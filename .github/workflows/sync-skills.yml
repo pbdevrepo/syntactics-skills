@@ -4,8 +4,8 @@ on:
   push:
     branches: [main]
     paths:
-      - 'skills/**/SKILL.md'
-      - 'skills/**/references/**'
+      - 'skills/**-workflow/**/SKILL.md'
+      - 'skills/**-workflow/**/references/**'
 
 concurrency:
   group: sync-skills
@@ -55,7 +55,7 @@ jobs:
           node scripts/bump-version.js patch
           git diff --quiet || (git add skills/*/SKILL.md && git commit -m "chore: bump skill versions [skip ci]")
 
-      - name: Build skill ZIPs
+      - name: Build skill ZIPs and workflow bundles
         run: npm run build
 
       - name: Get version tag
@@ -74,5 +74,7 @@ jobs:
 
             ## Changed skills
             See commit diff for changed SKILL.md files.
-          files: dist/*.skill
+          files: |
+            dist/*.skill
+            dist/*.zip
           fail_on_unmatched_files: false

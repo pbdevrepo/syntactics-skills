@@ -5,11 +5,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-npm run validate      # validate all skill frontmatter + semver
-npm run deploy:local  # copy skills to ~/.claude/skills/
-npm run dev           # watch + auto-validate + deploy on .md change
-npm run build         # package skills as dist/*.skill ZIPs
-npm run bump          # bump patch version for git-changed skills
+npm run validate        # validate all skill frontmatter + semver
+npm run deploy:local    # copy skills (flattened) to ~/.claude/skills/
+npm run dev             # watch + auto-validate + deploy on .md change
+npm run build           # build individual .skill ZIPs + workflow bundle ZIPs
+npm run build:workflows # build only workflow bundles (requires build first)
+npm run bump            # bump patch version for git-changed skills
 node scripts/bump-version.js minor  # bump minor instead
 ```
 
@@ -19,26 +20,36 @@ Skills are markdown files deployed to `~/.claude/skills/` for Claude Code to loa
 
 **Data flow:**
 ```
-skills/{name}/SKILL.md  →  validate  →  deploy-local.js  →  ~/.claude/skills/{name}/
-                                      →  build-skills.js  →  dist/{name}.skill (ZIP)
+skills/{workflow}/{skill}/SKILL.md
+  → validate-skills.js  → ~/.claude/skills/{skill}/   (flattened, no workflow subdir)
+  → build-skills.js     → dist/{skill}.skill
+  → build-workflows.js  → dist/{workflow}.zip          (bundles .skill files per role)
 ```
 
-**Skill structure** — each skill is a directory:
+**Directory structure:**
 ```
-skills/{name}/
-  SKILL.md           # required: YAML frontmatter (name, version, description) + ## sections
-  references/*.md    # optional: templates, question banks, output formats
+skills/
+  {role}-workflow/
+    {skill-name}/
+      SKILL.md           # required: YAML frontmatter + ## sections
+      references/*.md    # optional: templates, question banks, output formats
+dist/
+  {skill-name}.skill     # individual skill ZIP
+  {role}-workflow.zip    # all skills in that workflow bundled together
 ```
 
 **Frontmatter rules** enforced by `validate-skills.js`:
-- `name` must match directory name exactly
+- `name` must match skill directory name exactly
 - `version` must be valid semver
 - `description` field drives Claude Code's skill trigger logic
 - At least one `##` section required in body
 
-**Version bumping** (`bump-version.js`): diffs `origin/main...HEAD`, bumps only skills with changed files. CI auto-commits the bump with `[skip ci]` to avoid loops.
+**`discoverSkills()`** — shared pattern used by validate, deploy, build scripts:
+scans `skills/*-workflow/` dirs, returns `[{ workflow, skill, skillPath }]`.
 
-**CI trigger**: only fires when `skills/**/SKILL.md` or `skills/**/references/**` changes. Script changes do not trigger CI.
+**Version bumping** (`bump-version.js`): diffs `origin/main...HEAD`, extracts skill from `skills/{workflow}/{skill}/` path, bumps only changed skills. CI auto-commits with `[skip ci]`.
+
+**CI trigger**: fires only when `skills/**-workflow/**/SKILL.md` or references change.
 
 ## Distribution
 
@@ -46,8 +57,12 @@ New machines run one install script (see README). The install wires a `UserPromp
 
 ## Adding a Skill
 
-1. Create `skills/{name}/SKILL.md` with frontmatter `name`, `version: 1.0.0`, `description`
+1. Create `skills/{role}-workflow/{skill-name}/SKILL.md` with frontmatter `name`, `version: 1.0.0`, `description`
 2. Add at least one `##` section
-3. Run `npm run validate` — must pass before committing
-4. Run `npm run deploy:local` to test locally
-5. Merge to `main` — CI auto-bumps version and publishes release
+3. `npm run validate` — must pass before committing
+4. `npm run deploy:local` to test locally
+5. Merge to `main` — CI auto-bumps version and publishes individual `.skill` + workflow `.zip`
+
+## Adding a New Workflow Role
+
+Create a new `skills/{role}-workflow/` directory and add skills inside it. No config changes needed — scripts auto-discover all `*-workflow` directories.
