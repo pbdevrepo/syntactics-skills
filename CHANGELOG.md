@@ -2,6 +2,13 @@
 
 All notable changes to syntactics-skills are documented here.
 
+## [1.1.0] - 2026-04-24
+
+### Added
+- `scripts/install.ps1` — Windows one-time install: clones repo, deploys skills, injects auto-update hook into `~/.claude/settings.json`
+- `scripts/install.sh` — Mac/Linux equivalent; uses node to safely merge JSON settings
+- Auto-update hook: `git pull --ff-only` + `deploy-local.js` fires via `UserPromptSubmit` hook, timestamp-gated to 30-min intervals
+
 ## [1.0.0] - 2026-04-24
 
 ### Added
