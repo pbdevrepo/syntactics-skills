@@ -1,6 +1,6 @@
 ---
 name: database-administrator
-version: 1.0.0
+version: 1.0.3
 description: >
   Expert-level relational database design assistant. Deep knowledge in schema design,
   normalization (1NF–3NF), transactions, and production schema best practices.
@@ -40,8 +40,7 @@ When a user asks to design a database:
 
 ### Step 1 — Elicit Requirements
 
-Use the `ask_user_input_v0` tool to gather requirements before writing any tables. Combine
-related questions into one tool call (max 3 questions per call). Cover at minimum:
+Use the `ask_user_input_v0` tool to gather requirements before writing any tables. If that tool is unavailable, ask as a plain numbered list in chat. Combine related questions into one tool call (max 3 questions per call). Cover at minimum:
 
 - **SQL dialect** — PostgreSQL, MySQL, SQLite, SQL Server, or other? → use `single_select`
 - **ORM / framework** — Laravel/Eloquent, Django, Prisma, raw SQL, other? → use `single_select`
@@ -77,12 +76,12 @@ BCNF — but only flag it if a violation would cause real data anomalies.
 
 ### Step 5 — Simulate Real Transactions
 
-**Skip decision — check ALL of the following:**
-- [ ] Schema has 3 or more core entities with write operations? → if NO, skip and note _"No complex transactions identified — schema is primarily read/reference data."_
-- [ ] Any state changes, status transitions, inventory adjustments, or financial writes? → if NO, skip
-- [ ] Any tables where concurrent writes could cause race conditions? → if NO, skip
+**Simulate ONLY IF any of the following apply — skip if ALL are NO:**
+- [ ] Schema has 3 or more core entities with write operations?
+- [ ] Any state changes, status transitions, inventory adjustments, or financial writes?
+- [ ] Any tables where concurrent writes could cause race conditions?
 
-If any box above is YES, simulate. For each major business event, use this exact format:
+If all are NO, note: _"No complex transactions identified — schema is primarily read/reference data."_ and skip. For each major business event, use this exact format:
 
 ```
 ## Transaction: <Event Name>
@@ -190,12 +189,12 @@ Read `references/schema-output-format.md` before writing the file — it defines
 ```
 Use kebab-case, all lowercase. Examples: `ecommerce-database-schema.md`, `inventory-management-database-schema.md`
 
-**Save to:** `/mnt/user-data/outputs/{filename}.md`
+**Save to:** `/mnt/user-data/outputs/{filename}.md` (Claude.ai). In Claude Code, save to the current working directory or a path the user specifies.
 
 Follow the document structure, section order, column table format, and tone rules defined in `references/schema-output-format.md` exactly.
 
 After writing the file, call `present_files` with the output path so the user gets a download link.
-Do NOT just tell the user the file path — always use `present_files`.
+If `present_files` is unavailable, state the full file path clearly.
 
 **If the user selected "Generate DDL instead":**
 Generate a `.sql` file named `{project_name}_schema.sql` with full `CREATE TABLE` statements,
@@ -220,8 +219,6 @@ Only escalate to the full Schema Review Mode below when the user shares **multip
 ---
 
 ### Full Schema Review Flow
-
-Use this workflow when the user provides an **existing schema** to review (not designing from scratch).
 
 ### Step R1 — Parse the Schema
 Identify all tables, columns, and relationships from the provided DDL or description.
@@ -494,7 +491,6 @@ Flag any of these in new designs or reviews:
 - ❌ `ON DELETE CASCADE` without explicit intent → default to `RESTRICT`, document when you deviate
 - ❌ Bare junction table (only two FKs, nothing else) → add `created_at` and `UNIQUE` constraint at minimum
 - ❌ Using `INT` for PKs on large tables → use `BIGINT`/`BIGSERIAL` by default
-- ❌ Same PK strategy everywhere → evaluate UUID vs SERIAL per table context (see guide above)
 - ❌ Wrong column table format (`| Column | Type | Nullable | Default | Notes |`) → always use the 7-column format: `Field Name | Data Type | Length | Default Value | Nullable | Description | Constraints`
 
 ---

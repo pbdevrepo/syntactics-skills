@@ -2,6 +2,17 @@
 
 All notable changes to syntactics-skills are documented here.
 
+## [1.1.4] - 2026-04-24
+
+### Changed
+- `database-administrator` v1.0.2 → v1.0.3
+  - Added fallback for `ask_user_input_v0`: ask as plain numbered list in chat when tool unavailable
+  - Added fallback for `present_files`: state full file path when tool unavailable
+  - Fixed duplicate "Use this workflow when the user provides an existing schema" header in Schema Review Mode
+  - Added Claude Code path guidance alongside hardcoded `/mnt/user-data/outputs/` (Claude.ai-only path)
+  - Fixed Step 5 skip logic contradiction: "check ALL" vs "if ANY is YES" — reworded to "skip if ALL are NO"
+  - Removed redundant "Same PK strategy everywhere" anti-pattern entry (fully covered by UUID vs SERIAL guide)
+
 ## [1.1.3] - 2026-04-24
 
 ### Changed
