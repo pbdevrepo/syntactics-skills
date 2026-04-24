@@ -74,7 +74,5 @@ jobs:
 
             ## Changed skills
             See commit diff for changed SKILL.md files.
-          files: |
-            dist/*.skill
-            dist/*.zip
+          files: dist/*.zip
           fail_on_unmatched_files: false
