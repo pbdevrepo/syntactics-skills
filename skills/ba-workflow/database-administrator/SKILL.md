@@ -2,11 +2,11 @@
 name: database-administrator
 version: 1.0.0
 description: >
-  Expert-level relational database design assistant. Deep knowledge in ERD creation,
+  Expert-level relational database design assistant. Deep knowledge in schema design,
   normalization (1NF–3NF), transactions, and production schema best practices.
   Produces downloadable .md schema files and .sql DDL files after user confirmation.
-  Trigger for: database design, schema design, ER diagrams, entity-relationship modeling,
-  table normalization, foreign keys, join tables, trigger tables, stored procedures,
+  Trigger for: database design, schema design, table normalization, foreign keys,
+  join tables, trigger tables, stored procedures,
   transaction design, data integrity, or reviewing a relational database.
   Also trigger for: "design a database for X", "what tables do I need for Y",
   "normalize this schema", "generate a schema file", "give me the DDL",
@@ -68,7 +68,6 @@ Adjust type syntax throughout based on the declared dialect (see **Dialect Type 
 - Identify all entities and their attributes
 - Classify every relationship: `1:1`, `1:N`, or `M:N`
 - For M:N: always resolve via a **junction/bridge table** with its own PK and metadata (see **Junction Table Guide**)
-- Always represent entities and relationships using the **ERD Text Format** below
 
 ### Step 4 — Normalize to 3NF
 
@@ -358,23 +357,6 @@ CREATE INDEX idx_loan_active     ON loans(due_date) WHERE returned_at IS NULL;
 ```
 
 **Table grouping order:** lookup/reference tables → core entities → junction tables → audit/history tables.
-
----
-
-## ERD Text Format
-
-Use this format for all schemas:
-
-```
-[EntityName]
-  - pk: id (BIGINT, PK)
-  - column_name (TYPE, constraints)
-  - fk: foreign_table_id → foreign_table.id
-
-Relationships:
-  - customer 1──< order         (one customer has many orders)
-  - order M──< order_item >──M product  (many-to-many via junction)
-```
 
 ---
 

@@ -2,6 +2,14 @@
 
 All notable changes to syntactics-skills are documented here.
 
+## [1.1.3] - 2026-04-24
+
+### Changed
+- `database-administrator` v1.0.1 → v1.0.2
+  - Removed ERD text output format — BA will create ERDs manually using a visual tool
+  - Removed `## ERD Text Format` section and Step 3 instruction to output ERD text
+  - Updated description: removed "ERD creation", "ER diagrams", "entity-relationship modeling" trigger phrases
+
 ## [1.1.2] - 2026-04-24
 
 ### Changed
