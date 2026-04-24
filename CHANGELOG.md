@@ -2,6 +2,16 @@
 
 All notable changes to syntactics-skills are documented here.
 
+## [1.1.1] - 2026-04-24
+
+### Changed
+- `ba-project-intake` v1.0.0 → v1.0.1
+  - Description: added trigger phrases (`"project requirements"`, `"client brief"`, `"we got a new project"`)
+  - Phase 2: cap inline table at 15 modules; summarize remainder
+  - Phase 3: all-clear shortcut (skip questions when no ambiguity), 5–10 question limit, Phase 3b re-loop for answers that open new gaps
+  - Phase 4: graceful fallback when `present_files` unavailable
+  - `references/question-bank.md`: question limit + prioritization order at top
+
 ## [1.1.0] - 2026-04-24
 
 ### Added

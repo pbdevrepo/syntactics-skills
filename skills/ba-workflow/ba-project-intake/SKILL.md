@@ -1,12 +1,14 @@
 ---
 name: ba-project-intake
-version: 1.0.0
+version: 1.0.1
 description: >
   Entry point for the BA project lifecycle at Syntactics Inc. Trigger when a BA says "start the
-  intake", "I have a proposal", "run the intake", "gather requirements", "read this proposal", or
-  uploads a PDF to begin project analysis. Also trigger for "new project from Sales", "client sent
-  a proposal", or "what do we need to build this". Always run this skill first — before
-  database-administrator, sprint-planner, and final-design.
+  intake", "I have a proposal", "run the intake", "gather requirements", "read this proposal",
+  "project requirements", "client brief", "we got a new project", "client sent a proposal",
+  "what do we need to build this", or uploads a PDF to begin project analysis. Also trigger for
+  "new project from Sales" or any message where a BA shares a proposal doc and wants to begin
+  analysis. Always run this skill first — before database-administrator, sprint-planner, and
+  final-design.
 ---
 
 # BA Project Intake
@@ -36,6 +38,8 @@ See `references/extraction-rules.md` for how to extract modules from messy propo
 
 Post inline in chat. Not a file yet.
 
+If the proposal has more than 15 modules, show the first 15 in the table and summarize the remainder in a note below (e.g., "8 additional modules identified — listed in intake doc").
+
 | # | Module | Description (1 line) | Source | Confidence |
 |---|--------|----------------------|--------|------------|
 | 1 | User Authentication | Login, logout, password reset | Page 3 | Clear |
@@ -52,7 +56,11 @@ End with: `X modules found. Y clear, Z ambiguous, N inferred.`
 
 Ask only what the proposal does not answer. See `references/question-bank.md` for the pool.
 
-Rules: no generic questions · one sentence each · group by category · use Q-IDs
+**If zero ambiguous/inferred modules and all roles are defined:** state no questions are needed and skip to Phase 4.
+
+Rules: no generic questions · one sentence each · group by category · use Q-IDs · **aim for 5–10 questions max, never more than 15** — prioritize ambiguous modules and missing role definitions first
+
+**If answers reveal new gaps:** run a follow-up Phase 3b with only the new questions before proceeding.
 
 ```
 ## Clarifying Questions
@@ -80,7 +88,7 @@ After Q&A is answered (or BA says "skip — proceed"):
 
 File: `{project-name}-intake.md` · Use `create_file` · Follow `references/output-format.md`
 
-Then `present_files`. Then say:
+Then `present_files` if available, otherwise state the file path. Then say:
 
 ```
 Intake done. Next: database-administrator — pass the intake doc.

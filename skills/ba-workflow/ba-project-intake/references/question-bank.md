@@ -1,6 +1,6 @@
 # Question Bank
 
-Pick only what the proposal does not answer. Not a checklist.
+Pick only what the proposal does not answer. Not a checklist. **Aim for 5–10 questions max (never >15).** Prioritize: ambiguous modules first, then missing role definitions, then business rules.
 
 ## Modules & Scope
 
