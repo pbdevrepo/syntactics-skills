@@ -1,5 +1,6 @@
 ---
 name: database-administrator
+version: 1.0.0
 description: >
   Expert-level relational database design assistant. Deep knowledge in ERD creation,
   normalization (1NF–3NF), transactions, and production schema best practices.

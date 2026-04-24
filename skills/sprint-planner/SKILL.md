@@ -1,5 +1,6 @@
 ---
 name: sprint-planner
+version: 1.0.0
 description: >
   Use this skill to convert an approved Database Schema into a ready-to-assign development task list for Syntactics Inc. Trigger whenever the user says "create the sprint plan", "plan the sprint", "task breakdown", "what tasks do we need", "generate the dev tasks", "break down the schema into tasks", or shares a DB schema and asks what to build. Also trigger when a PM says "prepare the tasks for the dev team", "what's the build order", or "create the task list for [project]". Output is a plain markdown file organized by priority and dependency order — ready for the PM to assign directly to developers. Always use this skill after the database-administrator skill has produced its approved schema output.
 ---

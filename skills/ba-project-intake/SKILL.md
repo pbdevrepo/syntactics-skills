@@ -1,5 +1,6 @@
 ---
 name: ba-project-intake
+version: 1.0.0
 description: >
   Entry point for the BA project lifecycle at Syntactics Inc. Trigger when a BA says "start the
   intake", "I have a proposal", "run the intake", "gather requirements", "read this proposal", or

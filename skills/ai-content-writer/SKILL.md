@@ -1,5 +1,6 @@
 ---
 name: ai-content-writer
+version: 1.0.0
 description: >
   Write and optimize web content — static pages, articles, and blog posts — so they rank
   on Google AND get cited by AI agents (ChatGPT Browse, Perplexity, Claude, Google AI

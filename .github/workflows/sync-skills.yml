@@ -1,0 +1,78 @@
+name: Validate and sync skills
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'skills/**/SKILL.md'
+      - 'skills/**/references/**'
+
+concurrency:
+  group: sync-skills
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: Validate skill manifests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate all skills
+        run: npm run validate
+
+  build-and-release:
+    name: Build and release skill ZIPs
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Bump version for changed skills
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          node scripts/bump-version.js patch
+          git diff --quiet || (git add skills/*/SKILL.md && git commit -m "chore: bump skill versions [skip ci]")
+
+      - name: Build skill ZIPs
+        run: npm run build
+
+      - name: Get version tag
+        id: tag
+        run: |
+          VERSION=$(date +%Y%m%d%H%M%S)
+          echo "tag=release-$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release with skill ZIPs
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: Skills Release ${{ steps.tag.outputs.tag }}
+          body: |
+            Automated release from skill changes on main.
+
+            ## Changed skills
+            See commit diff for changed SKILL.md files.
+          files: dist/*.skill
+          fail_on_unmatched_files: false
