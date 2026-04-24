@@ -2,6 +2,14 @@
 
 All notable changes to syntactics-skills are documented here.
 
+## [1.1.2] - 2026-04-24
+
+### Changed
+- `database-administrator` v1.0.0 → v1.0.1
+  - Enforced strict 7-column table format (`Field Name | Data Type | Length | Default Value | Nullable | Description | Constraints`) in `Schema Output Format` section
+  - Added wrong-format callout (`| Column | Type | Nullable | Default | Notes |`) as explicit violation with correct alternative
+  - Added wrong column table format to Anti-Patterns Checklist
+
 ## [1.1.1] - 2026-04-24
 
 ### Changed

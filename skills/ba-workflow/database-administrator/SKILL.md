@@ -312,6 +312,14 @@ Cardinality rule: don't index boolean or low-cardinality columns in isolation �
 
 > ⚠️ The **in-chat** column table and the **generated file** column table must use the same format. Use this structure for both.
 
+> ❌ **WRONG format — never use this:**
+> `| Column | Type | Nullable | Default | Notes |`
+> This is missing `Length`, `Default Value` (exact), and `Constraints` columns. Using it is a schema quality failure.
+
+> ✅ **ONLY accepted format — always use exactly these 7 columns:**
+> `| Field Name | Data Type | Length | Default Value | Nullable | Description | Constraints |`
+> Every table, every response, no exceptions. Not 5 columns, not 6 columns — 7.
+
 Present every table using this Markdown structure:
 
 ### `table_name`
@@ -505,6 +513,7 @@ Flag any of these in new designs or reviews:
 - ❌ Bare junction table (only two FKs, nothing else) → add `created_at` and `UNIQUE` constraint at minimum
 - ❌ Using `INT` for PKs on large tables → use `BIGINT`/`BIGSERIAL` by default
 - ❌ Same PK strategy everywhere → evaluate UUID vs SERIAL per table context (see guide above)
+- ❌ Wrong column table format (`| Column | Type | Nullable | Default | Notes |`) → always use the 7-column format: `Field Name | Data Type | Length | Default Value | Nullable | Description | Constraints`
 
 ---
 
