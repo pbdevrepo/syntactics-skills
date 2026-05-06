@@ -2,6 +2,17 @@
 
 All notable changes to syntactics-skills are documented here.
 
+## [Unreleased] - 2026-05-06
+
+### Added
+- `sales-workflow`: `requirement-analyzer`, `proposal-grill`, `proposal-writer`, `quotation` — full Sales lifecycle from client requirements to itemized quotation
+- `design-dev-workflow`: `ui-designer`, `frontend-developer`, `backend-developer`, `qa-tester`, `bug-fixer` — full Design & Dev lifecycle from FDD to verified build
+- `CONTEXT.md` — canonical domain language, workflow relationships, and terminology across all three workflows
+- Artifact path convention: `output/{project-name}/{workflow-phase}/{artifact}.md`
+
+### Changed
+- `final-design` — updated Handoff Chain to point downstream to `ui-designer`
+
 ## [1.1.1] - 2026-04-24
 
 ### Changed

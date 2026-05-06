@@ -36,6 +36,12 @@ skills/
 dist/
   {skill-name}.skill     # individual skill ZIP
   {role}-workflow.zip    # all skills in that workflow bundled together
+output/
+  {project-name}/
+    sales/               # artifacts from sales-workflow
+    ba/                  # artifacts from ba-workflow
+    design-dev/          # artifacts from design-dev-workflow
+CONTEXT.md               # canonical domain language for all workflows
 ```
 
 **Frontmatter rules** enforced by `validate-skills.js`:

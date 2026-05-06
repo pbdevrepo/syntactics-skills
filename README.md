@@ -2,15 +2,49 @@
 
 Claude Code skills for Syntactics Inc. internal workflow automation.
 
-## Skills
+## Workflows
 
+### Sales (`sales-workflow`)
+| Skill | Description |
+|-------|-------------|
+| `requirement-analyzer` | Extract and structure client requirements from PDF or free-form text |
+| `proposal-grill` | Stress-test requirements for missed modules and ambiguous scope |
+| `proposal-writer` | Write a client-facing project proposal |
+| `quotation` | Generate itemized module/feature list with placeholder hour ranges per role |
+
+### Business Analysis (`ba-workflow`)
+| Skill | Description |
+|-------|-------------|
+| `ba-project-intake` | Entry point — gather and structure requirements from proposal |
+| `database-administrator` | ERD design, normalization, schema best practices |
+| `sprint-planner` | Convert approved DB schema into development task list |
+| `final-design` | Produce Final Design Documents (FDD) per module |
+
+### Design & Development (`design-dev-workflow`)
+| Skill | Description |
+|-------|-------------|
+| `ui-designer` | Generate Figma design task list from FDD wireframe specs |
+| `frontend-developer` | Generate frontend implementation task list from FDD + design tasks |
+| `backend-developer` | Generate backend implementation task list from FDD + frontend tasks |
+| `qa-tester` | Generate test cases mapped to FDD validation rules and implemented tasks |
+| `bug-fixer` | Generate prioritized fix task list from failed QA test cases |
+
+### Content (`content-workflow`)
 | Skill | Description |
 |-------|-------------|
 | `ai-content-writer` | Write and optimize web content for Google and AI agents |
-| `ba-project-intake` | Entry point for BA project lifecycle — gather and structure requirements |
-| `database-administrator` | ERD design, normalization, schema best practices |
-| `final-design` | Produce Final Design Documents (FDD) for web/mobile projects |
-| `sprint-planner` | Convert approved DB schema into development task list |
+
+## Workflow Sequence
+
+```
+Sales:  requirement-analyzer → proposal-grill → proposal-writer → quotation
+                                                                       ↓ (client approves)
+BA:     ba-project-intake → database-administrator → sprint-planner → final-design
+                                                                       ↓ (FDD approved)
+D&D:    ui-designer → frontend-developer → backend-developer → qa-tester ⇄ bug-fixer
+```
+
+Artifacts are written to `output/{project-name}/{workflow-phase}/{artifact}.md`.
 
 ## Install (one-time per machine)
 
