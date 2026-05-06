@@ -1,12 +1,12 @@
 ---
 name: database-administrator
-version: 1.0.0
+version: 1.0.3
 description: >
-  Expert-level relational database design assistant. Deep knowledge in ERD creation,
+  Expert-level relational database design assistant. Deep knowledge in schema design,
   normalization (1NF–3NF), transactions, and production schema best practices.
   Produces downloadable .md schema files and .sql DDL files after user confirmation.
-  Trigger for: database design, schema design, ER diagrams, entity-relationship modeling,
-  table normalization, foreign keys, join tables, trigger tables, stored procedures,
+  Trigger for: database design, schema design, table normalization, foreign keys,
+  join tables, trigger tables, stored procedures,
   transaction design, data integrity, or reviewing a relational database.
   Also trigger for: "design a database for X", "what tables do I need for Y",
   "normalize this schema", "generate a schema file", "give me the DDL",
