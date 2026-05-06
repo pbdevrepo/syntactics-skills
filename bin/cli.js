@@ -38,7 +38,7 @@ async function downloadFile(url, dest) {
 }
 
 async function main() {
-  const [,, command, repo] = process.argv;
+  const [, , command, repo] = process.argv;
 
   if (command !== 'add') usage();
   if (!repo || !repo.includes('/')) usage();
@@ -60,10 +60,10 @@ async function main() {
   }
 
   const release = JSON.parse(body.toString());
-  const zipAssets = (release.assets || []).filter((a) => a.name.endsWith('.zip'));
+  const skillAssets = (release.assets || []).filter((a) => a.name.endsWith('.skill'));
 
-  if (zipAssets.length === 0) {
-    console.error('No .zip assets found in the latest release.');
+  if (skillAssets.length === 0) {
+    console.error('No .skill files found in the latest release.');
     process.exit(1);
   }
 
@@ -72,46 +72,42 @@ async function main() {
 
   let installed = 0;
 
-  for (const asset of zipAssets) {
-    const zipPath = path.join(tmpDir, asset.name);
-    process.stdout.write(`  Downloading ${asset.name}...`);
-    await downloadFile(asset.browser_download_url, zipPath);
+  for (const asset of skillAssets) {
+    const skillZip = path.join(tmpDir, asset.name);
+    const skillName = asset.name.replace('.skill', '');
+
+    process.stdout.write(`  ${skillName}: downloading...`);
+    await downloadFile(asset.browser_download_url, skillZip);
     process.stdout.write(' extracting...');
 
-    const extractDir = path.join(tmpDir, asset.name.replace('.zip', ''));
-    fs.mkdirSync(extractDir, { recursive: true });
-    execFileSync('unzip', ['-q', '-o', zipPath, '-d', extractDir]);
+    const skillExtract = path.join(tmpDir, `skill-${skillName}`);
+    fs.mkdirSync(skillExtract, { recursive: true });
+    execFileSync('unzip', ['-q', '-o', skillZip, '-d', skillExtract]);
 
-    // each .skill file inside the zip is itself a zip containing the skill dir
-    for (const entry of fs.readdirSync(extractDir)) {
-      if (!entry.endsWith('.skill')) continue;
-      const skillZip = path.join(extractDir, entry);
-      const skillName = entry.replace('.skill', '');
-      const skillDest = path.join(SKILLS_DIR, skillName);
+    // .skill ZIP contains: skillname/SKILL.md, skillname/references/, etc.
+    const innerDirs = fs.readdirSync(skillExtract);
+    const inner = innerDirs.length === 1 ? path.join(skillExtract, innerDirs[0]) : skillExtract;
+    const skillDest = path.join(SKILLS_DIR, skillName);
 
-      const skillExtract = path.join(tmpDir, `skill-${skillName}`);
-      fs.mkdirSync(skillExtract, { recursive: true });
-      execFileSync('unzip', ['-q', '-o', skillZip, '-d', skillExtract]);
+    if (fs.existsSync(skillDest)) fs.rmSync(skillDest, { recursive: true });
+    fs.renameSync(inner, skillDest);
 
-      // skill dir is nested one level (the original skill directory name)
-      const innerDirs = fs.readdirSync(skillExtract);
-      const inner = innerDirs.length === 1 ? path.join(skillExtract, innerDirs[0]) : skillExtract;
-
-      if (fs.existsSync(skillDest)) fs.rmSync(skillDest, { recursive: true });
-      fs.cpSync(inner, skillDest, { recursive: true });
-      installed++;
-    }
-    console.log(' done');
+    process.stdout.write(' done\n');
+    installed++;
   }
 
   // cleanup
   fs.rmSync(tmpDir, { recursive: true, force: true });
 
-  console.log(`\n${installed} skill(s) installed to ${SKILLS_DIR}`);
-  console.log('Restart Claude Code to load the skills.');
+  console.log(`\n✓ ${installed} skill(s) installed to ${SKILLS_DIR}`);
+  console.log('Restart Claude to load the skills.');
 }
 
 main().catch((err) => {
-  console.error(err.message);
+  console.error(`Error: ${err.message}`);
   process.exit(1);
 });
+      fs.cpSync(inner, skillDest, { recursive: true });
+      installed++;
+    }
+    console.log(' done');
