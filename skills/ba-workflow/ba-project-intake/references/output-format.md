@@ -27,9 +27,9 @@ Plain language. No jargon. No copy-paste from the proposal.]
 
 ## 2. Module Inventory
 
-| # | Module | Description | Confidence | Notes |
-|---|--------|-------------|------------|-------|
-| 1 | [Name] | [1-line description] | Clear / Inferred / Ambiguous | [any note] |
+| # | Module | Description | Source | Confidence | Notes |
+|---|--------|-------------|--------|------------|-------|
+| 1 | [Name] | [1-line description] | Page X / Implied | Clear / Inferred / Ambiguous | [any note] |
 
 **Total:** X modules (Y clear, Z ambiguous, N inferred)
 

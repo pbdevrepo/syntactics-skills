@@ -2,13 +2,10 @@
 name: ba-project-intake
 version: 1.0.1
 description: >
-  Entry point for the BA project lifecycle at Syntactics Inc. Trigger when a BA says "start the
-  intake", "I have a proposal", "run the intake", "gather requirements", "read this proposal",
-  "project requirements", "client brief", "we got a new project", "client sent a proposal",
-  "what do we need to build this", or uploads a PDF to begin project analysis. Also trigger for
-  "new project from Sales" or any message where a BA shares a proposal doc and wants to begin
-  analysis. Always run this skill first — before database-administrator, sprint-planner, and
-  final-design.
+  Entry point for the BA project lifecycle at Syntactics Inc. Trigger when a BA uploads a proposal
+  PDF, says "start the intake" / "I have a proposal" / "we got a new project", or shares any client
+  brief to begin project analysis. Always run this skill first — before database-administrator,
+  sprint-planner, and final-design.
 ---
 
 # BA Project Intake
@@ -66,16 +63,13 @@ Rules: no generic questions · one sentence each · group by category · use Q-I
 ## Clarifying Questions
 
 **Modules & Scope**
-Q-001: [question]
-
 **User Roles**
-Q-002: [question]
-
-**Technical**
-Q-003: [question]
-
 **Business Rules**
-Q-004: [question]
+**Data & Integrations**
+**Technical**
+**Timeline**
+**Ambiguous or Inferred Modules**
+Q-ID: [one-line question per category as needed]
 ```
 
 Wait for answers before Phase 4.
@@ -93,22 +87,6 @@ Then `present_files` if available, otherwise state the file path. Then say:
 ```
 Intake done. Next: database-administrator — pass the intake doc.
 ```
-
----
-
-## What This Skill Does NOT Do
-
-No wireframes · No ERD · No sprint tasks · No FDD · No estimates · No tech stack picks
-
----
-
-## Handoff Chain
-
-| Step | Skill | Needs |
-|------|-------|-------|
-| 1 | `database-administrator` | Intake doc |
-| 2 | `sprint-planner` | DB schema doc |
-| 3 | `final-design` | Intake doc + DB schema doc |
 
 ---
 
