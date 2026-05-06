@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__plugin_context-mode_context-mode__ctx_execute_file",
+      "mcp__plugin_context-mode_context-mode__ctx_batch_execute",
+      "Bash(git checkout *)",
+      "Bash(git pull *)",
+      "Bash(npm run *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\jayclyde_syntacticsi\\\\Documents\\\\Business Apps\\\\syntactics-skills\\\\skills\" -Directory)",
+      "Bash(Select-Object -ExpandProperty Name)",
+      "PowerShell(tree /F /A $root)",
+      "PowerShell($root = \"C:\\\\Users\\\\jayclyde_syntacticsi\\\\Documents\\\\Business Apps\\\\syntactics-skills\\\\skills\")",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(bash scripts/validate.sh)"
+    ]
+  }
+}
