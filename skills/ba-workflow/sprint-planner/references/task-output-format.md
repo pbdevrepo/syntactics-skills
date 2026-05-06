@@ -16,7 +16,7 @@ Examples: `lundgreens-sprint-tasks.md`, `quotation-app-sprint-tasks.md`
 **Project:** {Project / System Name}
 **Prepared by:** {PM or BA Name}
 **Date:** {date}
-**Source:** {FDD filename} + {DB Schema filename}
+**Source:** {DB Schema filename}
 **Status:** Draft | Ready for Assignment
 
 ---
@@ -35,7 +35,7 @@ Examples: `lundgreens-sprint-tasks.md`, `quotation-app-sprint-tasks.md`
 
 ---
 
-## Priority 1 — DB Migrations
+## Priority 1 — DB Migrations, Models & Seeders
 
 {task blocks}
 
@@ -81,7 +81,7 @@ Tasks are grouped by module within each priority section.
 
 ~~~markdown
 ### {Module Name}
-> FDD reference: {module name as it appears in the FDD}
+> Source: {module name as it appears in the DB schema}
 
 | ID | Task | Role | Depends On | Blocks |
 |---|---|---|---|---|
