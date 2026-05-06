@@ -18,16 +18,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
       - name: Validate all skills
-        run: npm run validate
+        run: bash scripts/validate.sh
 
   build-and-release:
     name: Build and release skill ZIPs
@@ -40,23 +32,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
       - name: Bump version for changed skills
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          node scripts/bump-version.js patch
-          git diff --quiet || (git add skills/*/SKILL.md && git commit -m "chore: bump skill versions [skip ci]")
+          bash scripts/bump-version.sh patch
+          git diff --quiet || (git add skills/ && git commit -m "chore: bump skill versions [skip ci]")
 
       - name: Build skill ZIPs and workflow bundles
-        run: npm run build
+        run: bash scripts/build.sh
 
       - name: Get version tag
         id: tag
@@ -76,3 +60,20 @@ jobs:
             See commit diff for changed SKILL.md files.
           files: dist/*.zip
           fail_on_unmatched_files: false
+
+  publish-npm:
+    name: Publish to npm
+    needs: build-and-release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Publish package
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

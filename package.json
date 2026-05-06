@@ -2,18 +2,14 @@
   "name": "syntactics-skills",
   "version": "1.0.0",
   "description": "Claude AI skills for Syntactics Inc. workflow automation",
-  "scripts": {
-    "validate": "node scripts/validate-skills.js",
-    "build": "node scripts/build-skills.js && node scripts/build-workflows.js",
-    "build:workflows": "node scripts/build-workflows.js",
-    "deploy:local": "node scripts/deploy-local.js",
-    "dev": "node scripts/watch.js",
-    "bump": "node scripts/bump-version.js"
+  "bin": {
+    "syntactics-skills": "./bin/cli.js"
   },
-  "devDependencies": {
-    "chokidar": "^3.6.0",
-    "glob": "^10.4.5",
-    "gray-matter": "^4.0.3",
-    "semver": "^7.6.3"
+  "files": [
+    "bin/",
+    "skills/"
+  ],
+  "engines": {
+    "node": ">=18"
   }
 }
