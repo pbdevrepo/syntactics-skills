@@ -2,32 +2,16 @@
 
 All notable changes to syntactics-skills are documented here.
 
-## [1.1.4] - 2026-04-24
+## [Unreleased] - 2026-05-06
+
+### Added
+- `sales-workflow`: `requirement-analyzer`, `proposal-grill`, `proposal-writer`, `quotation` — full Sales lifecycle from client requirements to itemized quotation
+- `design-dev-workflow`: `ui-designer`, `frontend-developer`, `backend-developer`, `qa-tester`, `bug-fixer` — full Design & Dev lifecycle from FDD to verified build
+- `CONTEXT.md` — canonical domain language, workflow relationships, and terminology across all three workflows
+- Artifact path convention: `output/{project-name}/{workflow-phase}/{artifact}.md`
 
 ### Changed
-- `database-administrator` v1.0.2 → v1.0.3
-  - Added fallback for `ask_user_input_v0`: ask as plain numbered list in chat when tool unavailable
-  - Added fallback for `present_files`: state full file path when tool unavailable
-  - Fixed duplicate "Use this workflow when the user provides an existing schema" header in Schema Review Mode
-  - Added Claude Code path guidance alongside hardcoded `/mnt/user-data/outputs/` (Claude.ai-only path)
-  - Fixed Step 5 skip logic contradiction: "check ALL" vs "if ANY is YES" — reworded to "skip if ALL are NO"
-  - Removed redundant "Same PK strategy everywhere" anti-pattern entry (fully covered by UUID vs SERIAL guide)
-
-## [1.1.3] - 2026-04-24
-
-### Changed
-- `database-administrator` v1.0.1 → v1.0.2
-  - Removed ERD text output format — BA will create ERDs manually using a visual tool
-  - Removed `## ERD Text Format` section and Step 3 instruction to output ERD text
-  - Updated description: removed "ERD creation", "ER diagrams", "entity-relationship modeling" trigger phrases
-
-## [1.1.2] - 2026-04-24
-
-### Changed
-- `database-administrator` v1.0.0 → v1.0.1
-  - Enforced strict 7-column table format (`Field Name | Data Type | Length | Default Value | Nullable | Description | Constraints`) in `Schema Output Format` section
-  - Added wrong-format callout (`| Column | Type | Nullable | Default | Notes |`) as explicit violation with correct alternative
-  - Added wrong column table format to Anti-Patterns Checklist
+- `final-design` — updated Handoff Chain to point downstream to `ui-designer`
 
 ## [1.1.1] - 2026-04-24
 

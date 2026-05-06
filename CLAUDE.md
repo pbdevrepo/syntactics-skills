@@ -36,6 +36,12 @@ skills/
 dist/
   {skill-name}.skill     # individual skill ZIP
   {role}-workflow.zip    # all skills in that workflow bundled together
+output/
+  {project-name}/
+    sales/               # artifacts from sales-workflow
+    ba/                  # artifacts from ba-workflow
+    design-dev/          # artifacts from design-dev-workflow
+CONTEXT.md               # canonical domain language for all workflows
 ```
 
 **Frontmatter rules** enforced by `validate-skills.js`:
@@ -66,3 +72,17 @@ New machines run one install script (see README). The install wires a `UserPromp
 ## Adding a New Workflow Role
 
 Create a new `skills/{role}-workflow/` directory and add skills inside it. No config changes needed — scripts auto-discover all `*-workflow` directories.
+
+## Agent skills
+
+### Issue tracker
+
+Issues live in GitHub Issues (`pbdevrepo/syntactics-skills`). See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default label vocabulary (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context layout — `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.

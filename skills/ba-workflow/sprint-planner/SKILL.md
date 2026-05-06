@@ -2,7 +2,7 @@
 name: sprint-planner
 version: 1.0.0
 description: >
-  Use this skill to convert an approved Database Schema into a ready-to-assign development task list for Syntactics Inc. Trigger whenever the user says "create the sprint plan", "plan the sprint", "task breakdown", "what tasks do we need", "generate the dev tasks", "break down the schema into tasks", or shares a DB schema and asks what to build. Also trigger when a PM says "prepare the tasks for the dev team", "what's the build order", or "create the task list for [project]". Output is a plain markdown file organized by priority and dependency order — ready for the PM to assign directly to developers. Always use this skill after the database-administrator skill has produced its approved schema output.
+  Use this skill to convert an approved Database Schema into a ready-to-assign development task list for Syntactics Inc. Trigger whenever the user says "create the sprint plan", "plan the sprint", "task breakdown", "what tasks do we need", "generate the dev tasks", "break down the schema into tasks", or shares a DB schema and asks what to build. Also trigger when a PM says "prepare the tasks for the dev team", "what's the build order", or "create the task list for [project]". Output is a plain markdown file organized by priority and dependency order — ready for the PM to assign directly to developers.
 ---
 
 # Sprint Planner Skill
@@ -10,6 +10,8 @@ description: >
 Reads the approved **Database Schema** (and optionally the BA Intake Document) and produces a **Sprint Task List** as a `.md` file. Output is organized by build order (dependency-first), tagged by role, and linked back to the source table or module that generated each task.
 
 The PM uses this to assign work directly. No estimation — hours are already in the quotation. No tool-specific formatting — plain markdown throughout.
+
+> Always run after the **database-administrator** skill has produced its approved schema output.
 
 ## Before You Start
 
@@ -86,7 +88,7 @@ Flag ambiguous dependencies with ⚠️ Dependency Note.
 
 ### Step 4 — Generate the Markdown File
 
-Use `create_file`. File name: `{project-name}-sprint-tasks.md` (kebab-case, lowercase).
+Write the output as `{project-name}-sprint-tasks.md` (kebab-case, lowercase).
 
 Follow the exact structure in `references/task-output-format.md`.
 
@@ -103,7 +105,7 @@ Follow the exact structure in `references/task-output-format.md`.
 
 ### Step 6 — Deliver
 
-Use `present_files`. After presenting, add inline:
+Present the file inline. After presenting, add:
 
 ```
 PM: assign role columns directly. Tasks are ordered by dependency —

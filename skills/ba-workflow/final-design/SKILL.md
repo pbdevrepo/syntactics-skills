@@ -7,7 +7,7 @@ description: >
 
 # Final Design Document Skill
 
-Produces Final Design Documents (FDD) following the **Business Applications Final Design Template v2.0** (Sept 2025). Output is a `.md` file written directly using `create_file` — no docx tooling needed.
+Produces Final Design Documents (FDD) following the **Business Applications Final Design Template v2.0** (Sept 2025). Output is a `.md` file written using the `Write` tool.
 
 ## Before You Start
 
@@ -44,7 +44,7 @@ Always ask: **How many modules need spec tables in this document?**
 
 ### Step 3 — Generate the Markdown File
 
-Use `create_file` to write the `.md` file directly to `/mnt/user-data/outputs/`. File name format: `{system-name}-final-design.md` (kebab-case, lowercase).
+Use the `Write` tool to write the `.md` file. Ask the user for the output path if not specified, or default to the current working directory. File name format: `{system-name}-final-design.md` (kebab-case, lowercase).
 
 Follow the markdown structure defined in `references/template-structure.md` exactly. Do not invent sections or reorder fields.
 
@@ -56,7 +56,7 @@ Follow the markdown structure defined in `references/template-structure.md` exac
 
 ### Step 4 — Deliver
 
-Use `present_files` to share the output `.md` file with the user.
+Report the output file path to the user.
 
 ---
 
@@ -72,11 +72,16 @@ Once the client approves the FDD, any updates must follow this protocol — remi
 
 ## Handoff Chain
 
-Final step. No further handoff.
-
 | Step | Skill | Input Needed |
 |------|-------|--------------|
 | ← Upstream | `sprint-planner` | Intake doc + Schema doc |
+| → Downstream | `ui-designer` | All FDD module files |
+
+After all module FDD files are generated and approved:
+
+```
+Next: ui-designer — pass all {project-name}-fdd-{module}.md files to begin the Design & Dev phase.
+```
 
 ---
 
