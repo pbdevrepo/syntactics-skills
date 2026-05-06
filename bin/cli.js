@@ -11,7 +11,7 @@ const SKILLS_DIR = path.join(os.homedir(), '.claude', 'skills');
 
 function usage() {
   console.log('Usage: npx syntactics-skills@latest add <owner/repo>');
-  console.log('  Example: npx syntactics-skills@latest add syntactics-skills/skills');
+  console.log('  Example: npx syntactics-skills@latest add pbdevrepo/syntactics-skills');
   process.exit(1);
 }
 
@@ -60,10 +60,10 @@ async function main() {
   }
 
   const release = JSON.parse(body.toString());
-  const skillAssets = (release.assets || []).filter((a) => a.name.endsWith('.skill'));
+  const sourceZipAsset = (release.assets || []).find((a) => a.name.endsWith('.zip') && a.name.includes('syntactics-skills'));
 
-  if (skillAssets.length === 0) {
-    console.error('No .skill files found in the latest release.');
+  if (!sourceZipAsset) {
+    console.error('No source code ZIP found in the latest release.');
     process.exit(1);
   }
 
@@ -72,34 +72,44 @@ async function main() {
 
   let installed = 0;
 
-  for (const asset of skillAssets) {
-    const skillZip = path.join(tmpDir, asset.name);
-    const skillName = asset.name.replace('.skill', '');
+  // Download and extract the source code ZIP
+  const sourceZip = path.join(tmpDir, sourceZipAsset.name);
+  process.stdout.write(`Downloading ${sourceZipAsset.name}...`);
+  await downloadFile(sourceZipAsset.browser_download_url, sourceZip);
+  process.stdout.write(' extracting...');
 
-    process.stdout.write(`  ${skillName}: downloading...`);
-    await downloadFile(asset.browser_download_url, skillZip);
-    process.stdout.write(' extracting...');
+  const extractDir = path.join(tmpDir, 'extracted');
+  fs.mkdirSync(extractDir, { recursive: true });
+  execFileSync('unzip', ['-q', '-o', sourceZip, '-d', extractDir]);
 
-    const skillExtract = path.join(tmpDir, `skill-${skillName}`);
-    fs.mkdirSync(skillExtract, { recursive: true });
-    execFileSync('unzip', ['-q', '-o', skillZip, '-d', skillExtract]);
+  // Find the skills directory in the extracted source
+  const repoDir = fs.readdirSync(extractDir).find(dir => dir.includes('syntactics-skills'));
+  const skillsSourceDir = path.join(extractDir, repoDir || '', 'skills');
 
-    // .skill ZIP contains: skillname/SKILL.md, skillname/references/, etc.
-    const innerDirs = fs.readdirSync(skillExtract);
-    const inner = innerDirs.length === 1 ? path.join(skillExtract, innerDirs[0]) : skillExtract;
-    const skillDest = path.join(SKILLS_DIR, skillName);
+  if (!fs.existsSync(skillsSourceDir)) {
+    console.error('Skills directory not found in source code.');
+    process.exit(1);
+  }
 
-    if (fs.existsSync(skillDest)) fs.rmSync(skillDest, { recursive: true });
-    fs.renameSync(inner, skillDest);
+  // Copy all skills to ~/.claude/skills/
+  const skillDirs = fs.readdirSync(skillsSourceDir, { withFileTypes: true })
+    .filter(dirent => dirent.isDirectory())
+    .map(dirent => dirent.name);
 
-    process.stdout.write(' done\n');
+  for (const skillDir of skillDirs) {
+    const sourcePath = path.join(skillsSourceDir, skillDir);
+    const destPath = path.join(SKILLS_DIR, skillDir);
+
+    if (fs.existsSync(destPath)) fs.rmSync(destPath, { recursive: true });
+    fs.cpSync(sourcePath, destPath, { recursive: true });
+    process.stdout.write(`\n  ${skillDir}: installed`);
     installed++;
   }
 
   // cleanup
   fs.rmSync(tmpDir, { recursive: true, force: true });
 
-  console.log(`\n✓ ${installed} skill(s) installed to ${SKILLS_DIR}`);
+  console.log(`\n\n✓ ${installed} skill(s) installed to ${SKILLS_DIR}`);
   console.log('Restart Claude to load the skills.');
 }
 

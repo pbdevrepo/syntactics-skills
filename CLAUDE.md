@@ -5,11 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-bash scripts/validate.sh          # validate all skill frontmatter + semver
-bash scripts/deploy-local.sh      # copy skills (flattened) to ~/.claude/skills/
-bash scripts/build.sh             # build individual .skill ZIPs + workflow bundle ZIPs
-bash scripts/bump-version.sh      # bump patch version for git-changed skills
-bash scripts/bump-version.sh minor  # bump minor instead
+npx syntactics-skills@latest add pbdevrepo/syntactics-skills  # install skills from GitHub releases
 ```
 
 ## Architecture
@@ -19,9 +15,8 @@ Skills are markdown files deployed to `~/.claude/skills/` for Claude Code to loa
 **Data flow:**
 ```
 skills/{workflow}/{skill}/SKILL.md
-  → validate.sh    → ~/.claude/skills/{skill}/   (flattened, no workflow subdir)
-  → build.sh       → dist/{skill}.skill
-  → build.sh       → dist/{workflow}.zip          (bundles .skill files per role)
+  → GitHub Actions    → source code ZIP         (entire repo)
+  → GitHub Release    → npx add downloads          (installs to ~/.claude/skills/)
 ```
 
 **Directory structure:**
@@ -31,9 +26,6 @@ skills/
     {skill-name}/
       SKILL.md           # required: YAML frontmatter + ## sections
       references/*.md    # optional: templates, question banks, output formats
-dist/
-  {skill-name}.skill     # individual skill ZIP
-  {role}-workflow.zip    # all skills in that workflow bundled together
 output/
   {project-name}/
     sales/               # artifacts from sales-workflow
@@ -42,31 +34,33 @@ output/
 CONTEXT.md               # canonical domain language for all workflows
 ```
 
-**Frontmatter rules** enforced by `validate.sh`:
+**Frontmatter rules:**
 - `name` must match skill directory name exactly
 - `version` must be valid semver
 - `description` field drives Claude Code's skill trigger logic
 - At least one `##` section required in body
 
-**Version bumping** (`bump-version.sh`): diffs `origin/main...HEAD`, extracts skill from `skills/{workflow}/{skill}/` path, bumps only changed skills. CI auto-commits with `[skip ci]`.
-
-**CI trigger**: fires only when `skills/**-workflow/**/SKILL.md` or references change.
+**CI trigger**: fires only when `skills/**-workflow/**/SKILL.md` or references change. Automatically creates GitHub releases with source code ZIP.
 
 ## Distribution
 
-New machines run one install script (see README). The install wires a `UserPromptSubmit` hook that runs `git pull + bash scripts/deploy-local.sh` at most once per 30 minutes via a timestamp file at `~/.syntactics-skills/.last-pull`.
+Users install skills with one command:
+```bash
+npx syntactics-skills@latest add pbdevrepo/syntactics-skills
+```
+
+This downloads the latest source code from GitHub releases and extracts skills to `~/.claude/skills/`.
 
 ## Adding a Skill
 
 1. Create `skills/{role}-workflow/{skill-name}/SKILL.md` with frontmatter `name`, `version: 1.0.0`, `description`
 2. Add at least one `##` section
-3. `bash scripts/validate.sh` — must pass before committing
-4. `bash scripts/deploy-local.sh` to test locally
-5. Merge to `main` — CI auto-bumps version and publishes individual `.skill` + workflow `.zip`
+3. Commit and push to `main` — CI automatically creates GitHub release with source code ZIP
+4. Users can install with: `npx syntactics-skills@latest add pbdevrepo/syntactics-skills`
 
 ## Adding a New Workflow Role
 
-Create a new `skills/{role}-workflow/` directory and add skills inside it. No config changes needed — scripts auto-discover all `*-workflow` directories.
+Create a new `skills/{role}-workflow/` directory and add skills inside it. No config changes needed — CI auto-discovers all `*-workflow` directories.
 
 ## Agent skills
 

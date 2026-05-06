@@ -2,7 +2,7 @@
 # Syntactics Skills - One-time install script (Windows)
 # Usage: powershell -ExecutionPolicy Bypass -File scripts\install.ps1
 
-$REPO_URL    = "https://github.com/syntactics-skills/skills.git"
+$REPO_URL    = "https://github.com/pbdevrepo/syntactics-skills.git"
 $INSTALL_DIR = "$HOME\.syntactics-skills"
 $CLAUDE_SETTINGS = "$HOME\.claude\settings.json"
 

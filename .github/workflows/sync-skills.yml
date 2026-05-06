@@ -22,32 +22,19 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Build skill ZIPs
-        run: |
-          mkdir -p dist
-          SKILLS_DIR="skills"
-          for workflow_dir in "$SKILLS_DIR"/*-workflow/; do
-            [ -d "$workflow_dir" ] || continue
-            for skill_dir in "$workflow_dir"*/; do
-              [ -d "$skill_dir" ] || continue
-              skill="$(basename "$skill_dir")"
-              (cd "$workflow_dir" && zip -r "../../dist/${skill}.skill" "$skill/" --quiet)
-              echo "  built: dist/${skill}.skill"
-            done
-          done
-
       - name: Get version tag
         id: tag
         run: |
           VERSION=$(date +%Y%m%d%H%M%S)
           echo "tag=release-$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Create GitHub Release with skill ZIPs
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.tag.outputs.tag }}
           name: Skills Release ${{ steps.tag.outputs.tag }}
           body: |
             Automated release from skill changes on main.
-          files: dist/*.skill
-          fail_on_unmatched_files: false
+
+            ## Changed skills
+            See commit diff for changed SKILL.md files.

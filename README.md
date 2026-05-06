@@ -46,7 +46,15 @@ D&D:    ui-designer → frontend-developer → backend-developer → qa-tester �
 
 Artifacts are written to `output/{project-name}/{workflow-phase}/{artifact}.md`.
 
-## Install (one-time per machine)
+## Install (one-command)
+
+```bash
+npx syntactics-skills@latest add pbdevrepo/syntactics-skills
+```
+
+This downloads the latest skills from GitHub releases and installs them to `~/.claude/skills/`. Restart Claude Code to load the skills.
+
+## Legacy Install (deprecated)
 
 **Windows:**
 ```powershell
@@ -58,40 +66,32 @@ powershell -ExecutionPolicy Bypass -File scripts\install.ps1
 bash scripts/install.sh
 ```
 
-What the install script does:
-1. Clones this repo to `~/.syntactics-skills/`
-2. Deploys skills to `~/.claude/skills/`
-3. Adds an auto-update hook to `~/.claude/settings.json`
-
-After install, skills auto-update every 30 minutes while Claude Code is open. No manual steps needed for future updates.
+These clone the repo locally and set up auto-updates. The npx command above is preferred for new installations.
 
 ## Development
 
-```bash
-npm run dev        # watch + auto-validate + deploy on file change
-npm run validate   # validate all skill frontmatter
-npm run deploy:local  # manual deploy to ~/.claude/skills/
-npm run build      # package skills as dist/*.skill ZIPs
-npm run bump       # bump semver for changed skills
-```
+Skills are developed directly in the `skills/` directory. Changes are automatically built and released via GitHub Actions when merged to `main`.
+
+To test locally during development:
+1. Edit skills in `skills/{workflow}/{skill}/SKILL.md`
+2. Push to `main` branch
+3. CI creates a GitHub release with source code
+4. Run `npx syntactics-skills@latest add pbdevrepo/syntactics-skills` to install the latest version
 
 ## Structure
 
 ```
 skills/
-  {skill-name}/
-    SKILL.md          # skill definition + frontmatter (name, version, description)
-    references/       # supporting templates, question banks, output formats
-scripts/
-  install.ps1         # Windows one-time install
-  install.sh          # Mac/Linux one-time install
-  deploy-local.js     # copy skills to ~/.claude/skills/
-  validate-skills.js  # frontmatter + semver validation
-  build-skills.js     # package skills as ZIPs
-  watch.js            # dev file watcher
-  bump-version.js     # auto-bump semver on git diff
+  {workflow}-workflow/
+    {skill-name}/
+      SKILL.md          # skill definition + frontmatter (name, version, description)
+      references/       # supporting templates, question banks, output formats
+bin/
+  cli.js               # CLI tool for installing skills from GitHub releases
+.github/workflows/
+  sync-skills.yml      # CI: builds .skill ZIPs and creates releases
 ```
 
 ## CI/CD
 
-On merge to `main`: validate → bump patch version → build ZIPs → create GitHub Release.
+On merge to `main`: create GitHub Release with source code ZIP.

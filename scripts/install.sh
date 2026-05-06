@@ -11,7 +11,7 @@ err()  { echo "    ✗ $1" >&2; exit 1; }
 step "Installing Syntactics Skills"
 command -v npx >/dev/null 2>&1 || err "Node.js/npm not found"
 
-npx syntactics-skills@latest add syntactics-skills/skills
+npx syntactics-skills@latest add pbdevrepo/syntactics-skills
 
 ok "Installation complete!"
 ok "Restart Claude to load the skills."
