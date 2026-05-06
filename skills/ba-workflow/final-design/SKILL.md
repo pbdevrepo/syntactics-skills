@@ -72,11 +72,16 @@ Once the client approves the FDD, any updates must follow this protocol — remi
 
 ## Handoff Chain
 
-Final step. No further handoff.
-
 | Step | Skill | Input Needed |
 |------|-------|--------------|
 | ← Upstream | `sprint-planner` | Intake doc + Schema doc |
+| → Downstream | `ui-designer` | All FDD module files |
+
+After all module FDD files are generated and approved:
+
+```
+Next: ui-designer — pass all {project-name}-fdd-{module}.md files to begin the Design & Dev phase.
+```
 
 ---
 
