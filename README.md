@@ -49,7 +49,7 @@ Artifacts are written to `output/{project-name}/{workflow-phase}/{artifact}.md`.
 ## Install (one-command)
 
 ```bash
-npx syntactics-skills@latest add syntactics-skills/skills
+npx syntactics-skills@latest add pbdevrepo/syntactics-skills
 ```
 
 This downloads the latest skills from GitHub releases and installs them to `~/.claude/skills/`. Restart Claude Code to load the skills.
@@ -75,8 +75,8 @@ Skills are developed directly in the `skills/` directory. Changes are automatica
 To test locally during development:
 1. Edit skills in `skills/{workflow}/{skill}/SKILL.md`
 2. Push to `main` branch
-3. CI builds `.skill` ZIPs and creates a GitHub release
-4. Run `npx syntactics-skills@latest add syntactics-skills/skills` to install the latest version
+3. CI creates a GitHub release with source code
+4. Run `npx syntactics-skills@latest add pbdevrepo/syntactics-skills` to install the latest version
 
 ## Structure
 
@@ -94,4 +94,4 @@ bin/
 
 ## CI/CD
 
-On merge to `main`: build `.skill` ZIPs → create GitHub Release with skill assets.
+On merge to `main`: create GitHub Release with source code ZIP.

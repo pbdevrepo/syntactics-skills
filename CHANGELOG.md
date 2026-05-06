@@ -9,8 +9,8 @@ All notable changes to syntactics-skills are documented here.
 - `design-dev-workflow`: `ui-designer`, `frontend-developer`, `backend-developer`, `qa-tester`, `bug-fixer` — full Design & Dev lifecycle from FDD to verified build
 - `CONTEXT.md` — canonical domain language, workflow relationships, and terminology across all three workflows
 - Artifact path convention: `output/{project-name}/{workflow-phase}/{artifact}.md`
-- CLI tool (`bin/cli.js`) for one-command installation: `npx syntactics-skills@latest add syntactics-skills/skills`
-- GitHub Actions workflow to build and release `.skill` ZIP files automatically
+- CLI tool (`bin/cli.js`) for one-command installation: `npx syntactics-skills@latest add pbdevrepo/syntactics-skills`
+- GitHub Actions workflow to build and release with source code ZIP
 - Simplified installation: no local scripts needed, just npx command downloads from GitHub releases
 
 ### Removed
@@ -21,7 +21,7 @@ All notable changes to syntactics-skills are documented here.
 ### Changed
 - `final-design` — updated Handoff Chain to point downstream to `ui-designer`
 - Installation simplified to single npx command that downloads and installs skills from GitHub releases
-- CI/CD now builds `.skill` ZIPs and creates releases automatically on skill changes
+- CI/CD now creates releases with default source code ZIP instead of building individual `.skill` ZIPs
 - Removed npm publishing - skills distributed via GitHub releases only
 
 ## [1.1.1] - 2026-04-24

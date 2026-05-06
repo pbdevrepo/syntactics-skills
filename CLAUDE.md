@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-npx syntactics-skills@latest add syntactics-skills/skills  # install skills from GitHub releases
+npx syntactics-skills@latest add pbdevrepo/syntactics-skills  # install skills from GitHub releases
 ```
 
 ## Architecture
@@ -15,7 +15,7 @@ Skills are markdown files deployed to `~/.claude/skills/` for Claude Code to loa
 **Data flow:**
 ```
 skills/{workflow}/{skill}/SKILL.md
-  → GitHub Actions    → dist/{skill}.skill         (individual skill ZIP)
+  → GitHub Actions    → source code ZIP         (entire repo)
   → GitHub Release    → npx add downloads          (installs to ~/.claude/skills/)
 ```
 
@@ -26,8 +26,6 @@ skills/
     {skill-name}/
       SKILL.md           # required: YAML frontmatter + ## sections
       references/*.md    # optional: templates, question banks, output formats
-dist/
-  {skill-name}.skill     # individual skill ZIP (built by CI)
 output/
   {project-name}/
     sales/               # artifacts from sales-workflow
@@ -42,23 +40,23 @@ CONTEXT.md               # canonical domain language for all workflows
 - `description` field drives Claude Code's skill trigger logic
 - At least one `##` section required in body
 
-**CI trigger**: fires only when `skills/**-workflow/**/SKILL.md` or references change. Automatically builds `.skill` ZIPs and creates GitHub releases.
+**CI trigger**: fires only when `skills/**-workflow/**/SKILL.md` or references change. Automatically creates GitHub releases with source code ZIP.
 
 ## Distribution
 
 Users install skills with one command:
 ```bash
-npx syntactics-skills@latest add syntactics-skills/skills
+npx syntactics-skills@latest add pbdevrepo/syntactics-skills
 ```
 
-This downloads the latest `.skill` files from GitHub releases and extracts them to `~/.claude/skills/`.
+This downloads the latest source code from GitHub releases and extracts skills to `~/.claude/skills/`.
 
 ## Adding a Skill
 
 1. Create `skills/{role}-workflow/{skill-name}/SKILL.md` with frontmatter `name`, `version: 1.0.0`, `description`
 2. Add at least one `##` section
-3. Commit and push to `main` — CI automatically builds `.skill` ZIP and creates release
-4. Users can install with: `npx syntactics-skills@latest add syntactics-skills/skills`
+3. Commit and push to `main` — CI automatically creates GitHub release with source code ZIP
+4. Users can install with: `npx syntactics-skills@latest add pbdevrepo/syntactics-skills`
 
 ## Adding a New Workflow Role
 
