@@ -34,7 +34,19 @@ try {
     New-Item -ItemType Directory -Force -Path $TmpDir | Out-Null
     Expand-Archive -Path $TmpZip -DestinationPath $TmpDir -Force
 
-    $manifest    = Get-Content (Join-Path $TmpDir "manifest.json") -Raw | ConvertFrom-Json
+    $manifestPath = Join-Path $TmpDir "manifest.json"
+    if (-not (Test-Path $manifestPath)) {
+        # Old release without manifest — install everything flat
+        Write-Host "No manifest found; installing all skills..."
+        New-Item -ItemType Directory -Force -Path $SkillDir | Out-Null
+        Get-ChildItem -Path $TmpDir -Directory | ForEach-Object {
+            Copy-Item -Path $_.FullName -Destination (Join-Path $SkillDir $_.Name) -Recurse -Force
+        }
+        Write-Host "`nDone. Restart Claude Code to load the skills."
+        return
+    }
+
+    $manifest    = Get-Content $manifestPath -Raw | ConvertFrom-Json
     $allWorkflows = $manifest.workflows | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name
 
     # must-have skills are always installed
