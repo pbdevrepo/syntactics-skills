@@ -22,8 +22,10 @@ jobs:
 
       - name: Create skills ZIP
         run: |
-          cd skills
-          zip -r ../syntactics-skills.zip .
+          mkdir -p /tmp/flat-skills
+          find skills -mindepth 2 -maxdepth 2 -type d -exec cp -r {} /tmp/flat-skills/ \;
+          cd /tmp/flat-skills
+          zip -r $GITHUB_WORKSPACE/syntactics-skills.zip .
 
       - name: Create GitHub Release
         env:
