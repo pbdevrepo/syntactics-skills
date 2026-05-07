@@ -4,8 +4,8 @@ on:
   push:
     branches: [main]
     paths:
-      - 'skills/**-workflow/**/SKILL.md'
-      - 'skills/**-workflow/**/references/**'
+      - 'skills/**'
+      - 'scripts/**'
 
 concurrency:
   group: sync-skills
