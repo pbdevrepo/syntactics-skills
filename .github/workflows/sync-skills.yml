@@ -13,28 +13,43 @@ concurrency:
 
 jobs:
   build-and-release:
-    name: Build skills and create release
+    name: Build skills and publish to WordPress
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Get version tag
-        id: tag
+      - name: Create skills ZIP
         run: |
-          VERSION=$(date +%Y%m%d%H%M%S)
-          echo "tag=release-$VERSION" >> $GITHUB_OUTPUT
+          cd skills
+          zip -r ../syntactics-skills.zip .
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ steps.tag.outputs.tag }}
-          name: Skills Release ${{ steps.tag.outputs.tag }}
-          body: |
-            Automated release from skill changes on main.
+      - name: Upload ZIP to WordPress
+        id: upload
+        run: |
+          TIMESTAMP=$(date +%Y%m%d%H%M%S)
+          RESPONSE=$(curl -s -X POST \
+            "${{ secrets.WP_URL }}/wp-json/wp/v2/media" \
+            -u "${{ secrets.WP_USERNAME }}:${{ secrets.WP_APP_PASSWORD }}" \
+            -H "Content-Disposition: attachment; filename=syntactics-skills-${TIMESTAMP}.zip" \
+            -H "Content-Type: application/zip" \
+            --data-binary @syntactics-skills.zip)
 
-            ## Changed skills
-            See commit diff for changed SKILL.md files.
+          ZIP_URL=$(echo "$RESPONSE" | jq -r '.source_url')
+
+          if [ "$ZIP_URL" = "null" ] || [ -z "$ZIP_URL" ]; then
+            echo "WordPress upload failed. Response:" >&2
+            echo "$RESPONSE" >&2
+            exit 1
+          fi
+
+          echo "zip_url=$ZIP_URL" >> $GITHUB_OUTPUT
+
+      - name: Update WordPress pointer page
+        run: |
+          curl -s -X POST \
+            "${{ secrets.WP_URL }}/wp-json/wp/v2/pages/${{ secrets.WP_POINTER_PAGE_ID }}" \
+            -u "${{ secrets.WP_USERNAME }}:${{ secrets.WP_APP_PASSWORD }}" \
+            -H "Content-Type: application/json" \
+            -d "$(jq -n \
+              --arg url "${{ steps.upload.outputs.zip_url }}" \
+              '{content: $url, status: "publish"}')"

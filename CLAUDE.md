@@ -4,8 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
+**Windows:**
+```powershell
+irm https://development.websiteprojectupdates.com/wiki/wp-content/uploads/install.ps1 | iex
+```
+
+**Mac/Linux:**
 ```bash
-npx syntactics-skills@latest add pbdevrepo/syntactics-skills  # install skills from GitHub releases
+curl -fsSL https://development.websiteprojectupdates.com/wiki/wp-content/uploads/install.sh | bash
 ```
 
 ## Architecture
@@ -15,8 +21,9 @@ Skills are markdown files deployed to `~/.claude/skills/` for Claude Code to loa
 **Data flow:**
 ```
 skills/{workflow}/{skill}/SKILL.md
-  → GitHub Actions    → source code ZIP         (entire repo)
-  → GitHub Release    → npx add downloads          (installs to ~/.claude/skills/)
+  → GitHub Actions    → skills ZIP uploaded to WordPress
+  → WordPress pointer page updated with ZIP URL
+  → install.ps1 / install.sh reads pointer → downloads ZIP → extracts to ~/.claude/skills/
 ```
 
 **Directory structure:**
@@ -40,23 +47,20 @@ CONTEXT.md               # canonical domain language for all workflows
 - `description` field drives Claude Code's skill trigger logic
 - At least one `##` section required in body
 
-**CI trigger**: fires only when `skills/**-workflow/**/SKILL.md` or references change. Automatically creates GitHub releases with source code ZIP.
+**CI trigger**: fires only when `skills/**-workflow/**/SKILL.md` or references change. Uploads ZIP to WordPress and updates the pointer page automatically.
 
 ## Distribution
 
-Users install skills with one command:
-```bash
-npx syntactics-skills@latest add pbdevrepo/syntactics-skills
-```
+Skills are distributed via WordPress. CI uploads the skills ZIP on every release and updates a pointer page with the URL. Install scripts read that page and extract skills to `~/.claude/skills/`.
 
-This downloads the latest source code from GitHub releases and extracts skills to `~/.claude/skills/`.
+See `README.md` for one-time distribution setup instructions.
 
 ## Adding a Skill
 
 1. Create `skills/{role}-workflow/{skill-name}/SKILL.md` with frontmatter `name`, `version: 1.0.0`, `description`
 2. Add at least one `##` section
-3. Commit and push to `main` — CI automatically creates GitHub release with source code ZIP
-4. Users can install with: `npx syntactics-skills@latest add pbdevrepo/syntactics-skills`
+3. Commit and push to `main` — CI uploads the new ZIP to WordPress and updates the pointer page
+4. Users run the install command again to get the latest skills
 
 ## Adding a New Workflow Role
 
