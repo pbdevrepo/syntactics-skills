@@ -129,11 +129,11 @@ _Avoid_: bug list, issue list, defect log
 ### Workflow Sequence
 
 ```
-Sales:      requirement-analyzer → proposal-grill → proposal-writer → quotation
-                                                                           ↓ (client approves)
-BA:         ba-project-intake → database-administrator → sprint-planner → final-design
-                                                                           ↓ (FDD approved)
-Design&Dev: ui-designer → frontend-developer → backend-developer → qa-tester ⇄ bug-fixer
+Sales:      sync-requirement-analyzer → sync-proposal-grill → sync-proposal-writer → sync-quotation
+                                                                                           ↓ (client approves)
+BA:         sync-ba-project-intake → sync-database-administrator → sync-sprint-planner → sync-final-design
+                                                                                           ↓ (FDD approved)
+Design&Dev: sync-ui-designer → sync-frontend-developer → sync-backend-developer → sync-qa-tester ⇄ sync-bug-fixer
 ```
 
 ---

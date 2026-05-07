@@ -7,41 +7,41 @@ Claude Code skills for Syntactics Inc. internal workflow automation.
 ### Sales (`sales-workflow`)
 | Skill | Description |
 |-------|-------------|
-| `requirement-analyzer` | Extract and structure client requirements from PDF or free-form text |
-| `proposal-grill` | Stress-test requirements for missed modules and ambiguous scope |
-| `proposal-writer` | Write a client-facing project proposal |
-| `quotation` | Generate itemized module/feature list with placeholder hour ranges per role |
+| `sync-requirement-analyzer` | Extract and structure client requirements from PDF or free-form text |
+| `sync-proposal-grill` | Stress-test requirements for missed modules and ambiguous scope |
+| `sync-proposal-writer` | Write a client-facing project proposal |
+| `sync-quotation` | Generate itemized module/feature list with placeholder hour ranges per role |
 
 ### Business Analysis (`ba-workflow`)
 | Skill | Description |
 |-------|-------------|
-| `ba-project-intake` | Entry point — gather and structure requirements from proposal |
-| `database-administrator` | ERD design, normalization, schema best practices |
-| `sprint-planner` | Convert approved DB schema into development task list |
-| `final-design` | Produce Final Design Documents (FDD) per module |
+| `sync-ba-project-intake` | Entry point — gather and structure requirements from proposal |
+| `sync-database-administrator` | ERD design, normalization, schema best practices |
+| `sync-sprint-planner` | Convert approved DB schema into development task list |
+| `sync-final-design` | Produce Final Design Documents (FDD) per module |
 
 ### Design & Development (`design-dev-workflow`)
 | Skill | Description |
 |-------|-------------|
-| `ui-designer` | Generate Figma design task list from FDD wireframe specs |
-| `frontend-developer` | Generate frontend implementation task list from FDD + design tasks |
-| `backend-developer` | Generate backend implementation task list from FDD + frontend tasks |
-| `qa-tester` | Generate test cases mapped to FDD validation rules and implemented tasks |
-| `bug-fixer` | Generate prioritized fix task list from failed QA test cases |
+| `sync-ui-designer` | Generate Figma design task list from FDD wireframe specs |
+| `sync-frontend-developer` | Generate frontend implementation task list from FDD + design tasks |
+| `sync-backend-developer` | Generate backend implementation task list from FDD + frontend tasks |
+| `sync-qa-tester` | Generate test cases mapped to FDD validation rules and implemented tasks |
+| `sync-bug-fixer` | Generate prioritized fix task list from failed QA test cases |
 
 ### Content (`content-workflow`)
 | Skill | Description |
 |-------|-------------|
-| `ai-content-writer` | Write and optimize web content for Google and AI agents |
+| `sync-ai-content-writer` | Write and optimize web content for Google and AI agents |
 
 ## Workflow Sequence
 
 ```
-Sales:  requirement-analyzer → proposal-grill → proposal-writer → quotation
-                                                                       ↓ (client approves)
-BA:     ba-project-intake → database-administrator → sprint-planner → final-design
-                                                                       ↓ (FDD approved)
-D&D:    ui-designer → frontend-developer → backend-developer → qa-tester ⇄ bug-fixer
+Sales:  sync-requirement-analyzer → sync-proposal-grill → sync-proposal-writer → sync-quotation
+                                                                                       ↓ (client approves)
+BA:     sync-ba-project-intake → sync-database-administrator → sync-sprint-planner → sync-final-design
+                                                                                       ↓ (FDD approved)
+D&D:    sync-ui-designer → sync-frontend-developer → sync-backend-developer → sync-qa-tester ⇄ sync-bug-fixer
 ```
 
 Artifacts are written to `output/{project-name}/{workflow-phase}/{artifact}.md`.
