@@ -32,6 +32,16 @@ unzip -q -o "$TMP_ZIP" -d "$TMP_DIR"
 
 MANIFEST="$TMP_DIR/manifest.json"
 
+# Old release without manifest — install everything flat
+if [[ ! -f "$MANIFEST" ]]; then
+    echo "No manifest found; installing all skills..."
+    mkdir -p "$SKILLS_DIR"
+    find "$TMP_DIR" -maxdepth 1 -mindepth 1 -type d -exec cp -r {} "$SKILLS_DIR/" \;
+    echo ""
+    echo "Done. Restart Claude Code to load the skills."
+    exit 0
+fi
+
 wf_skills() {
     local wf="${1/-workflow/}"
     python3 - <<EOF
