@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Replace POINTER_PAGE_ID with the WordPress page ID from setup step 1.
 # Do not upload this script to WordPress until you have done that.
-POINTER_URL="https://development.websiteprojectupdates.com/wiki/wp-json/wp/v2/pages/POINTER_PAGE_ID?_fields=content"
+POINTER_URL="https://development.websiteprojectupdates.com/wiki/wp-json/wp/v2/pages/5480?_fields=content"
 SKILLS_DIR="$HOME/.claude/skills"
 TMP_ZIP="/tmp/syntactics-skills-$$.zip"
 TMP_DIR="/tmp/syntactics-skills-$$"

@@ -3,7 +3,7 @@ $ErrorActionPreference = 'Stop'
 
 # Replace POINTER_PAGE_ID with the WordPress page ID from setup step 1.
 # Do not upload this script to WordPress until you have done that.
-$PointerUrl = "https://development.websiteprojectupdates.com/wiki/wp-json/wp/v2/pages/POINTER_PAGE_ID?_fields=content"
+$PointerUrl = "https://development.websiteprojectupdates.com/wiki/wp-json/wp/v2/pages/5480?_fields=content"
 $SkillsDir  = Join-Path $HOME ".claude\skills"
 $TmpZip     = Join-Path $env:TEMP "syntactics-skills-$PID.zip"
 
