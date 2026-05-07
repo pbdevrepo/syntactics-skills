@@ -24,6 +24,7 @@ jobs:
         run: |
           mkdir -p /tmp/flat-skills
           find skills -mindepth 2 -maxdepth 2 -type d -exec cp -r {} /tmp/flat-skills/ \;
+          python3 scripts/gen_manifest.py /tmp/flat-skills
           cd /tmp/flat-skills
           zip -r $GITHUB_WORKSPACE/syntactics-skills.zip .
 
