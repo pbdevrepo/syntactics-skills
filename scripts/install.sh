@@ -1,31 +1,35 @@
 #!/usr/bin/env bash
-# Optional: Install Syntactics Skills from GitHub releases
-# This is not required - users can run: npx syntactics-skills@latest add syntactics-skills/skills
+set -euo pipefail
 
-set -e
+# Replace POINTER_PAGE_ID with the WordPress page ID from setup step 1.
+# Do not upload this script to WordPress until you have done that.
+POINTER_URL="https://development.websiteprojectupdates.com/wiki/wp-json/wp/v2/pages/POINTER_PAGE_ID?_fields=content"
+SKILLS_DIR="$HOME/.claude/skills"
+TMP_ZIP="/tmp/syntactics-skills-$$.zip"
+TMP_DIR="/tmp/syntactics-skills-$$"
 
-step() { echo "==> $1"; }
-ok()   { echo "    ✓ $1"; }
-err()  { echo "    ✗ $1" >&2; exit 1; }
+echo "Fetching latest skills..."
+RESPONSE=$(curl -fsSL "$POINTER_URL" 2>/dev/null) || {
+    echo "Error: Could not reach pointer page. Check your connection or contact your admin." >&2
+    exit 1
+}
 
-step "Installing Syntactics Skills"
-command -v npx >/dev/null 2>&1 || err "Node.js/npm not found"
-
-npx syntactics-skills@latest add pbdevrepo/syntactics-skills
-
-ok "Installation complete!"
-ok "Restart Claude to load the skills."
-const cmd = $(printf '%s' "$HOOK_CMD" | node -e "process.stdout.write(JSON.stringify(require('fs').readFileSync('/dev/stdin','utf8')))");
-const s = JSON.parse(fs.readFileSync(p, 'utf8') || '{}');
-s.hooks = s.hooks || {};
-s.hooks.UserPromptSubmit = s.hooks.UserPromptSubmit || [];
-s.hooks.UserPromptSubmit.push({ hooks: [{ type: 'command', command: cmd }] });
-fs.writeFileSync(p, JSON.stringify(s, null, 2));
-console.log('    OK: Hook added');
-EOF
+ZIP_URL=$(echo "$RESPONSE" | grep -oE 'https?://[^"<[:space:]]+\.zip' | head -1)
+if [ -z "$ZIP_URL" ]; then
+    echo "Error: No ZIP URL found in pointer page. Contact your admin." >&2
+    exit 1
 fi
 
-echo ""
-echo "Install complete."
-echo "Skills auto-update every 30 min when Claude Code is open."
-echo "Restart Claude Code now to load the skills."
+echo "Downloading skills..."
+curl -fsSL "$ZIP_URL" -o "$TMP_ZIP"
+
+echo "Installing to $SKILLS_DIR..."
+mkdir -p "$SKILLS_DIR"
+mkdir -p "$TMP_DIR"
+unzip -q -o "$TMP_ZIP" -d "$TMP_DIR"
+cp -r "$TMP_DIR/." "$SKILLS_DIR/"
+
+rm -f "$TMP_ZIP"
+rm -rf "$TMP_DIR"
+
+echo "Done. Restart Claude Code to load the skills."
