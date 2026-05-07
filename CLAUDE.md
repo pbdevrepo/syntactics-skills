@@ -4,15 +4,44 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-**Windows:**
+**Install all skills (interactive menu on first run):**
+
+Windows:
 ```powershell
 irm https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.ps1 | iex
 ```
 
-**Mac/Linux:**
+Mac/Linux:
 ```bash
 curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash
 ```
+
+**Install specific workflows (no menu):**
+
+Windows — use the scriptblock form to pass parameters:
+```powershell
+$url = "https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.ps1"
+& ([scriptblock]::Create((irm $url))) -Workflow sales,ba
+```
+
+Mac/Linux:
+```bash
+curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash -s -- --workflow sales --workflow ba
+```
+
+**Install specific skills:**
+
+Windows:
+```powershell
+& ([scriptblock]::Create((irm $url))) -Skill sync-requirement-analyzer,sync-proposal-writer
+```
+
+Mac/Linux:
+```bash
+curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash -s -- --skill sync-requirement-analyzer --skill sync-proposal-writer
+```
+
+> `must-have-workflow` skills (`sync-caveman`, `sync-grill-me`, `sync-grill-with-docs`) are always installed regardless of selection.
 
 ## Architecture
 
@@ -51,7 +80,7 @@ CONTEXT.md               # canonical domain language for all workflows
 
 ## Distribution
 
-Skills are distributed via GitHub Releases. CI creates a new release on every skill change. Install scripts download the latest release ZIP and extract to `~/.claude/skills/`. No setup required — uses `GITHUB_TOKEN`.
+Skills are distributed via GitHub Releases. CI creates a new release on every skill change. The ZIP contains all flat `sync-*` skill dirs plus a `manifest.json` that maps workflow names to their skill lists. Install scripts download the ZIP, read the manifest, and copy only the selected skills to `~/.claude/skills/`. No setup required — uses `GITHUB_TOKEN`.
 
 ## Adding a Skill
 
