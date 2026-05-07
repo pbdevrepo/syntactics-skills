@@ -1,27 +1,12 @@
 #Requires -Version 5.1
 $ErrorActionPreference = 'Stop'
 
-# Replace POINTER_PAGE_ID with the WordPress page ID from setup step 1.
-# Do not upload this script to WordPress until you have done that.
-$PointerUrl = "https://development.websiteprojectupdates.com/wiki/wp-json/wp/v2/pages/5480?_fields=content"
-$SkillsDir  = Join-Path $HOME ".claude\skills"
-$TmpZip     = Join-Path $env:TEMP "syntactics-skills-$PID.zip"
+$Repo      = "pbdevrepo/syntactics-skills"
+$ZipUrl    = "https://github.com/$Repo/releases/latest/download/syntactics-skills.zip"
+$SkillsDir = Join-Path $HOME ".claude\skills"
+$TmpZip    = Join-Path $env:TEMP "syntactics-skills-$PID.zip"
 
-Write-Host "Fetching latest skills..."
-try {
-    $Page = Invoke-RestMethod $PointerUrl
-} catch {
-    Write-Error "Could not reach pointer page. Check your connection or contact your admin."
-    exit 1
-}
-
-$ZipUrl = [regex]::Match($Page.content.rendered, 'https?://\S+\.zip').Value
-if (-not $ZipUrl) {
-    Write-Error "No ZIP URL found in pointer page. Contact your admin."
-    exit 1
-}
-
-Write-Host "Downloading skills..."
+Write-Host "Downloading latest skills..."
 Invoke-WebRequest $ZipUrl -OutFile $TmpZip
 
 Write-Host "Installing to $SkillsDir..."

@@ -52,12 +52,12 @@ Copy and run the command for your OS. No prerequisites required.
 
 **Windows** — paste into PowerShell:
 ```powershell
-irm https://development.websiteprojectupdates.com/wiki/wp-content/uploads/install.ps1 | iex
+irm https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.ps1 | iex
 ```
 
-**Mac** — paste into Terminal:
+**Mac/Linux** — paste into Terminal:
 ```bash
-curl -fsSL https://development.websiteprojectupdates.com/wiki/wp-content/uploads/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash
 ```
 
 Restart Claude Code after the script completes.
@@ -66,12 +66,12 @@ To update skills, run the same command again.
 
 ## Development
 
-Skills are developed directly in the `skills/` directory. Push to `main` — CI uploads the latest skills ZIP to WordPress automatically.
+Skills are developed directly in the `skills/` directory. Push to `main` — CI creates a GitHub Release with the skills ZIP automatically.
 
 To test locally:
 1. Edit skills in `skills/{workflow}/{skill}/SKILL.md`
 2. Push to `main`
-3. CI uploads the new ZIP and updates the pointer page
+3. CI creates a new GitHub Release with the updated ZIP
 4. Run the install command above to get the latest version
 
 ## Structure
@@ -83,66 +83,12 @@ skills/
       SKILL.md          # skill definition + frontmatter (name, version, description)
       references/       # supporting templates, question banks, output formats
 scripts/
-  install.ps1           # Windows install script (hosted on WordPress)
-  install.sh            # Mac/Linux install script (hosted on WordPress)
+  install.ps1           # Windows install script
+  install.sh            # Mac/Linux install script
 .github/workflows/
-  sync-skills.yml       # CI: creates ZIP, uploads to WordPress, updates pointer page
-docs/adr/
-  0001-wordpress-distribution.md
+  sync-skills.yml       # CI: creates ZIP, publishes GitHub Release
 ```
 
 ## CI/CD
 
-On push to `main` when skill files change: creates a skills ZIP, uploads it to WordPress, and updates the pointer page with the new URL. No manual step required after initial setup.
-
-## Distribution Setup (one-time, admin only)
-
-Complete these steps in order. **Do not proceed to the next step until the current one is done.**
-
-### Step 1 — Create the WordPress pointer page
-
-1. Log in to `https://development.websiteprojectupdates.com/wiki/wp-admin`
-2. Go to **Pages → Add New**
-3. Title: `Skills Latest` (or any title — users never see it)
-4. Leave the content blank for now
-5. Publish the page
-6. Note the page ID from the URL: `post.php?post=**{ID}**&action=edit`
-
-### Step 2 — Update the install scripts with the page ID
-
-In this repo, open `scripts/install.ps1` and `scripts/install.sh`. Replace `POINTER_PAGE_ID` in the `$PointerUrl` / `POINTER_URL` line with the ID from Step 1.
-
-Commit and push to `main`.
-
-### Step 3 — Upload install scripts to WordPress
-
-1. Go to **Media → Add New** in WordPress admin
-2. Upload `scripts/install.ps1` — note the file URL
-3. Upload `scripts/install.sh` — note the file URL
-4. Verify the URLs match exactly:
-   - `…/wp-content/uploads/install.ps1`
-   - `…/wp-content/uploads/install.sh`
-
-   If WordPress renames the files (e.g., `install-1.ps1`), delete and re-upload until the names are clean.
-
-### Step 4 — Create a WordPress application password
-
-1. Go to **Users → Profile** in WordPress admin
-2. Scroll to **Application Passwords**
-3. Name it `GitHub Actions` and click **Add New Application Password**
-4. Copy the generated password immediately — it won't be shown again
-
-### Step 5 — Add GitHub Actions secrets
-
-In the GitHub repo, go to **Settings → Secrets and variables → Actions → New repository secret**. Add these four secrets:
-
-| Secret | Value |
-|---|---|
-| `WP_URL` | `https://development.websiteprojectupdates.com/wiki` |
-| `WP_USERNAME` | Your WordPress username |
-| `WP_APP_PASSWORD` | The application password from Step 4 |
-| `WP_POINTER_PAGE_ID` | The page ID from Step 1 |
-
-### Step 6 — Trigger the first release
-
-Push any change to a `SKILL.md` file (or re-push the commit from Step 2) to `main`. CI will upload the first ZIP and update the pointer page. From this point on, every skill change triggers an automatic release.
+On push to `main` when skill files change: creates a skills ZIP and publishes a GitHub Release tagged with the timestamp. The release asset `syntactics-skills.zip` is downloaded by the install scripts. No setup required — uses the built-in `GITHUB_TOKEN`.

@@ -6,12 +6,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Windows:**
 ```powershell
-irm https://development.websiteprojectupdates.com/wiki/wp-content/uploads/install.ps1 | iex
+irm https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.ps1 | iex
 ```
 
 **Mac/Linux:**
 ```bash
-curl -fsSL https://development.websiteprojectupdates.com/wiki/wp-content/uploads/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash
 ```
 
 ## Architecture
@@ -21,9 +21,8 @@ Skills are markdown files deployed to `~/.claude/skills/` for Claude Code to loa
 **Data flow:**
 ```
 skills/{workflow}/{skill}/SKILL.md
-  → GitHub Actions    → skills ZIP uploaded to WordPress
-  → WordPress pointer page updated with ZIP URL
-  → install.ps1 / install.sh reads pointer → downloads ZIP → extracts to ~/.claude/skills/
+  → GitHub Actions    → skills ZIP published as GitHub Release asset
+  → install.ps1 / install.sh downloads latest release ZIP → extracts to ~/.claude/skills/
 ```
 
 **Directory structure:**
@@ -47,19 +46,17 @@ CONTEXT.md               # canonical domain language for all workflows
 - `description` field drives Claude Code's skill trigger logic
 - At least one `##` section required in body
 
-**CI trigger**: fires only when `skills/**-workflow/**/SKILL.md` or references change. Uploads ZIP to WordPress and updates the pointer page automatically.
+**CI trigger**: fires only when `skills/**-workflow/**/SKILL.md` or references change. Creates a GitHub Release with `syntactics-skills.zip` as the asset.
 
 ## Distribution
 
-Skills are distributed via WordPress. CI uploads the skills ZIP on every release and updates a pointer page with the URL. Install scripts read that page and extract skills to `~/.claude/skills/`.
-
-See `README.md` for one-time distribution setup instructions.
+Skills are distributed via GitHub Releases. CI creates a new release on every skill change. Install scripts download the latest release ZIP and extract to `~/.claude/skills/`. No setup required — uses `GITHUB_TOKEN`.
 
 ## Adding a Skill
 
 1. Create `skills/{role}-workflow/{skill-name}/SKILL.md` with frontmatter `name`, `version: 1.0.0`, `description`
 2. Add at least one `##` section
-3. Commit and push to `main` — CI uploads the new ZIP to WordPress and updates the pointer page
+3. Commit and push to `main` — CI creates a new GitHub Release automatically
 4. Users run the install command again to get the latest skills
 
 ## Adding a New Workflow Role

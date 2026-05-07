@@ -13,8 +13,10 @@ concurrency:
 
 jobs:
   build-and-release:
-    name: Build skills and publish to WordPress
+    name: Build skills and publish release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -23,33 +25,12 @@ jobs:
           cd skills
           zip -r ../syntactics-skills.zip .
 
-      - name: Upload ZIP to WordPress
-        id: upload
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TIMESTAMP=$(date +%Y%m%d%H%M%S)
-          RESPONSE=$(curl -s -X POST \
-            "${{ secrets.WP_URL }}/wp-json/wp/v2/media" \
-            -u "${{ secrets.WP_USERNAME }}:${{ secrets.WP_APP_PASSWORD }}" \
-            -H "Content-Disposition: attachment; filename=syntactics-skills-${TIMESTAMP}.zip" \
-            -H "Content-Type: application/zip" \
-            --data-binary @syntactics-skills.zip)
-
-          ZIP_URL=$(echo "$RESPONSE" | jq -r '.source_url')
-
-          if [ "$ZIP_URL" = "null" ] || [ -z "$ZIP_URL" ]; then
-            echo "WordPress upload failed. Response:" >&2
-            echo "$RESPONSE" >&2
-            exit 1
-          fi
-
-          echo "zip_url=$ZIP_URL" >> $GITHUB_OUTPUT
-
-      - name: Update WordPress pointer page
-        run: |
-          curl -s -X POST \
-            "${{ secrets.WP_URL }}/wp-json/wp/v2/pages/${{ secrets.WP_POINTER_PAGE_ID }}" \
-            -u "${{ secrets.WP_USERNAME }}:${{ secrets.WP_APP_PASSWORD }}" \
-            -H "Content-Type: application/json" \
-            -d "$(jq -n \
-              --arg url "${{ steps.upload.outputs.zip_url }}" \
-              '{content: $url, status: "publish"}')"
+          TAG="skills-$(date +%Y%m%d%H%M%S)"
+          gh release create "$TAG" syntactics-skills.zip \
+            --title "Skills $TAG" \
+            --notes "Auto-release from CI" \
+            --latest
