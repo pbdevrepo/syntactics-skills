@@ -29,6 +29,16 @@ Claude Code skills for Syntactics Inc. internal workflow automation.
 | `sync-qa-tester` | Generate test cases mapped to FDD validation rules and implemented tasks |
 | `sync-bug-fixer` | Generate prioritized fix task list from failed QA test cases |
 
+### Must-Have (`must-have-workflow`)
+
+Always installed regardless of workflow selection.
+
+| Skill | Description |
+|-------|-------------|
+| `sync-caveman` | Ultra-compressed communication mode — cuts token usage ~75% |
+| `sync-grill-me` | Interview the user relentlessly about a plan or design until reaching shared understanding |
+| `sync-grill-with-docs` | Grilling session that challenges a plan against the existing domain model and updates docs inline |
+
 ### Content (`content-workflow`)
 | Skill | Description |
 |-------|-------------|
