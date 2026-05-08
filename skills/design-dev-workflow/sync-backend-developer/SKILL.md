@@ -35,16 +35,14 @@ Read `references/task-output-format.md` for the exact task block structure befor
 
 ### Step 1 — Read All Inputs
 
-From the FDD per module, extract:
-- All entities and their fields (maps to DB tables and migrations)
-- All business rules, validations, and constraints
-- All user roles and access permissions (RBAC rules)
-- All integrations and third-party dependencies
-- All workflow steps (approvals, status changes, triggers)
+From the FDD per module, extract only what is needed for implementation tasks:
+- Entity names and their field list (name, type, nullable/required) — no prose
+- RBAC rules: which role can perform which action per module
+- Workflow/status transitions (e.g., draft → pending → approved) — as a list, not narrative
+- Integration names and trigger events (not full integration docs)
 
 From the frontend task list, extract:
-- All API endpoints flagged as TBD — these must be resolved and named
-- All payload and response requirements per endpoint
+- Every endpoint marked TBD — task ID, associated resource, and HTTP method — to resolve and name them
 
 ### Step 2 — Derive Backend Tasks
 
@@ -90,7 +88,7 @@ Priority 6 — Notifications & Background Jobs
 
 Write file: `projects/{project-name}/design-dev/{project-name}-backend-tasks.md`
 
-Follow `references/task-output-format.md` for exact structure.
+Follow `references/task-output-format.md` for exact structure. Use the **compact table format** by default. Use the detailed block only for endpoints with complex business rules, multi-step side effects, or 5+ request fields that a table row cannot express.
 
 State the file path, then say:
 
