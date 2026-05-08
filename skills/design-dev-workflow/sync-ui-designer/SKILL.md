@@ -35,12 +35,13 @@ Read `references/task-output-format.md` for the exact task block structure befor
 
 ### Step 1 — Read All FDD Modules
 
-For each module FDD:
-- Extract the wireframe specs and screen descriptions
-- Extract all user-facing views (list, detail, form, dashboard, modal, etc.)
-- Extract all user roles that interact with each screen
-- Extract validation rules and field definitions — these inform form design
-- Extract any stated design notes or UI constraints
+For each module FDD, extract only what is needed to generate design tasks:
+- Screen/view names and their types (list, form, detail, modal, dashboard, auth)
+- User roles per screen
+- Field names and required/optional status — field names only, not validation prose
+- Explicit design constraints or UI notes stated in the FDD
+
+Do not carry full behavior or validation narrative into context — that detail lives in the FDD and is not needed for design tasks.
 
 ### Step 2 — Derive Design Tasks
 
@@ -76,7 +77,7 @@ task per role variant.
 
 Write file: `projects/{project-name}/design-dev/{project-name}-design-tasks.md`
 
-Follow `references/task-output-format.md` for exact structure.
+Follow `references/task-output-format.md` for exact structure. Use the **compact table format** by default. Use the detailed block only for screens with complex design constraints (multi-step flows, conditional layouts, role-specific layout variants) that a table row cannot express.
 
 State the file path, then say:
 

@@ -4,6 +4,10 @@ File: `projects/{project-name}/design-dev/{project-name}-design-tasks.md`
 
 ---
 
+## Default Format — Compact Table
+
+Use this for all tasks. One row per screen or component.
+
 ```markdown
 # {Project Name} — Design Task List
 
@@ -17,20 +21,44 @@ File: `projects/{project-name}/design-dev/{project-name}-design-tasks.md`
 
 ## Summary
 
-| Module | Design Tasks | Status |
-|--------|-------------|--------|
+| Module | Tasks | Status |
+|--------|-------|--------|
 | {Module Name} | {count} | Pending |
 
-Total Design Tasks: {N}
+**Total Design Tasks: {N}**
 
 ---
 
-## Module: {Module Name}
+## Task List
 
-### DESIGN-{N} — {Screen Name}
+| ID | Module | Screen | Type | Roles | Key Fields | States | Notes |
+|----|--------|--------|------|-------|------------|--------|-------|
+| DESIGN-1 | {Module} | {Screen Name} | {Type} | {Roles} | {field1, field2, ...} | {D,E,V,L} | {constraint or "—"} |
+| DESIGN-2 | ... | ... | ... | ... | ... | ... | ... |
+
+**Type values:** List · Form · Detail · Dashboard · Modal · Auth
+**States codes:** `D` = Default/loaded · `E` = Empty state · `V` = Validation/error · `L` = Loading/async
+
+---
+
+## Unresolved Items
+
+| ID | Item | Reason |
+|----|------|--------|
+| UI-1 | {screen or element} | {needs FDD update or BA clarification} |
+```
+
+---
+
+## Fallback Format — Detailed Block (complex screens only)
+
+Use a detailed block **only** when a screen has non-obvious design constraints that cannot be expressed in a table row — e.g., multi-step wizards, conditional field logic, or role-specific layout differences. Replace the relevant table row with this block below the table.
+
+```markdown
+### DESIGN-{N} — {Screen Name}  *(complex screen — see detail below)*
 
 **Module:** {Module Name}
-**Screen Type:** List / Form / Detail / Dashboard / Modal / Auth
+**Screen Type:** {Type}
 **User Roles:** {which roles see this screen}
 **Figma Page:** {suggested Figma page name}
 
@@ -44,19 +72,6 @@ Total Design Tasks: {N}
 - [ ] Validation / error state (if form)
 - [ ] Loading state (if async data)
 
-**FDD Reference:** Section {X.X} — {module name} wireframe spec
-
-**Notes:** {any specific design constraint from the FDD, or "None"}
-
----
-
-{repeat DESIGN-{N} block for each task}
-
----
-
-## Unresolved Items
-
-| ID | Item | Reason |
-|----|------|--------|
-| UI-1 | {screen or element with unclear spec} | {why it's unclear — needs FDD update or BA clarification} |
+**FDD Reference:** {module name} — wireframe spec
+**Design Constraint:** {specific constraint from FDD that warranted the detail block}
 ```
