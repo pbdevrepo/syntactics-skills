@@ -48,12 +48,6 @@ Use the `Write` tool to write the `.md` file. Ask the user for the output path i
 
 Follow the markdown structure defined in `references/template-structure.md` exactly. Do not invent sections or reorder fields.
 
-**Document Structure (in order):**
-1. Cover block — company name, system name, phase (if applicable), "Final Design"
-2. Table of Contents — linked headings
-3. General Instructions section — Figma link + numbered project-specific rules
-4. One spec table block per module (repeat as needed)
-
 ### Step 4 — Deliver
 
 Report the output file path to the user.
@@ -77,15 +71,4 @@ Once the client approves the FDD, any updates must follow this protocol — remi
 | ← Upstream | `sprint-planner` | Intake doc + Schema doc |
 | → Downstream | `ui-designer` | All FDD module files |
 
-After all module FDD files are generated and approved:
-
-```
-Next: ui-designer — pass all {project-name}-fdd-{module}.md files to begin the Design & Dev phase.
-```
-
----
-
-## Reference Files
-
-- `references/template-structure.md` — Full spec table row definitions and column layout rules
-- `references/database-standards.md` — DB naming conventions and table formatting for "Tables To Use" rows
+After all module FDD files are generated and approved, pass them to `ui-designer` to begin the Design & Dev phase.

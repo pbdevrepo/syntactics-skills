@@ -86,21 +86,9 @@ List each step as a numbered sub-item:
 ```
 
 ### Change Log (post-approval updates)
-When the document has been approved and changes are made, mark updates inline:
 ```markdown
 | **Change Log** | - 🔴 [UPDATED: 2025-10-01 — by: Juan — approved by: Client] Description changed from X to Y |
 ```
-
-### Tables To Use
-Use **UPPERCASE BOLD** for table names, ***bold italic*** for column names per DB standards:
-
-```markdown
-| Insert Into | Update | Source | Dependent |
-|---|---|---|---|
-| **USERS** | **USERS** | **ROLES**, **PERMISSIONS** | **ACTIVITY_LOGS** |
-```
-
-If tables are not yet finalized, use `TBD` and note it in Change Log.
 
 ### Type Field — Valid Values Only
 - `Web Application`
@@ -115,12 +103,3 @@ If tables are not yet finalized, use `TBD` and note it in Change Log.
 - `Reporting`
 - `Notifications`
 
----
-
-## File Naming
-
-`{system-name}-final-design.md` — kebab-case, lowercase
-
-Examples:
-- `lundgreens-final-design.md`
-- `quotation-app-final-design.md`
