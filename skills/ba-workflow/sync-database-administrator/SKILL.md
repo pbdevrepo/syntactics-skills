@@ -1,15 +1,15 @@
 ---
 name: sync-database-administrator
-version: 1.1.0
+version: 1.2.0
 description: >
   Expert-level relational database design assistant. Deep knowledge in schema design,
   normalization (1NF–3NF), transactions, and production schema best practices.
-  Produces downloadable .md schema files and .sql DDL files after user confirmation.
+  Produces a downloadable .md schema file directly after design is complete.
   Trigger for: database design, schema design, table normalization, foreign keys,
   join tables, trigger tables, stored procedures,
   transaction design, data integrity, or reviewing a relational database.
   Also trigger for: "design a database for X", "what tables do I need for Y",
-  "normalize this schema", "generate a schema file", "give me the DDL",
+  "normalize this schema", "generate a schema file",
   "add a column", "what index should I use", "is this schema normalized",
   "model this relationship", "what's wrong with this table", "review my schema",
   or any time a user pastes DDL or a table definition and asks for feedback.
@@ -99,63 +99,11 @@ Then follow with a `BEGIN; ... COMMIT;` SQL block. Identify: the happy path, one
 
 Read `references/triggers.md` for when to use trigger tables vs. application logic.
 
-### Step 7 — Deliver the Schema
-
-Present each table using the column table format defined in `references/schema-output-format.md`. Use that format for both in-chat presentation and the generated file.
-
-Use SQL **only** for: index definitions, trigger function bodies, transaction simulations, query examples, and custom types.
-
-> ⚠️ **Do NOT generate any file at this step.** Present the schema in-chat for review first.
-
-### Step 8 — Design Summary + Confirmation Prompt
-
-After the last table, close with a summary block:
-
-```
-## Design Summary
-
-| | |
-|---|---|
-| Tables designed | 7 (3 core entities, 2 lookup, 1 junction, 1 audit) |
-| Dialect | PostgreSQL 15+ |
-| PK strategy | BIGSERIAL for internal tables; UUID for user-facing resources |
-| Normalization | 3NF throughout; order_item.unit_price_snapshot intentionally denormalized |
-| Soft deletes | Applied to: order, customer |
-| Audit logging | order_history via trigger on status change |
-
-**Key design decisions:**
-- [Decision and why]
-```
-
-Then use `ask_user_input_v0` with exactly these options:
-
-```
-Question: "Does this schema look good to you? I can generate a downloadable .md file once you confirm."
-Options (single_select):
-  - "Looks good — generate the .md file"
-  - "I want to make changes first"
-  - "No file needed — just the design"
-```
-
-Only after the user confirms they want a file, present the add-ons question:
-
-```
-Question: "Would you like any of these added to the file?"
-Options (multi_select):
-  - "Laravel migration files"
-  - "Seed data / factory stubs"
-  - "Transaction simulation SQL blocks"
-```
-
-**Do not proceed to Step 9 until the user selects "Looks good — generate the .md file" or equivalent.**
-If they select "I want to make changes first", collect feedback and re-present before asking again.
-If they select "No file needed — just the design", skip Step 9 entirely.
-
-### Step 9 — Generate & Deliver the Schema File
-
-Only execute after explicit confirmation from Step 8.
+### Step 7 — Generate & Deliver the Schema File
 
 Read `references/schema-output-format.md` before writing the file — it defines the canonical document structure, section order, and tone rules.
+
+Use SQL **only** for: index definitions, trigger function bodies, transaction simulations, query examples, and custom types. No DDL walls.
 
 **File naming:** `{project-name}-database-schema.md` (kebab-case, lowercase)
 **Save to:** `/mnt/user-data/outputs/{filename}.md`
@@ -202,18 +150,8 @@ Do **not** rewrite the schema unprompted.
 #### Step R4 — Deliver Fixes
 For each fix: show the **before** column table, explain the violation in one sentence, then show the **after** column table.
 
-#### Step R5 — Confirm Before Generating File
-Use `ask_user_input_v0`:
-
-```
-Question: "The revised schema is ready. Shall I generate a downloadable .md file?"
-Options (single_select):
-  - "Yes — generate the .md file"
-  - "Still have changes to make"
-  - "No file needed"
-```
-
-Then follow Step 9 to generate and deliver the file.
+#### Step R5 — Generate & Deliver the Revised Schema File
+Follow Step 7 to generate and deliver the file.
 
 ---
 
