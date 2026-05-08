@@ -180,6 +180,6 @@ Document every non-obvious choice:
 
 - Table names: always backtick-formatted
 - Descriptions: one sentence, active voice, plain English
-- No DDL walls — column tables only unless DDL explicitly requested
+- No DDL — column tables only; SQL appears only in index and trigger blocks
 - Every design decision documented in the Design Decisions section
 - Deliberate denormalizations always noted with a reason

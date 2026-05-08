@@ -1,6 +1,6 @@
 ---
 name: sync-database-administrator
-version: 1.0.3
+version: 1.1.0
 description: >
   Expert-level relational database design assistant. Deep knowledge in schema design,
   normalization (1NF–3NF), transactions, and production schema best practices.
@@ -105,8 +105,6 @@ Present each table using the column table format defined in `references/schema-o
 
 Use SQL **only** for: index definitions, trigger function bodies, transaction simulations, query examples, and custom types.
 
-Only generate full `CREATE TABLE` DDL if the user explicitly asks.
-
 > ⚠️ **Do NOT generate any file at this step.** Present the schema in-chat for review first.
 
 ### Step 8 — Design Summary + Confirmation Prompt
@@ -136,7 +134,6 @@ Question: "Does this schema look good to you? I can generate a downloadable .md 
 Options (single_select):
   - "Looks good — generate the .md file"
   - "I want to make changes first"
-  - "Generate DDL instead (CREATE TABLE SQL)"
   - "No file needed — just the design"
 ```
 
@@ -145,7 +142,6 @@ Only after the user confirms they want a file, present the add-ons question:
 ```
 Question: "Would you like any of these added to the file?"
 Options (multi_select):
-  - "Full DDL (CREATE TABLE + indexes)"
   - "Laravel migration files"
   - "Seed data / factory stubs"
   - "Transaction simulation SQL blocks"
@@ -165,8 +161,6 @@ Read `references/schema-output-format.md` before writing the file — it defines
 **Save to:** `/mnt/user-data/outputs/{filename}.md`
 
 After writing, call `present_files` with the output path. Do NOT just tell the user the file path.
-
-**If the user selected "Generate DDL instead":** Generate a `.sql` file named `{project_name}_schema.sql` with full `CREATE TABLE`, `CREATE INDEX`, and inline comments. Save to `/mnt/user-data/outputs/` and call `present_files`.
 
 ---
 
