@@ -13,7 +13,8 @@ Produces Final Design Documents (FDD) following the **Business Applications Fina
 
 1. Read `references/template-structure.md` for the exact table row layout and field rules.
 2. Read `references/database-standards.md` for naming conventions and DB table formatting rules.
-3. Ask the user for any missing inputs before generating — never assume module data.
+3. Read `references/behavior-validation-guide.md` for how to fill System Behavior, System Validations, Access Validations, and Activity Logs.
+4. Ask the user for any missing inputs before generating — never assume module data.
 
 ---
 
@@ -35,8 +36,20 @@ If `PHASE` is not applicable, remove it from the title — do not leave the plac
 
 ### Step 2 — Gather Module-Level Inputs
 
-For each module, collect all fields listed in `references/template-structure.md`. If a field is unknown at time of writing:
-- Use `- Pending` as the value for behavioral/validation fields
+For each module, collect all fields listed in `references/template-structure.md`.
+
+**For System Behavior, System Validations, Access Validations, and Activity Logs**, work through the checklists in `references/behavior-validation-guide.md`. Ask the user targeted questions to fill these fields as completely as possible — ask per module, using the appropriate pattern (Auth, CRUD, Dashboard, Settings, Approval) as a starting framework. Use `- Pending` only for items that remain genuinely unknown after asking.
+
+Cover these user cases at minimum for every module:
+- Page/screen load behavior and empty state
+- Happy path for each primary action (create, read, update, delete, submit, approve)
+- Error and failure states (validation failures, server errors)
+- Conditional UI (role-based visibility, status-based show/hide, create vs. edit mode differences)
+- Navigation and redirects after each operation
+- Per-role access rules (who can view, create, edit, delete) and what happens on unauthorized access
+- Every loggable event and the data captured
+
+For all other fields if unknown at time of writing:
 - Leave `Wireframe Design` row with a `[wireframe image here]` placeholder
 - Use `[date-requestedby]` for Change Log placeholder
 
