@@ -35,16 +35,15 @@ Read `references/task-output-format.md` for the exact task block structure befor
 
 ### Step 1 — Read All Inputs
 
-From the FDD per module, extract:
-- All screens and views (maps to design tasks)
-- All form fields, types, and validation rules
-- All API data requirements per screen (what data is fetched/submitted)
-- All user role access rules (what each role sees or cannot see)
-- Client-side business rules and conditional logic
+From the FDD per module, extract only what is needed for implementation tasks:
+- Screen/view names and their types (list, form, detail, modal, dashboard, auth)
+- Field names, types, and validation rule per field — rule only, not full prose
+- API method + endpoint per screen (or note TBD if not yet scoped)
+- Which roles access each screen and what action they can take
+- Any explicit conditional logic flags (note that it exists; do not copy full behavior prose)
 
 From the design task list, extract:
-- The Figma reference per screen
-- States to implement per screen (empty, error, loading)
+- DESIGN-{N} ID and screen name per screen — for Figma Ref column only
 
 ### Step 2 — Derive Frontend Tasks
 
@@ -86,7 +85,7 @@ Every task must be tagged:
 
 Write file: `projects/{project-name}/design-dev/{project-name}-frontend-tasks.md`
 
-Follow `references/task-output-format.md` for exact structure.
+Follow `references/task-output-format.md` for exact structure. Use the **compact table format** by default. Use the detailed block only for tasks with complex conditional logic, 5+ API calls, or role-specific UI branching that a table row cannot express.
 
 State the file path, then say:
 

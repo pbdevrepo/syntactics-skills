@@ -4,6 +4,10 @@ File: `projects/{project-name}/design-dev/{project-name}-frontend-tasks.md`
 
 ---
 
+## Default Format — Compact Table
+
+Use this for all tasks. One row per implementable unit.
+
 ```markdown
 # {Project Name} — Frontend Task List
 
@@ -17,57 +21,25 @@ File: `projects/{project-name}/design-dev/{project-name}-frontend-tasks.md`
 
 ## Summary
 
-| Module | Frontend Tasks | Status |
-|--------|---------------|--------|
+| Module | Tasks | Status |
+|--------|-------|--------|
+| Global | {count} | Pending |
 | {Module Name} | {count} | Pending |
 
-Total Frontend Tasks: {N}
+**Total Frontend Tasks: {N}**
 
 ---
 
-## Global / Project-Level Tasks
+## Task List
 
-### FE-0001 — Project Scaffolding & Global Layout
+| ID | Module | Task | Type | Figma Ref | API | States | Depends On | Notes |
+|----|--------|------|------|-----------|-----|--------|------------|-------|
+| FE-0001 | Global | Project scaffolding & global layout | Component | {Figma page} | — | D | — | Do first |
+| FE-{N} | {Module} | {Task name} | {Type} | DESIGN-{N} | {METHOD /path or TBD} | {D,L,E,V} | {FE-N or —} | {constraint or —} |
 
-**Role:** [FE]
-**Module:** Global
-**Description:** Set up project structure, routing, navigation, sidebar, header, footer, and auth guards.
-**Depends on:** None
-**Figma Ref:** {Figma page for global layout}
-**Notes:** Complete before any module tasks begin.
-
----
-
-## Module: {Module Name}
-
-### FE-{NNNN} — {Task Name}
-
-**Role:** [FE]
-**Module:** {Module Name}
-**Screen Type:** List / Form / Detail / Dashboard / Modal / Component
-**Figma Ref:** DESIGN-{N} — {screen name}
-**Description:** {specific implementation description — what to build, not how}
-
-**Fields / Validation (if form):**
-- {field name}: {type} — {validation rule from FDD}
-
-**API Integration:**
-- Method: {GET / POST / PUT / DELETE}
-- Endpoint: {endpoint path or "TBD — pending backend task BE-{N}"}
-- Payload: {brief description or "N/A"}
-
-**States to Implement:**
-- [ ] Default / loaded
-- [ ] Loading (skeleton or spinner)
-- [ ] Empty state
-- [ ] Error / validation state
-
-**Depends on:** {task ID(s) that must be done first, or "None"}
-**Blocks:** {task ID(s) that cannot start until this is done, or "None"}
-
----
-
-{repeat FE-{NNNN} block for each task}
+**Type values:** List · Form · Detail · Dashboard · Modal · Auth · Component
+**States codes:** `D` = Default/loaded · `L` = Loading · `E` = Empty state · `V` = Validation/error
+**API column:** write `GET /path`, `POST /path`, etc., or `TBD` if endpoint not yet scoped
 
 ---
 
@@ -75,5 +47,37 @@ Total Frontend Tasks: {N}
 
 | ID | Item | Reason |
 |----|------|--------|
-| FE-U1 | {task or screen with unclear spec} | {why — needs FDD clarification or design update} |
+| FE-U1 | {task or screen} | {needs FDD clarification or design update} |
+```
+
+---
+
+## Fallback Format — Detailed Block (complex tasks only)
+
+Use a detailed block **only** when a task has non-obvious implementation requirements that cannot fit a table row — e.g., multi-step forms with conditional field logic, complex role-based UI branching, or tasks with 5+ API calls. Replace the relevant table row with this block below the table.
+
+```markdown
+### FE-{NNNN} — {Task Name}  *(complex — see detail below)*
+
+**Role:** [FE]
+**Module:** {Module Name}
+**Screen Type:** {Type}
+**Figma Ref:** DESIGN-{N} — {screen name}
+**Description:** {specific implementation description — what to build, not how}
+
+**Fields / Validation (if form):**
+- {field name}: {type} — {validation rule}
+
+**API Integration:**
+- {METHOD} {endpoint} — {brief payload note or "N/A"}
+
+**States to Implement:**
+- [ ] Default / loaded
+- [ ] Loading (skeleton or spinner)
+- [ ] Empty state
+- [ ] Error / validation state
+
+**Depends on:** {task ID(s) or "None"}
+**Blocks:** {task ID(s) or "None"}
+**Complexity note:** {why this task warranted a detail block}
 ```
