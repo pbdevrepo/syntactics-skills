@@ -23,7 +23,7 @@ Workflow: **ui-designer → frontend-developer → backend-developer → qa-test
 
 Confirm inputs:
 1. FDD files: all module `.md` files from the BA workflow
-2. Design task list: `output/{project-name}/design-dev/{project-name}-design-tasks.md`
+2. Design task list: `projects/{project-name}/design-dev/{project-name}-design-tasks.md`
 
 All UI design tasks must be marked complete before this skill runs.
 
@@ -84,7 +84,7 @@ Every task must be tagged:
 
 ### Step 5 — Deliver
 
-Write file: `output/{project-name}/design-dev/{project-name}-frontend-tasks.md`
+Write file: `projects/{project-name}/design-dev/{project-name}-frontend-tasks.md`
 
 Follow `references/task-output-format.md` for exact structure.
 

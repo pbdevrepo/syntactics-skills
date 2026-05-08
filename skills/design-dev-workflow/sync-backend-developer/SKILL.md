@@ -25,7 +25,7 @@ Workflow: **ui-designer → frontend-developer → backend-developer → qa-test
 
 Confirm inputs:
 1. FDD files: all module `.md` files from the BA workflow
-2. Frontend task list: `output/{project-name}/design-dev/{project-name}-frontend-tasks.md`
+2. Frontend task list: `projects/{project-name}/design-dev/{project-name}-frontend-tasks.md`
 
 Read `references/task-output-format.md` for the exact task block structure before generating.
 
@@ -88,7 +88,7 @@ Priority 6 — Notifications & Background Jobs
 
 ### Step 4 — Deliver
 
-Write file: `output/{project-name}/design-dev/{project-name}-backend-tasks.md`
+Write file: `projects/{project-name}/design-dev/{project-name}-backend-tasks.md`
 
 Follow `references/task-output-format.md` for exact structure.
 

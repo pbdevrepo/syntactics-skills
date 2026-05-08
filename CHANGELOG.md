@@ -8,7 +8,7 @@ All notable changes to syntactics-skills are documented here.
 - `sales-workflow`: `requirement-analyzer`, `proposal-grill`, `proposal-writer`, `quotation` — full Sales lifecycle from client requirements to itemized quotation
 - `design-dev-workflow`: `ui-designer`, `frontend-developer`, `backend-developer`, `qa-tester`, `bug-fixer` — full Design & Dev lifecycle from FDD to verified build
 - `CONTEXT.md` — canonical domain language, workflow relationships, and terminology across all three workflows
-- Artifact path convention: `output/{project-name}/{workflow-phase}/{artifact}.md`
+- Artifact path convention: `projects/{project-name}/{workflow-phase}/{artifact}.md`
 - CLI tool (`bin/cli.js`) for one-command installation: `npx syntactics-skills@latest add pbdevrepo/syntactics-skills`
 - GitHub Actions workflow to build and release with source code ZIP
 - Simplified installation: no local scripts needed, just npx command downloads from GitHub releases

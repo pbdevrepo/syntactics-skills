@@ -20,7 +20,7 @@ Workflow: **requirement-analyzer → proposal-grill → proposal-writer → quot
 
 ## Before You Start
 
-1. Confirm the requirements doc: `output/{project-name}/sales/{project-name}-requirements.md`
+1. Confirm the requirements doc: `projects/{project-name}/sales/{project-name}-requirements.md`
 2. Read the full requirements document including all resolved grilling items.
 3. Do not write the proposal until all `Ambiguous` and `Inferred` modules are resolved — if any remain, flag them and ask Sales to resolve before proceeding.
 
@@ -71,7 +71,7 @@ Structure:
 
 ### Step 4 — Deliver
 
-Write file: `output/{project-name}/sales/{project-name}-proposal.md`
+Write file: `projects/{project-name}/sales/{project-name}-proposal.md`
 
 State the file path, then say:
 

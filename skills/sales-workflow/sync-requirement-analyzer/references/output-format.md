@@ -1,6 +1,6 @@
 # Output Format — Requirements Document
 
-File: `output/{project-name}/sales/{project-name}-requirements.md`
+File: `projects/{project-name}/sales/{project-name}-requirements.md`
 
 ---
 

@@ -1,6 +1,6 @@
 # Test Case Format — QA Tester
 
-File: `output/{project-name}/design-dev/{project-name}-qa-tasks.md`
+File: `projects/{project-name}/design-dev/{project-name}-qa-tasks.md`
 
 ---
 

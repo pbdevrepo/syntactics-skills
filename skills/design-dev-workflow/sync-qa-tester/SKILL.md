@@ -23,8 +23,8 @@ Workflow: **ui-designer → frontend-developer → backend-developer → qa-test
 
 Confirm inputs:
 1. FDD files: all module `.md` files from the BA workflow
-2. Frontend task list: `output/{project-name}/design-dev/{project-name}-frontend-tasks.md`
-3. Backend task list: `output/{project-name}/design-dev/{project-name}-backend-tasks.md`
+2. Frontend task list: `projects/{project-name}/design-dev/{project-name}-frontend-tasks.md`
+3. Backend task list: `projects/{project-name}/design-dev/{project-name}-backend-tasks.md`
 
 Read `references/test-case-format.md` for the exact test case block structure.
 
@@ -82,7 +82,7 @@ Tag every test case:
 
 ### Step 5 — Deliver
 
-Write file: `output/{project-name}/design-dev/{project-name}-qa-tasks.md`
+Write file: `projects/{project-name}/design-dev/{project-name}-qa-tasks.md`
 
 Follow `references/test-case-format.md` for exact structure.
 

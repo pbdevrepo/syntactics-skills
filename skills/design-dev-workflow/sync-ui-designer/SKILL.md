@@ -74,7 +74,7 @@ task per role variant.
 
 ### Step 4 — Deliver
 
-Write file: `output/{project-name}/design-dev/{project-name}-design-tasks.md`
+Write file: `projects/{project-name}/design-dev/{project-name}-design-tasks.md`
 
 Follow `references/task-output-format.md` for exact structure.
 

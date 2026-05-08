@@ -23,7 +23,7 @@ Workflow: **qa-tester → bug-fixer → [qa-tester re-run]**
 ## Before You Start
 
 Confirm input:
-- QA task list with failed cases marked: `output/{project-name}/design-dev/{project-name}-qa-tasks.md`
+- QA task list with failed cases marked: `projects/{project-name}/design-dev/{project-name}-qa-tasks.md`
 
 Read only the **Failed Test Cases** section and the individual failed `QA-{NNNN}` blocks.
 
@@ -75,7 +75,7 @@ P1 fixes must be resolved and re-tested before P2 work begins.
 
 ### Step 5 — Deliver
 
-Write file: `output/{project-name}/design-dev/{project-name}-bugfix-tasks.md`
+Write file: `projects/{project-name}/design-dev/{project-name}-bugfix-tasks.md`
 
 Follow `references/fix-task-format.md` for exact structure.
 

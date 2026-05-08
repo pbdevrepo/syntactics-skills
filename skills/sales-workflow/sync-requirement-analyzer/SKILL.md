@@ -85,7 +85,7 @@ Wait for answers before Phase 4.
 
 After Q&A is answered (or Sales says "skip — proceed"):
 
-File: `output/{project-name}/sales/{project-name}-requirements.md`
+File: `projects/{project-name}/sales/{project-name}-requirements.md`
 
 Follow `references/output-format.md` for the exact structure.
 

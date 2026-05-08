@@ -54,7 +54,7 @@ BA:     sync-ba-project-intake → sync-database-administrator → sync-sprint-p
 D&D:    sync-ui-designer → sync-frontend-developer → sync-backend-developer → sync-qa-tester ⇄ sync-bug-fixer
 ```
 
-Artifacts are written to `output/{project-name}/{workflow-phase}/{artifact}.md`.
+Artifacts are written to `projects/{project-name}/{workflow-phase}/{artifact}.md`.
 
 ## Install
 

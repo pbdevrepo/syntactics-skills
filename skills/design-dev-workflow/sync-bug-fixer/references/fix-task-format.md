@@ -1,6 +1,6 @@
 # Fix Task Format — Bug Fixer
 
-File: `output/{project-name}/design-dev/{project-name}-bugfix-tasks.md`
+File: `projects/{project-name}/design-dev/{project-name}-bugfix-tasks.md`
 
 ---
 

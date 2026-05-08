@@ -1,6 +1,6 @@
 # Proposal Template Structure
 
-File: `output/{project-name}/sales/{project-name}-proposal.md`
+File: `projects/{project-name}/sales/{project-name}-proposal.md`
 
 ---
 

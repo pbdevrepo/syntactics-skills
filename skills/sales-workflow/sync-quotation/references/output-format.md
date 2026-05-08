@@ -1,6 +1,6 @@
 # Output Format — Quotation
 
-File: `output/{project-name}/sales/{project-name}-quotation.md`
+File: `projects/{project-name}/sales/{project-name}-quotation.md`
 
 ---
 

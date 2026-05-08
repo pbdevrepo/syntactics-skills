@@ -23,7 +23,7 @@ _Avoid_: pipeline, process, flow
 
 **Artifact**:
 The `.md` output file a skill produces. Artifacts are stored at
-`output/{project-name}/{workflow-phase}/{artifact-name}.md` and serve as the sole input
+`projects/{project-name}/{workflow-phase}/{artifact-name}.md` and serve as the sole input
 to the next skill in the sequence.
 _Avoid_: output, document, file, deliverable
 

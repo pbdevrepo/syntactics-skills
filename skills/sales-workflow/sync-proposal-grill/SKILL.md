@@ -21,7 +21,7 @@ Workflow: **requirement-analyzer → proposal-grill → proposal-writer → quot
 
 ## Before You Start
 
-1. Confirm the requirements doc file path: `output/{project-name}/sales/{project-name}-requirements.md`
+1. Confirm the requirements doc file path: `projects/{project-name}/sales/{project-name}-requirements.md`
 2. Read the full document before asking anything.
 3. Build an internal list of every gap, assumption, and risk — then work through them one question at a time.
 

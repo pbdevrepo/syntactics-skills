@@ -1,6 +1,6 @@
 # Task Output Format — Backend Developer
 
-File: `output/{project-name}/design-dev/{project-name}-backend-tasks.md`
+File: `projects/{project-name}/design-dev/{project-name}-backend-tasks.md`
 
 ---
 

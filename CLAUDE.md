@@ -61,7 +61,7 @@ skills/
     sync-{skill-name}/
       SKILL.md           # required: YAML frontmatter + ## sections
       references/*.md    # optional: templates, question banks, output formats
-output/
+projects/
   {project-name}/
     sales/               # artifacts from sales-workflow
     ba/                  # artifacts from ba-workflow
