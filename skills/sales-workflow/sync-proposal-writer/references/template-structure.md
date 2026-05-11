@@ -85,11 +85,14 @@ This proposal is based on the following assumptions:
 
 Upon completion, Syntactics Inc. will deliver:
 
-- Fully functional web application with all modules listed in Section 4
+- Fully functional {web application / system / platform} with all modules listed in Section 4
 - Source code repository access
-- Database schema documentation
-- User acceptance testing (UAT) support
+{if project has a database: - Database schema documentation}
+{if project involves users / auth / data entry: - User acceptance testing (UAT) support}
+{if deployment is in scope: - Deployment to {staging / production} environment}
 - {Any additional deliverable specific to this project}
+
+> Note to writer: Remove lines in {} that do not apply. Every deliverable listed must map to something in Section 4 or be explicitly agreed with the client.
 
 ---
 

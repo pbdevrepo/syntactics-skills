@@ -61,7 +61,7 @@ Once answered, pass it to sync-requirement-analyzer as the client input.
 
 ---
 
-## Phase 5 — Discovery Summary (Interactive Mode Only)
+## After Groups — Discovery Summary (Interactive Mode Only)
 
 After all groups are answered, write the summary directly to file — do not output it in chat.
 

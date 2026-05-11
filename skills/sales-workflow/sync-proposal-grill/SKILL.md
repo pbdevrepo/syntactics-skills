@@ -74,7 +74,20 @@ See `references/question-bank.md` — Business Rules section.
 
 ## After Grilling
 
-When all gaps are resolved, produce a **Grilling Summary** inline in chat:
+When all gaps are resolved:
+
+### Step 1 — Update the Requirements Document
+
+Apply all findings directly to `projects/{project-name}/sales/{project-name}-requirements.md`:
+
+- Add any new modules to Section 4 (Module List) and Section 5 (Module Details)
+- Change `Ambiguous` → `Clear` for resolved modules; update their descriptions
+- Change `Inferred` → `Clear` or remove if confirmed out of scope
+- Add confirmed integrations to Section 6
+- Close resolved Open Items in Section 10 (mark Status: Resolved)
+- Change document **Status:** from `Draft` to `Grilled`
+
+### Step 2 — Post Grilling Summary inline in chat
 
 ```
 ## Grilling Summary — {project-name}
@@ -84,9 +97,9 @@ When all gaps are resolved, produce a **Grilling Summary** inline in chat:
 **Integrations confirmed:** {list integrations now named}
 **Open items remaining:** {list anything still unresolved, or "None"}
 
-Requirements are grilled. Update the requirements doc with the above before proceeding.
+Requirements doc updated and marked Grilled.
 
-Next: proposal-writer — update {project-name}-requirements.md with these findings, then pass it to proposal-writer.
+Next: proposal-writer — pass {project-name}-requirements.md to write the client proposal.
 ```
 
 ---
