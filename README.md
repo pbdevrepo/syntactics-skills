@@ -2,6 +2,77 @@
 
 Claude Code skills for Syntactics Inc. internal workflow automation.
 
+## Team Setup
+
+New team member? Follow these steps once to get skills running on your machine.
+
+### Prerequisites
+
+| Requirement | Notes |
+|-------------|-------|
+| [Claude Code](https://claude.ai/code) | Desktop app or CLI — must be installed and logged in |
+| PowerShell (Windows) or Terminal (Mac/Linux) | Built-in on all supported OS |
+| Internet access | Install script pulls from GitHub |
+
+> No Git, Node, or Python required. The install script has no dependencies.
+
+### Steps
+
+**1. Open a terminal**
+
+- Windows: open **PowerShell** (not CMD)
+- Mac/Linux: open **Terminal**
+
+**2. Run the install script**
+
+Windows:
+```powershell
+irm https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.ps1 | iex
+```
+
+Mac/Linux:
+```bash
+curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash
+```
+
+**3. Choose install location**
+
+Select **Global** (installs to `~/.claude/skills/`) — skills available in all projects.
+
+**4. Select your workflows**
+
+Pick the workflows matching your role:
+
+| Role | Workflow(s) to select |
+|------|-----------------------|
+| Sales | `sales` |
+| Business Analyst | `ba` |
+| Designer | `design-dev` |
+| Frontend / Backend Developer | `design-dev` |
+| QA Tester | `design-dev` |
+| Content Writer | `content` |
+| All roles | Select all |
+
+> `must-have` (caveman, grill-me, grill-with-docs) installs automatically.
+
+**5. Restart Claude Code**
+
+Close and reopen Claude Code (desktop app) or restart your CLI session.
+
+**6. Verify**
+
+In any Claude Code session, type:
+```
+/sync-caveman
+```
+Claude should respond in compressed mode. Skills are working.
+
+### Updating Skills
+
+Re-run the same install command from Step 2. The script overwrites existing skills with the latest from `main`.
+
+---
+
 ## Workflows
 
 ### Sales (`sales-workflow`)
