@@ -100,3 +100,10 @@ If all tests pass: the Design & Dev phase is complete.
 ## Reference Files
 
 - `references/test-case-format.md` — Test case block structure and classification rules
+
+
+---
+
+## Output Formatting
+
+- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.

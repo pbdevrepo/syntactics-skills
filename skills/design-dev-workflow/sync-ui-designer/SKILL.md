@@ -92,3 +92,10 @@ Next: frontend-developer — pass the FDD files and {project-name}-design-tasks.
 ## Reference Files
 
 - `references/task-output-format.md` — Task block structure and markdown format
+
+
+---
+
+## Output Formatting
+
+- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.

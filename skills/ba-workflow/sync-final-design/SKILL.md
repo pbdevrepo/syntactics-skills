@@ -85,3 +85,9 @@ Once the client approves the FDD, any updates must follow this protocol — remi
 | → Downstream | `ui-designer` | All FDD module files |
 
 After all module FDD files are generated and approved, pass them to `ui-designer` to begin the Design & Dev phase.
+
+---
+
+## Output Formatting
+
+- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.

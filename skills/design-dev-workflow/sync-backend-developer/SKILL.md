@@ -103,3 +103,10 @@ Next: qa-tester — pass the FDD files, {project-name}-frontend-tasks.md, and {p
 ## Reference Files
 
 - `references/task-output-format.md` — Task block structure and markdown format
+
+
+---
+
+## Output Formatting
+
+- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.

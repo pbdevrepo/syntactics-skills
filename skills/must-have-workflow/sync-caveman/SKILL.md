@@ -48,3 +48,9 @@ Example -- destructive op:
 > ```
 >
 > Caveman resume. Verify backup exist first.
+
+---
+
+## Output Formatting
+
+- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.

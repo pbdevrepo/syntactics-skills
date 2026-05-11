@@ -95,3 +95,9 @@ Intake done. Next: database-administrator — pass the intake doc.
 - `references/extraction-rules.md` — How to extract modules from proposals
 - `references/question-bank.md` — Question pool for Phase 3
 - `references/output-format.md` — Intake doc structure
+
+---
+
+## Output Formatting
+
+- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.

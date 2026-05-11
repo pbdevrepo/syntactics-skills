@@ -192,3 +192,10 @@ ORM: Laravel Eloquent — table names plural, bigIncrements() PKs, foreignId()->
 | `references/triggers.md` | Deciding trigger vs. application logic, writing audit table DDL |
 | `references/schema-output-format.md` | Writing the generated .md schema file |
 | `references/design-patterns.md` | UUID vs SERIAL, junction tables, indexing, dialect types, ERD format, naming, anti-patterns, Laravel FKs, transaction patterns |
+
+
+---
+
+## Output Formatting
+
+- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.

@@ -102,3 +102,10 @@ Requirements captured. Next: proposal-grill — pass {project-name}-requirements
 - `references/extraction-rules.md` — How to extract modules from unstructured client input
 - `references/question-bank.md` — Question pool for Phase 3
 - `references/output-format.md` — Requirements doc structure
+
+
+---
+
+## Output Formatting
+
+- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.

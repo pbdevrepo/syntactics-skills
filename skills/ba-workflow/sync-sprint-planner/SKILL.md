@@ -52,3 +52,10 @@ Next: sync-final-design — pass both the intake doc and the schema doc.
 ## Constraints
 
 No hour estimation · No person assignment · No tool-specific formatting · No sprint splitting
+
+
+---
+
+## Output Formatting
+
+- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.

@@ -89,3 +89,10 @@ Every page needs a clear entity description, enough context to be understood wit
 Facts can be warm. Q&A doesn't mean cold. CTAs should still convert. Don't over-optimize — if a page reads like a data sheet, it's gone too far.
 
 > "Since 1999, Syntactics has helped over 5,800 businesses build their online presence — from local shops in Cagayan de Oro to clients across 20 countries." ← factual AND human.
+
+
+---
+
+## Output Formatting
+
+- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.

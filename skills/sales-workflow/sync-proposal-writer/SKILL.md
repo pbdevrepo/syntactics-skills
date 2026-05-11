@@ -86,3 +86,10 @@ Next: quotation — pass {project-name}-proposal.md to generate the itemized quo
 ## Reference Files
 
 - `references/template-structure.md` — Full proposal template with section-by-section guidance
+
+
+---
+
+## Output Formatting
+
+- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.

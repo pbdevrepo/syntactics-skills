@@ -92,3 +92,10 @@ Next: qa-tester — re-run failed test cases after fixes are applied to verify r
 ## Reference Files
 
 - `references/fix-task-format.md` — Fix task block structure and priority classification
+
+
+---
+
+## Output Formatting
+
+- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.
