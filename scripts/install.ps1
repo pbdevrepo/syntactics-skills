@@ -2,15 +2,16 @@
 [CmdletBinding()]
 param(
     [string[]]$Workflow = @(),
-    [string[]]$Skill    = @()
+    [string[]]$Skill    = @(),
+    [switch]$Global,
+    [switch]$Local
 )
 $ErrorActionPreference = 'Stop'
 
-$Repo     = "pbdevrepo/syntactics-skills"
-$ZipUrl   = "https://github.com/$Repo/archive/refs/heads/main.zip"
-$SkillDir = Join-Path $HOME ".claude\skills"
-$TmpZip   = Join-Path $env:TEMP "syntactics-skills-$PID.zip"
-$TmpDir   = Join-Path $env:TEMP "syntactics-skills-$PID"
+$Repo   = "pbdevrepo/syntactics-skills"
+$ZipUrl = "https://github.com/$Repo/archive/refs/heads/main.zip"
+$TmpZip = Join-Path $env:TEMP "syntactics-skills-$PID.zip"
+$TmpDir = Join-Path $env:TEMP "syntactics-skills-$PID"
 
 function Get-WorkflowSkills {
     param([string]$WfDir)
@@ -47,6 +48,24 @@ try {
     Expand-Archive -Path $TmpZip -DestinationPath $TmpDir -Force
 
     $SkillsRoot = Join-Path $TmpDir "syntactics-skills-main" "skills"
+
+    # Determine install location
+    if ($Local) {
+        $SkillDir = Join-Path (Get-Location) ".claude\skills"
+    } elseif ($Global) {
+        $SkillDir = Join-Path $HOME ".claude\skills"
+    } else {
+        Write-Host ""
+        Write-Host "Install location:"
+        Write-Host ("  [1] Global — available in all projects ({0}\.claude\skills) (default)" -f $HOME)
+        Write-Host "  [2] Local  — current project only (.\.claude\skills)"
+        $locAnswer = Read-Host "`nEnter number [1]"
+        if ($locAnswer.Trim() -eq '2') {
+            $SkillDir = Join-Path (Get-Location) ".claude\skills"
+        } else {
+            $SkillDir = Join-Path $HOME ".claude\skills"
+        }
+    }
 
     $allWfDirs = Get-ChildItem -Path $SkillsRoot -Directory | Where-Object { $_.Name -like '*-workflow' }
 

@@ -70,19 +70,52 @@ irm https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/i
 curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash
 ```
 
-Restart Claude Code after the script completes.
+The script will prompt you to choose an install location and then select which workflows to install. Restart Claude Code after the script completes.
 
 To update skills, run the same command again.
 
+### Install location
+
+| Location | Scope | Path |
+|----------|-------|------|
+| Global (default) | Available in all projects | `~/.claude/skills/` |
+| Local | Current project only | `./.claude/skills/` |
+
+**Flags (skip the interactive prompt):**
+
+Windows:
+```powershell
+$url = "https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.ps1"
+& ([scriptblock]::Create((irm $url))) -Global          # install globally
+& ([scriptblock]::Create((irm $url))) -Local           # install in current project
+```
+
+Mac/Linux:
+```bash
+curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash -s -- --global
+curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash -s -- --local
+```
+
+Combine with `--workflow` or `--skill` for fully non-interactive installs:
+
+Windows:
+```powershell
+& ([scriptblock]::Create((irm $url))) -Local -Workflow ba
+```
+
+Mac/Linux:
+```bash
+curl -fsSL .../install.sh | bash -s -- --local --workflow ba
+```
+
 ## Development
 
-Skills are developed directly in the `skills/` directory. Push to `main` — CI creates a GitHub Release with the skills ZIP automatically.
+Skills are developed directly in the `skills/` directory. Push to `main` — the install scripts download the latest from `main` automatically. No CI required.
 
-To test locally:
+To test a change:
 1. Edit skills in `skills/{workflow}/{skill}/SKILL.md`
 2. Push to `main`
-3. CI creates a new GitHub Release with the updated ZIP
-4. Run the install command above to get the latest version
+3. Run the install command above to get the latest version
 
 ## Structure
 
@@ -95,10 +128,4 @@ skills/
 scripts/
   install.ps1           # Windows install script
   install.sh            # Mac/Linux install script
-.github/workflows/
-  sync-skills.yml       # CI: creates ZIP, publishes GitHub Release
 ```
-
-## CI/CD
-
-On push to `main` when skill files change: creates a skills ZIP and publishes a GitHub Release tagged with the timestamp. The release asset `syntactics-skills.zip` is downloaded by the install scripts. No setup required — uses the built-in `GITHUB_TOKEN`.

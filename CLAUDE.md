@@ -41,6 +41,20 @@ Mac/Linux:
 curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash -s -- --skill sync-requirement-analyzer --skill sync-proposal-writer
 ```
 
+**Install to current project only (local):**
+
+Windows:
+```powershell
+& ([scriptblock]::Create((irm $url))) -Local -Workflow ba
+```
+
+Mac/Linux:
+```bash
+curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash -s -- --local --workflow ba
+```
+
+Use `-Global` / `--global` to explicitly install to `~/.claude/skills/` (this is the default). Omitting both flags shows an interactive location prompt.
+
 > `must-have-workflow` skills (`sync-caveman`, `sync-grill-me`, `sync-grill-with-docs`) are always installed regardless of selection.
 
 ## Architecture

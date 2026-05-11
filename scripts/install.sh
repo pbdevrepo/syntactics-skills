@@ -2,17 +2,19 @@
 set -euo pipefail
 
 REPO="pbdevrepo/syntactics-skills"
-SKILLS_DIR="$HOME/.claude/skills"
 TMP_ZIP="/tmp/syntactics-skills-$$.zip"
 TMP_DIR="/tmp/syntactics-skills-$$"
 
 WORKFLOWS=()
 SKILLS=()
+INSTALL_SCOPE=""
 
 while [[ $# -gt 0 ]]; do
     case $1 in
         --workflow) WORKFLOWS+=("$2"); shift 2 ;;
         --skill)    SKILLS+=("$2");    shift 2 ;;
+        --global)   INSTALL_SCOPE="global"; shift ;;
+        --local)    INSTALL_SCOPE="local"; shift ;;
         *)          echo "Unknown option: $1" >&2; exit 1 ;;
     esac
 done
@@ -26,6 +28,25 @@ mkdir -p "$TMP_DIR"
 unzip -q -o "$TMP_ZIP" -d "$TMP_DIR"
 
 SKILLS_ROOT="$TMP_DIR/syntactics-skills-main/skills"
+
+# Determine install location
+if [[ "$INSTALL_SCOPE" == "local" ]]; then
+    SKILLS_DIR="$(pwd)/.claude/skills"
+elif [[ "$INSTALL_SCOPE" == "global" ]]; then
+    SKILLS_DIR="$HOME/.claude/skills"
+else
+    echo ""
+    echo "Install location:"
+    echo "  [1] Global — available in all projects (~/.claude/skills) (default)"
+    echo "  [2] Local  — current project only (./.claude/skills)"
+    read -rp $'\nEnter number [1]: ' LOC_ANSWER || true
+    LOC_ANSWER="${LOC_ANSWER:-1}"
+    if [[ "${LOC_ANSWER// /}" == "2" ]]; then
+        SKILLS_DIR="$(pwd)/.claude/skills"
+    else
+        SKILLS_DIR="$HOME/.claude/skills"
+    fi
+fi
 
 get_wf_skills() {
     find "$1" -mindepth 1 -maxdepth 1 -type d -name 'sync-*' | sort | while read -r d; do basename "$d"; done
