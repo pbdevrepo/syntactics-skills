@@ -20,43 +20,30 @@ done
 cleanup() { rm -f "$TMP_ZIP"; rm -rf "$TMP_DIR"; }
 trap cleanup EXIT
 
-if ! command -v python3 &>/dev/null; then
-    echo "Error: python3 is required but not found." >&2
-    exit 1
-fi
-
 echo "Downloading latest skills..."
-curl -fsSL "https://github.com/${REPO}/releases/latest/download/syntactics-skills.zip" -o "$TMP_ZIP"
+curl -fsSL "https://github.com/${REPO}/archive/refs/heads/main.zip" -o "$TMP_ZIP"
 mkdir -p "$TMP_DIR"
 unzip -q -o "$TMP_ZIP" -d "$TMP_DIR"
 
-MANIFEST="$TMP_DIR/manifest.json"
+SKILLS_ROOT="$TMP_DIR/syntactics-skills-main/skills"
 
-# Old release without manifest — install everything flat
-if [[ ! -f "$MANIFEST" ]]; then
-    echo "No manifest found; installing all skills..."
-    mkdir -p "$SKILLS_DIR"
-    find "$TMP_DIR" -maxdepth 1 -mindepth 1 -type d -exec cp -r {} "$SKILLS_DIR/" \;
-    echo ""
-    echo "Done. Restart Claude Code to load the skills."
-    exit 0
-fi
-
-wf_skills() {
-    local wf="${1/-workflow/}"
-    python3 - <<EOF
-import json
-m = json.load(open('$MANIFEST'))
-for s in m['workflows'].get('$wf', []):
-    print(s)
-EOF
+get_wf_skills() {
+    find "$1" -mindepth 1 -maxdepth 1 -type d -name 'sync-*' | sort | while read -r d; do basename "$d"; done
 }
 
 # must-have skills are always installed
 MUST_HAVE=()
-while IFS= read -r skill; do
-    [[ -n "$skill" ]] && MUST_HAVE+=("$skill")
-done < <(python3 -c "import json; m=json.load(open('$MANIFEST')); [print(s) for s in m['workflows'].get('must-have', [])]")
+if [[ -d "$SKILLS_ROOT/must-have-workflow" ]]; then
+    while IFS= read -r skill; do
+        [[ -n "$skill" ]] && MUST_HAVE+=("$skill")
+    done < <(get_wf_skills "$SKILLS_ROOT/must-have-workflow")
+fi
+
+# Discover workflow dirs (excluding must-have-workflow), sorted
+WF_DIRS=()
+while IFS= read -r dir; do
+    [[ -n "$dir" ]] && WF_DIRS+=("$dir")
+done < <(find "$SKILLS_ROOT" -mindepth 1 -maxdepth 1 -type d -name '*-workflow' | grep -v 'must-have-workflow' | sort)
 
 SELECTED=()
 
@@ -68,27 +55,29 @@ if [[ ${#SKILLS[@]} -gt 0 ]]; then
 
 elif [[ ${#WORKFLOWS[@]} -gt 0 ]]; then
     for wf in "${WORKFLOWS[@]}"; do
-        while IFS= read -r skill; do
-            [[ -n "$skill" ]] && SELECTED+=("$skill")
-        done < <(wf_skills "$wf")
+        wf_key="${wf%-workflow}-workflow"
+        wf_path="$SKILLS_ROOT/$wf_key"
+        if [[ ! -d "$wf_path" ]]; then
+            avail=$(for d in "${WF_DIRS[@]+"${WF_DIRS[@]}"}"; do basename "$d" | sed 's/-workflow$//'; done | paste -sd ', ')
+            echo "Warning: workflow not found: ${wf%-workflow}  (available: $avail)" >&2
+        else
+            while IFS= read -r skill; do
+                [[ -n "$skill" ]] && SELECTED+=("$skill")
+            done < <(get_wf_skills "$wf_path")
+        fi
     done
 
 else
-    # Interactive menu — must-have is hidden (always installed)
-    WF_NAMES=()
-    while IFS= read -r wf; do
-        [[ "$wf" != "must-have" && -n "$wf" ]] && WF_NAMES+=("$wf")
-    done < <(python3 -c "import json; m=json.load(open('$MANIFEST')); [print(k) for k in m['workflows'].keys()]")
-
-    WF_COUNT=${#WF_NAMES[@]}
+    WF_COUNT=${#WF_DIRS[@]}
     ALL_NUM=$((WF_COUNT + 1))
 
     echo ""
     echo "Available workflows:"
-    for i in "${!WF_NAMES[@]}"; do
-        wf="${WF_NAMES[$i]}"
-        cnt=$(python3 -c "import json; m=json.load(open('$MANIFEST')); print(len(m['workflows'].get('$wf', [])))")
-        echo "  [$((i+1))] ${wf}-workflow ($cnt skills)"
+    for i in "${!WF_DIRS[@]}"; do
+        wf_dir="${WF_DIRS[$i]}"
+        wf_name=$(basename "$wf_dir" | sed 's/-workflow$//')
+        cnt=$(get_wf_skills "$wf_dir" | wc -l | tr -d ' ')
+        echo "  [$((i+1))] ${wf_name}-workflow ($cnt skills)"
     done
     echo "  [$ALL_NUM] All (default)"
 
@@ -96,28 +85,27 @@ else
     ANSWER="${ANSWER:-$ALL_NUM}"
 
     if [[ "$ANSWER" == "$ALL_NUM" || -z "$ANSWER" ]]; then
-        for wf in "${WF_NAMES[@]}"; do
+        for wf_dir in "${WF_DIRS[@]+"${WF_DIRS[@]}"}"; do
             while IFS= read -r skill; do
                 [[ -n "$skill" ]] && SELECTED+=("$skill")
-            done < <(wf_skills "$wf")
+            done < <(get_wf_skills "$wf_dir")
         done
     else
         IFS=',' read -ra PICKS <<< "$ANSWER"
         for pick in "${PICKS[@]}"; do
             idx=$(( ${pick// /} - 1 ))
             if [[ $idx -ge 0 && $idx -lt $WF_COUNT ]]; then
-                wf="${WF_NAMES[$idx]}"
                 while IFS= read -r skill; do
                     [[ -n "$skill" ]] && SELECTED+=("$skill")
-                done < <(wf_skills "$wf")
+                done < <(get_wf_skills "${WF_DIRS[$idx]}")
             fi
         done
     fi
 fi
 
-# Merge must-have + selected, deduplicated (bash 3 compatible)
+# Merge must-have + selected, deduplicated
 ALL_SELECTED=()
-for skill in "${MUST_HAVE[@]}" "${SELECTED[@]}"; do
+for skill in "${MUST_HAVE[@]+"${MUST_HAVE[@]}"}" "${SELECTED[@]+"${SELECTED[@]}"}"; do
     already=0
     for existing in "${ALL_SELECTED[@]+"${ALL_SELECTED[@]}"}"; do
         [[ "$existing" == "$skill" ]] && already=1 && break
@@ -128,13 +116,14 @@ done
 mkdir -p "$SKILLS_DIR"
 COUNT=0
 for skill in "${ALL_SELECTED[@]+"${ALL_SELECTED[@]}"}"; do
-    src="$TMP_DIR/$skill"
-    if [[ -d "$src" ]]; then
-        cp -r "$src" "$SKILLS_DIR/"
-        COUNT=$((COUNT + 1))
-    else
-        echo "Warning: skill not found in package: $skill" >&2
-    fi
+    for wf_dir in "$SKILLS_ROOT"/*/; do
+        src="${wf_dir}${skill}"
+        if [[ -d "$src" ]]; then
+            cp -r "$src" "$SKILLS_DIR/"
+            COUNT=$((COUNT + 1))
+            break
+        fi
+    done
 done
 
 echo ""

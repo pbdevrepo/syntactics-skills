@@ -7,17 +7,29 @@ param(
 $ErrorActionPreference = 'Stop'
 
 $Repo     = "pbdevrepo/syntactics-skills"
-$ZipUrl   = "https://github.com/$Repo/releases/latest/download/syntactics-skills.zip"
+$ZipUrl   = "https://github.com/$Repo/archive/refs/heads/main.zip"
 $SkillDir = Join-Path $HOME ".claude\skills"
 $TmpZip   = Join-Path $env:TEMP "syntactics-skills-$PID.zip"
 $TmpDir   = Join-Path $env:TEMP "syntactics-skills-$PID"
 
+function Get-WorkflowSkills {
+    param([string]$WfDir)
+    Get-ChildItem -Path $WfDir -Directory |
+        Where-Object { $_.Name -like 'sync-*' } |
+        Select-Object -ExpandProperty Name |
+        Sort-Object
+}
+
 function Copy-Skills {
-    param([string[]]$Names, [string]$Target)
+    param([string[]]$Names, [string]$SkillsRoot, [string]$Target)
     $n = 0
     foreach ($name in $Names) {
-        $src = Join-Path $TmpDir $name
-        if (Test-Path $src) {
+        $src = Get-ChildItem -Path $SkillsRoot -Directory | ForEach-Object {
+            $candidate = Join-Path $_.FullName $name
+            if (Test-Path $candidate) { $candidate }
+        } | Select-Object -First 1
+
+        if ($src) {
             Copy-Item -Path $src -Destination (Join-Path $Target $name) -Recurse -Force
             $n++
         } else {
@@ -34,26 +46,18 @@ try {
     New-Item -ItemType Directory -Force -Path $TmpDir | Out-Null
     Expand-Archive -Path $TmpZip -DestinationPath $TmpDir -Force
 
-    $manifestPath = Join-Path $TmpDir "manifest.json"
-    if (-not (Test-Path $manifestPath)) {
-        # Old release without manifest — install everything flat
-        Write-Host "No manifest found; installing all skills..."
-        New-Item -ItemType Directory -Force -Path $SkillDir | Out-Null
-        Get-ChildItem -Path $TmpDir -Directory | ForEach-Object {
-            Copy-Item -Path $_.FullName -Destination (Join-Path $SkillDir $_.Name) -Recurse -Force
-        }
-        Write-Host "`nDone. Restart Claude Code to load the skills."
-        return
-    }
+    $SkillsRoot = Join-Path $TmpDir "syntactics-skills-main" "skills"
 
-    $manifest    = Get-Content $manifestPath -Raw | ConvertFrom-Json
-    $allWorkflows = $manifest.workflows | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name
+    $allWfDirs = Get-ChildItem -Path $SkillsRoot -Directory | Where-Object { $_.Name -like '*-workflow' }
 
     # must-have skills are always installed
     $mustHave = @()
-    if ($allWorkflows -contains 'must-have') {
-        $mustHave = @($manifest.workflows.'must-have')
+    $mustHaveDir = $allWfDirs | Where-Object { $_.Name -eq 'must-have-workflow' }
+    if ($mustHaveDir) {
+        $mustHave = @(Get-WorkflowSkills -WfDir $mustHaveDir.FullName)
     }
+
+    $wfDirs = @($allWfDirs | Where-Object { $_.Name -ne 'must-have-workflow' } | Sort-Object Name)
 
     $selected = @()
 
@@ -62,48 +66,44 @@ try {
 
     } elseif ($Workflow.Count -gt 0) {
         foreach ($wf in $Workflow) {
-            $key = $wf -replace '-workflow$', ''
-            $wfSkills = $manifest.workflows.$key
-            if ($null -eq $wfSkills) {
-                $avail = ($allWorkflows | Where-Object { $_ -ne 'must-have' }) -join ', '
-                Write-Warning "Workflow not found: $key  (available: $avail)"
+            $key = ($wf -replace '-workflow$', '') + '-workflow'
+            $wfDir = $wfDirs | Where-Object { $_.Name -eq $key }
+            if (-not $wfDir) {
+                $avail = ($wfDirs | ForEach-Object { $_.Name -replace '-workflow$', '' }) -join ', '
+                Write-Warning "Workflow not found: $($wf -replace '-workflow$', '')  (available: $avail)"
             } else {
-                $selected += @($wfSkills)
+                $selected += @(Get-WorkflowSkills -WfDir $wfDir.FullName)
             }
         }
 
     } else {
-        # Interactive menu — must-have is hidden (always installed)
-        $opts = @($allWorkflows | Where-Object { $_ -ne 'must-have' })
-
         Write-Host ""
         Write-Host "Available workflows:"
-        for ($i = 0; $i -lt $opts.Count; $i++) {
-            $wf  = $opts[$i]
-            $cnt = @($manifest.workflows.$wf).Count
-            Write-Host ("  [{0}] {1}-workflow ({2} skills)" -f ($i + 1), $wf, $cnt)
+        for ($i = 0; $i -lt $wfDirs.Count; $i++) {
+            $wfName = $wfDirs[$i].Name -replace '-workflow$', ''
+            $cnt    = @(Get-WorkflowSkills -WfDir $wfDirs[$i].FullName).Count
+            Write-Host ("  [{0}] {1}-workflow ({2} skills)" -f ($i + 1), $wfName, $cnt)
         }
-        $allNum = $opts.Count + 1
+        $allNum = $wfDirs.Count + 1
         Write-Host ("  [{0}] All (default)" -f $allNum)
 
         $answer = Read-Host ("`nEnter numbers separated by commas [{0}]" -f $allNum)
         if ([string]::IsNullOrWhiteSpace($answer) -or $answer.Trim() -eq "$allNum") {
-            foreach ($wf in $opts) { $selected += @($manifest.workflows.$wf) }
+            foreach ($wfDir in $wfDirs) { $selected += @(Get-WorkflowSkills -WfDir $wfDir.FullName) }
         } else {
             foreach ($part in ($answer -split ',')) {
                 $idx = [int]$part.Trim() - 1
-                if ($idx -ge 0 -and $idx -lt $opts.Count) {
-                    $selected += @($manifest.workflows.($opts[$idx]))
+                if ($idx -ge 0 -and $idx -lt $wfDirs.Count) {
+                    $selected += @(Get-WorkflowSkills -WfDir $wfDirs[$idx].FullName)
                 }
             }
         }
     }
 
-    # Merge must-have + selected, deduplicated
     $all = ($mustHave + $selected) | Select-Object -Unique
 
     New-Item -ItemType Directory -Force -Path $SkillDir | Out-Null
-    $count = Copy-Skills -Names $all -Target $SkillDir
+    $count = Copy-Skills -Names $all -SkillsRoot $SkillsRoot -Target $SkillDir
 
     Write-Host ""
     Write-Host "Installed $count skill(s) to $SkillDir"

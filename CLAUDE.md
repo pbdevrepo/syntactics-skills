@@ -50,8 +50,8 @@ Skills are markdown files deployed to `~/.claude/skills/` for Claude Code to loa
 **Data flow:**
 ```
 skills/{workflow}/sync-{skill}/SKILL.md
-  → GitHub Actions    → CI flattens workflow dirs → skills ZIP published as GitHub Release asset
-  → install.ps1 / install.sh downloads latest release ZIP → extracts flat to ~/.claude/skills/sync-{skill}/
+  → install.ps1 / install.sh downloads main branch ZIP from GitHub → discovers workflows from dir structure
+  → copies selected skill dirs to ~/.claude/skills/sync-{skill}/
 ```
 
 **Directory structure:**
@@ -76,22 +76,20 @@ CONTEXT.md               # canonical domain language for all workflows
 - `description` field drives Claude Code's skill trigger logic
 - At least one `##` section required in body
 
-**CI trigger**: fires only when `skills/**-workflow/**/SKILL.md` or references change. Creates a GitHub Release with `syntactics-skills.zip` as the asset.
-
 ## Distribution
 
-Skills are distributed via GitHub Releases. CI creates a new release on every skill change. The ZIP contains all flat `sync-*` skill dirs plus a `manifest.json` that maps workflow names to their skill lists. Install scripts download the ZIP, read the manifest, and copy only the selected skills to `~/.claude/skills/`. No setup required — uses `GITHUB_TOKEN`.
+Skills are distributed directly from the `main` branch. Install scripts download the GitHub archive ZIP (`/archive/refs/heads/main.zip`), discover workflows from the `skills/*-workflow/` directory structure, and copy only the selected skills to `~/.claude/skills/`. No CI or manifest file required.
 
 ## Adding a Skill
 
 1. Create `skills/{role}-workflow/sync-{skill-name}/SKILL.md` with frontmatter `name: sync-{skill-name}`, `version: 1.0.0`, `description`
 2. Add at least one `##` section
-3. Commit and push to `main` — CI flattens all skill dirs and creates a new GitHub Release automatically
+3. Commit and push to `main`
 4. Users run the install command again to get the latest skills
 
 ## Adding a New Workflow Role
 
-Create a new `skills/{role}-workflow/` directory and add skills inside it. No config changes needed — CI auto-discovers all `*-workflow` directories.
+Create a new `skills/{role}-workflow/` directory and add skills inside it. No config changes needed — install scripts auto-discover all `*-workflow` directories.
 
 ## Agent skills
 
