@@ -71,6 +71,32 @@ Claude should respond in compressed mode. Skills are working.
 
 Re-run the same install command from Step 2. The script overwrites existing skills with the latest from `main`.
 
+### Advanced: Non-Interactive Install
+
+Skip prompts by passing flags directly.
+
+Windows:
+```powershell
+$url = "https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.ps1"
+& ([scriptblock]::Create((irm $url))) -Global -Workflow sales,ba   # specific workflows
+& ([scriptblock]::Create((irm $url))) -Local -Workflow ba          # local project only
+& ([scriptblock]::Create((irm $url))) -Skill sync-requirement-analyzer,sync-proposal-writer  # specific skills
+```
+
+Mac/Linux:
+```bash
+curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash -s -- --global --workflow sales --workflow ba
+curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash -s -- --local --workflow ba
+curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash -s -- --skill sync-requirement-analyzer --skill sync-proposal-writer
+```
+
+| Flag | Effect |
+|------|--------|
+| `-Global` / `--global` | Install to `~/.claude/skills/` (all projects) |
+| `-Local` / `--local` | Install to `./.claude/skills/` (current project only) |
+| `-Workflow` / `--workflow` | Select specific workflow(s) |
+| `-Skill` / `--skill` | Select specific skill(s) |
+
 ---
 
 ## Workflows
@@ -127,58 +153,6 @@ D&D:    sync-ui-designer → sync-frontend-developer → sync-backend-developer 
 ```
 
 Artifacts are written to `projects/{project-name}/{workflow-phase}/{artifact}.md`.
-
-## Install
-
-Copy and run the command for your OS. No prerequisites required.
-
-**Windows** — paste into PowerShell:
-```powershell
-irm https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.ps1 | iex
-```
-
-**Mac/Linux** — paste into Terminal:
-```bash
-curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash
-```
-
-The script will prompt you to choose an install location and then select which workflows to install. Restart Claude Code after the script completes.
-
-To update skills, run the same command again.
-
-### Install location
-
-| Location | Scope | Path |
-|----------|-------|------|
-| Global (default) | Available in all projects | `~/.claude/skills/` |
-| Local | Current project only | `./.claude/skills/` |
-
-**Flags (skip the interactive prompt):**
-
-Windows:
-```powershell
-$url = "https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.ps1"
-& ([scriptblock]::Create((irm $url))) -Global          # install globally
-& ([scriptblock]::Create((irm $url))) -Local           # install in current project
-```
-
-Mac/Linux:
-```bash
-curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash -s -- --global
-curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash -s -- --local
-```
-
-Combine with `--workflow` or `--skill` for fully non-interactive installs:
-
-Windows:
-```powershell
-& ([scriptblock]::Create((irm $url))) -Local -Workflow ba
-```
-
-Mac/Linux:
-```bash
-curl -fsSL .../install.sh | bash -s -- --local --workflow ba
-```
 
 ## Development
 
