@@ -47,7 +47,7 @@ try {
     New-Item -ItemType Directory -Force -Path $TmpDir | Out-Null
     Expand-Archive -Path $TmpZip -DestinationPath $TmpDir -Force
 
-    $SkillsRoot = Join-Path $TmpDir "syntactics-skills-main" "skills"
+    $SkillsRoot = Join-Path $TmpDir "syntactics-skills-main\skills"
 
     # Determine install location
     if ($Local) {
