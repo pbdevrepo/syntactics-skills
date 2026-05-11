@@ -45,17 +45,25 @@ See `references/question-bank.md` for the full question pool.
 
 ## Document Mode
 
-Generate a client-facing questionnaire with all questions from `references/question-bank.md`,
-grouped and numbered. Format it as a clean markdown document the sales rep can share.
+Write the questionnaire directly to file — do not output it in chat.
 
-Do not produce a discovery summary in document mode — wait for answers to come back, then
-re-run in interactive mode or pass the completed questionnaire directly to `sync-requirement-analyzer`.
+File: `projects/{project-name}/sales/{project-name}-discovery.md`
+
+Use all questions from `references/question-bank.md`, grouped and numbered, formatted for a
+client to fill in. Add a blank answer line after each question.
+
+After writing, state the file path and say:
+
+```
+Discovery questionnaire saved. Share {project-name}-discovery.md with the client.
+Once answered, pass it to sync-requirement-analyzer as the client input.
+```
 
 ---
 
 ## Phase 5 — Discovery Summary (Interactive Mode Only)
 
-After all groups are answered, write the discovery summary.
+After all groups are answered, write the summary directly to file — do not output it in chat.
 
 File: `projects/{project-name}/sales/{project-name}-discovery.md`
 
