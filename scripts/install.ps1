@@ -31,7 +31,9 @@ function Copy-Skills {
         } | Select-Object -First 1
 
         if ($src) {
-            Copy-Item -Path $src -Destination (Join-Path $Target $name) -Recurse -Force
+            $dest = Join-Path $Target $name
+            if (Test-Path $dest) { Remove-Item $dest -Recurse -Force }
+            Copy-Item -Path $src -Destination $dest -Recurse -Force
             $n++
         } else {
             Write-Warning "Skill not found in package: $name"

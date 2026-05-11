@@ -140,6 +140,8 @@ for skill in "${ALL_SELECTED[@]+"${ALL_SELECTED[@]}"}"; do
     for wf_dir in "$SKILLS_ROOT"/*/; do
         src="${wf_dir}${skill}"
         if [[ -d "$src" ]]; then
+            dest="$SKILLS_DIR/$skill"
+            [[ -d "$dest" ]] && rm -rf "$dest"
             cp -r "$src" "$SKILLS_DIR/"
             COUNT=$((COUNT + 1))
             break
