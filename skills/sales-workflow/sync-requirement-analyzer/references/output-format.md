@@ -10,7 +10,7 @@ File: `projects/{project-name}/sales/{project-name}-requirements.md`
 **Project:** {project-name}
 **Date:** {YYYY-MM-DD}
 **Prepared by:** Sales Team — Syntactics Inc.
-**Status:** Draft
+**Status:** Draft *(valid values: Draft → Grilled → Approved)*
 
 ---
 

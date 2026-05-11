@@ -44,7 +44,7 @@ Before writing, scan for:
 - Any module still marked `Ambiguous` → stop and flag to Sales
 - Any Open Item in Section 10 of the requirements doc → stop and ask if it blocks the proposal
 
-If all items are resolved, proceed to Step 2.
+If all items are resolved, update the requirements doc **Status:** from `Grilled` to `Approved`, then proceed to Step 2.
 
 ### Step 2 — Draft the Proposal
 
