@@ -18,12 +18,16 @@ New team member? Follow these steps once to get skills running on your machine.
 
 ### Steps
 
+![Open a terminal](assets/img/open-powershell.png)
+
 **1. Open a terminal**
 
 - Windows: open **PowerShell** (not CMD)
 - Mac/Linux: open **Terminal**
 
 **2. Run the install script**
+
+![Open a terminal](assets/img/paste-script.png)
 
 Windows:
 ```powershell
@@ -36,6 +40,8 @@ curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/sc
 ```
 
 **3. Choose install location**
+
+![Open a terminal](assets/img/running-script.png)
 
 Select **Global** (installs to `~/.claude/skills/`) — skills available in all projects.
 
