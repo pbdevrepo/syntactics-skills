@@ -146,7 +146,9 @@ Always installed regardless of workflow selection.
 ### Content (`content-workflow`)
 | Skill | Description |
 |-------|-------------|
-| `sync-ai-content-writer` | Write and optimize web content for Google and AI agents |
+| `sync-web-content-writer` | Write and optimize static web pages - homepages, service pages, about pages, landing pages, FAQ sections, and portfolio entries |
+| `sync-article-writer` | Write and optimize blog posts and articles - how-to guides, listicles, opinion pieces, pillar content, and news articles |
+| `sync-content-strategist` | Audit existing content for SEO and AI readability issues, rewrite flagged sections, and produce content strategy recommendations |
 
 ## Workflow Sequence
 

@@ -5,6 +5,23 @@ All notable changes to syntactics-skills are documented here.
 ## [Unreleased] - 2026-05-11
 
 ### Added
+- `content-workflow`: `sync-web-content-writer` - write and optimize static web pages (homepages, service pages, about pages, landing pages, FAQ sections, portfolio entries) for Google and AI agent citation
+- `content-workflow`: `sync-article-writer` - write and optimize blog posts and articles (how-to guides, listicles, opinion pieces, pillar content, news articles) for Google and AI agent citation
+- `content-workflow`: `sync-content-strategist` - audit existing content for SEO and AI readability issues, rewrite top flagged sections, and produce prioritized content strategy recommendations
+- `references/intake.md` (all content skills) - pre-writing intake checklist: required client context before any content is produced, with mode-specific fields and `[FILL IN]` fallback convention
+
+### Changed
+- `content-workflow` references: deliverable format defined per skill (title tag, meta, H1, body, FAQ, schema type note)
+- `references/audit-rewrite.md`: default rewrite scope added (top 3 flagged sections in full; remaining issues listed with one-line fix each)
+- `references/schema-snippets.md`: usage gate added - templates only for explicit JSON-LD requests or full audits
+- `references/article-writing.md`: removed hardcoded "26 years" from opinion piece template; replaced with `[X] years` placeholder
+
+### Removed
+- `content-workflow`: `sync-ai-content-writer` - replaced by the three focused skills above
+
+## [Unreleased] - 2026-05-11
+
+### Added
 - `sales-workflow`: `sync-client-discovery` — pre-requirement discovery skill for clients with no brief; generates structured questions across business goals, project type, budget/timeline, and tech/design preferences; produces a `{project-name}-discovery.md` artifact that feeds into `sync-requirement-analyzer`
 
 ## [Unreleased] - 2026-05-06

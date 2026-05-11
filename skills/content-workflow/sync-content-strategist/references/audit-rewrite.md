@@ -42,10 +42,13 @@ Rate 1–5 on each dimension:
 
 ## Step 3: Produce Rewrites
 
-For each flagged section, produce a side-by-side:
+Default scope: rewrite the top 3 highest-impact flagged sections in full. List remaining flagged
+issues with a one-line fix description each. Do not rewrite everything unless the user asks.
+
+For each rewritten section, produce a side-by-side:
 - **Original** (labeled)
 - **Rewritten** (labeled, with AI-optimization and SEO notes)
 
-Always preserve brand voice. Optimization ≠ stripping personality. Facts can be stated warmly.
+Always preserve brand voice. Optimization does not mean stripping personality. Facts can be stated warmly.
 
-For before/after examples by page type → see `references/sample-rewrites.md`
+For before/after examples by page type -> see `references/sample-rewrites.md`

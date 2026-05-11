@@ -1,5 +1,7 @@
 # Schema Markup Snippets
 
+Use these templates only when the user explicitly requests JSON-LD, or during a full page audit (Mode 3).
+
 JSON-LD templates for common page types. Fill in the bracketed values and hand off to the
 developer for implementation in the `<head>` or before `</body>`.
 

@@ -186,7 +186,7 @@ The Conventional Wisdom (and why it's incomplete)
 
 Our Position / What We've Seen
 [Draw from real experience: client work, project outcomes, industry observations]
-[Use first-person plural: "In our 26 years building websites..."]
+[Use first-person plural: "In our [X] years building [service area]..."]
 
 Evidence / Supporting Points
 ## Point 1: [Specific reason]
