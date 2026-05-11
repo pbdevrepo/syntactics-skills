@@ -1,0 +1,22 @@
+{
+  "name": "syntactics-skills",
+  "skills": [
+    "./skills/ba-workflow/sync-ba-project-intake",
+    "./skills/ba-workflow/sync-database-administrator",
+    "./skills/ba-workflow/sync-final-design",
+    "./skills/ba-workflow/sync-sprint-planner",
+    "./skills/content-workflow/sync-ai-content-writer",
+    "./skills/design-dev-workflow/sync-backend-developer",
+    "./skills/design-dev-workflow/sync-frontend-developer",
+    "./skills/design-dev-workflow/sync-ui-designer",
+    "./skills/design-dev-workflow/sync-bug-fixer",
+    "./skills/design-dev-workflow/sync-qa-tester",
+    "./skills/must-have-workflow/sync-caveman",
+    "./skills/must-have-workflow/sync-grill-me",
+    "./skills/must-have-workflow/sync-grill-with-docs",
+    "./skills/sales-workflow/sync-proposal-grill",
+    "./skills/sales-workflow/sync-proposal-writer",
+    "./skills/sales-workflow/sync-quotation",
+    "./skills/sales-workflow/sync-requirement-analyzer"
+  ]
+}
