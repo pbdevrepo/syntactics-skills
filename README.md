@@ -7,6 +7,7 @@ Claude Code skills for Syntactics Inc. internal workflow automation.
 ### Sales (`sales-workflow`)
 | Skill | Description |
 |-------|-------------|
+| `sync-client-discovery` | Generate structured discovery questions for clients with no brief or clear direction |
 | `sync-requirement-analyzer` | Extract and structure client requirements from PDF or free-form text |
 | `sync-proposal-grill` | Stress-test requirements for missed modules and ambiguous scope |
 | `sync-proposal-writer` | Write a client-facing project proposal |
@@ -47,7 +48,7 @@ Always installed regardless of workflow selection.
 ## Workflow Sequence
 
 ```
-Sales:  sync-requirement-analyzer → sync-proposal-grill → sync-proposal-writer → sync-quotation
+Sales:  sync-client-discovery → sync-requirement-analyzer → sync-proposal-grill → sync-proposal-writer → sync-quotation
                                                                                        ↓ (client approves)
 BA:     sync-ba-project-intake → sync-database-administrator → sync-sprint-planner → sync-final-design
                                                                                        ↓ (FDD approved)

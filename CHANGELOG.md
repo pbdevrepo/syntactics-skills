@@ -2,6 +2,11 @@
 
 All notable changes to syntactics-skills are documented here.
 
+## [Unreleased] - 2026-05-11
+
+### Added
+- `sales-workflow`: `sync-client-discovery` — pre-requirement discovery skill for clients with no brief; generates structured questions across business goals, project type, budget/timeline, and tech/design preferences; produces a `{project-name}-discovery.md` artifact that feeds into `sync-requirement-analyzer`
+
 ## [Unreleased] - 2026-05-06
 
 ### Added

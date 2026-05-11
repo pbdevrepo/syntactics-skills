@@ -46,6 +46,12 @@ _Avoid_: project ID, slug, code name
 
 ### Sales Workflow Terms
 
+**Discovery Brief**:
+The artifact produced by `client-discovery`. A structured summary of a client's goals, project
+type, budget, timeline, and tech/design preferences — produced before any requirements exist.
+Feeds directly into `requirement-analyzer` as its client input.
+_Avoid_: intake notes, pre-brief, onboarding form
+
 **Requirements Document**:
 The artifact produced by `requirement-analyzer`. Contains all client modules, user roles,
 integrations, constraints, and open items extracted from raw client input.
@@ -129,7 +135,7 @@ _Avoid_: bug list, issue list, defect log
 ### Workflow Sequence
 
 ```
-Sales:      sync-requirement-analyzer → sync-proposal-grill → sync-proposal-writer → sync-quotation
+Sales:      sync-client-discovery → sync-requirement-analyzer → sync-proposal-grill → sync-proposal-writer → sync-quotation
                                                                                            ↓ (client approves)
 BA:         sync-ba-project-intake → sync-database-administrator → sync-sprint-planner → sync-final-design
                                                                                            ↓ (FDD approved)
