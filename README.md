@@ -54,8 +54,8 @@ Pick the workflows matching your role:
 | Sales | `sales` |
 | Business Analyst | `ba` |
 | Designer | `design-dev` |
-| Frontend / Backend Developer | `design-dev` |
-| QA Tester | `design-dev` |
+| Frontend / Backend Developer | `design-dev`, `engineering` |
+| QA Tester | `qa` |
 | Content Writer | `content` |
 | All roles | Select all |
 
