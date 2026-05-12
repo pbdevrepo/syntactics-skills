@@ -139,7 +139,8 @@ Sales:      sync-client-discovery → sync-requirement-analyzer → sync-proposa
                                                                                            ↓ (client approves)
 BA:         sync-ba-project-intake → sync-database-administrator → sync-sprint-planner → sync-final-design
                                                                                            ↓ (FDD approved)
-Design&Dev: sync-ui-designer → sync-frontend-developer → sync-backend-developer → sync-qa-tester ⇄ sync-bug-fixer
+Design&Dev: sync-ui-designer → sync-frontend-developer → sync-backend-developer
+Engineering: sync-dev-session → sync-tdd-be / sync-tdd-fe → sync-qa-planner → sync-qa-runner → sync-qa-to-ticket → sync-dev-to-fix → sync-qa-runner (re-run)
 ```
 
 ---

@@ -130,8 +130,20 @@ curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/sc
 | `sync-ui-designer` | Generate Figma design task list from FDD wireframe specs |
 | `sync-frontend-developer` | Generate frontend implementation task list from FDD + design tasks |
 | `sync-backend-developer` | Generate backend implementation task list from FDD + frontend tasks |
-| `sync-qa-tester` | Generate test cases mapped to FDD validation rules and implemented tasks |
-| `sync-bug-fixer` | Generate prioritized fix task list from failed QA test cases |
+### Engineering (`engineering-workflow`)
+| Skill | Description |
+|-------|-------------|
+| `sync-dev-session` | Implementation grilling session anchored to FDD - BE, FE, or Full-Stack |
+| `sync-tdd-be` | TDD-driven backend implementation loop with Swagger YAML generation |
+| `sync-tdd-fe` | TDD-driven frontend implementation loop |
+| `sync-dev-to-fix` | TDD-driven bug fix loop from a GitHub issue - fetches, fixes, posts result |
+
+### QA (`qa-workflow`)
+| Skill | Description |
+|-------|-------------|
+| `sync-qa-planner` | Generate structured QA test plan mapped to FDD rules and implemented tasks |
+| `sync-qa-runner` | Execute test plan live via Playwright MCP and HTTP - marks PASS/FAIL, generates regression specs |
+| `sync-qa-to-ticket` | Convert QA failures into GitHub issues with labels and FDD references |
 
 ### Must-Have (`must-have-workflow`)
 
@@ -157,7 +169,8 @@ Sales:  sync-client-discovery → sync-requirement-analyzer → sync-proposal-gr
                                                                                        ↓ (client approves)
 BA:     sync-ba-project-intake → sync-database-administrator → sync-sprint-planner → sync-final-design
                                                                                        ↓ (FDD approved)
-D&D:    sync-ui-designer → sync-frontend-developer → sync-backend-developer → sync-qa-tester ⇄ sync-bug-fixer
+D&D:    sync-ui-designer → sync-frontend-developer → sync-backend-developer
+Eng:    sync-dev-session → sync-tdd-be / sync-tdd-fe → sync-qa-planner → sync-qa-runner → sync-qa-to-ticket → sync-dev-to-fix → sync-qa-runner (re-run)
 ```
 
 Artifacts are written to `projects/{project-name}/{workflow-phase}/{artifact}.md`.

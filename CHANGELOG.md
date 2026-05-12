@@ -2,6 +2,29 @@
 
 All notable changes to syntactics-skills are documented here.
 
+## [Unreleased] - 2026-05-12
+
+### Added
+- `engineering-workflow`: `sync-dev-session` — implementation grilling session anchored to FDD; asks BE, FE, or Full-Stack session type; saves structured summary to `docs/sessions/{be|fe|fullstack}/{topic}-{date}.md`; ends with explicit handoff to `sync-tdd-be` or `sync-tdd-fe`
+- `engineering-workflow`: `sync-tdd-be` — TDD-driven backend implementation loop per task; generates full Swagger YAML for all API endpoints in the module at once to `docs/api/{module}/{feature}_api.yaml`
+- `engineering-workflow`: `sync-tdd-fe` — TDD-driven frontend implementation loop per task; mirrors `sync-tdd-be` pattern without Swagger output
+- `engineering-workflow`: `sync-dev-to-fix` — TDD-driven bug fix loop invoked with a GitHub issue link; fetches issue via GitHub MCP, runs failing test - fix - verify cycle, posts completion comment, applies `ready-for-qa` label; blocks on `out-of-scope` issues with `for-ba-confirmation` label
+- `qa-workflow`: `sync-qa-planner` — generates structured QA test plan from FDD + frontend/backend task lists; replaces deprecated `sync-qa-tester`; output to `projects/{project-name}/qa/{project-name}-qa-plan.md`
+- `qa-workflow`: `sync-qa-runner` — executes test plan live via Playwright MCP (UI/E2E) and HTTP requests (API); marks PASS/FAIL inline; generates reusable Playwright regression spec files to `docs/qa/{module}/{feature}.spec.ts`; supports local, staging, and custom URL environments
+- `qa-workflow`: `sync-qa-to-ticket` — converts QA failures and manual findings into GitHub issues via GitHub MCP; auto-bootstraps full label set on first run; applies type + priority + `needs-triage` on creation; never provides fix suggestions; flags out-of-scope issues with `for-ba-confirmation`
+- `references/session-summary-format.md` (`sync-dev-session`) — structured session summary template with Context, Decisions Made, Constraints Identified, Open Questions, Next Steps, Risks, and References sections
+- `references/swagger-output-format.md` (`sync-tdd-be`) — full OpenAPI 3.0.3 YAML template with shared response schemas and security scheme
+- `references/test-plan-format.md` (`sync-qa-planner`) — test case block structure with Execution Type and Test Run Log fields
+- Label convention: Type (`bug`, `out-of-scope`, `regression`), Status (`needs-triage`, `ready-for-dev`, `in-fix`, `ready-for-qa`, `verified`), Escalation (`for-ba-confirmation`, `needs-info`), Priority (`P1-critical` through `P4-low`)
+
+### Removed
+- `design-dev-workflow`: `sync-qa-tester` — deprecated and removed; replaced by `sync-qa-planner` in `qa-workflow`
+- `design-dev-workflow`: `sync-bug-fixer` — removed; replaced by `sync-qa-to-ticket` (issue creation) and `sync-dev-to-fix` (TDD fix execution)
+
+### Changed
+- `README.md` — added `engineering-workflow` and `qa-workflow` skill tables; updated workflow sequence diagram to reflect new engineering chain
+- `CONTEXT.md` — updated Design&Dev and Engineering workflow sequences
+
 ## [Unreleased] - 2026-05-11
 
 ### Added

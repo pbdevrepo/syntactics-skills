@@ -1,21 +1,23 @@
 ---
-name: sync-qa-tester
+name: sync-qa-planner
 version: 1.0.0
 description: >
-  Generates a module-by-module QA test case list for Syntactics Inc. from the Final Design Document
-  (FDD), frontend task list, and backend task list. Trigger when a QA tester says "generate test
-  cases", "what do I need to test", "QA tasks", "create test plan", "test case list", or after
-  backend-developer completes. Maps test cases directly to implemented features and FDD validation
-  rules. Always run after backend-developer and before bug-fixer in the design-dev workflow.
+  Generates a structured QA test plan for Syntactics Inc. from the FDD, frontend task list, and
+  backend task list. Replaces sync-qa-tester. Trigger when a QA tester says "generate test plan",
+  "create QA plan", "qa planner", "what do I need to test", or after sync-tdd-be and sync-tdd-fe
+  complete. Maps every test case to a specific FDD rule - nothing is tested that was not built,
+  nothing built is left untested. Always run after backend and frontend implementation and before
+  sync-qa-runner in the QA workflow.
 ---
 
-# QA Tester
+# QA Planner
 
-Reads the FDD, frontend task list, and backend task list to produce a structured QA test case list.
-Every test case maps to a specific feature from the FDD — nothing is tested that wasn't built,
-nothing built is left untested.
+Reads the FDD, frontend task list, and backend task list to produce a structured QA test plan.
+Every test case maps to a specific FDD rule. The plan is the input to sync-qa-runner for execution.
 
-Workflow: **ui-designer → frontend-developer → backend-developer → qa-tester → bug-fixer**
+Workflow: **sync-tdd-be / sync-tdd-fe - sync-qa-planner - sync-qa-runner**
+
+> Note: sync-qa-tester in design-dev-workflow is deprecated. Use this skill instead.
 
 ---
 
@@ -26,7 +28,7 @@ Confirm inputs:
 2. Frontend task list: `projects/{project-name}/design-dev/{project-name}-frontend-tasks.md`
 3. Backend task list: `projects/{project-name}/design-dev/{project-name}-backend-tasks.md`
 
-Read `references/test-case-format.md` for the exact test case block structure.
+Read `references/test-plan-format.md` for the exact test case block structure.
 
 ---
 
@@ -35,18 +37,18 @@ Read `references/test-case-format.md` for the exact test case block structure.
 ### Step 1 — Read All Inputs
 
 From the FDD, extract per module:
-- All validation rules and field constraints → become negative test cases
-- All business rules and conditional logic → become functional test cases
-- All user roles and access rules → become access control test cases
-- All workflow steps (approvals, status changes) → become flow test cases
+- All validation rules and field constraints - become negative test cases
+- All business rules and conditional logic - become functional test cases
+- All user roles and access rules - become access control test cases
+- All workflow steps (approvals, status changes) - become flow test cases
 
 From the frontend task list, extract:
-- All screens and states (loading, empty, error) → become UI test cases
-- All client-side validations → become form test cases
+- All screens and states (loading, empty, error) - become UI test cases
+- All client-side validations - become form test cases
 
 From the backend task list, extract:
-- All API endpoints → become API test cases
-- All server-side validations → become validation test cases
+- All API endpoints - become API test cases
+- All server-side validations - become validation test cases
 
 ### Step 2 — Derive Test Cases
 
@@ -69,7 +71,7 @@ From the backend task list, extract:
 
 Tag every test case:
 - **Type:** `Functional` / `UI` / `API` / `Access Control` / `Integration` / `Regression`
-- **Priority:** `P1 — Critical` / `P2 — High` / `P3 — Medium` / `P4 — Low`
+- **Priority:** `P1-critical` / `P2-high` / `P3-medium` / `P4-low`
 - **Expected result:** pass/fail criteria must be explicit — no ambiguous outcomes
 
 ### Step 4 — Self-Review Before Delivering
@@ -82,25 +84,24 @@ Tag every test case:
 
 ### Step 5 — Deliver
 
-Write file: `projects/{project-name}/design-dev/{project-name}-qa-tasks.md`
+Write file: `projects/{project-name}/qa/{project-name}-qa-plan.md`
 
-Follow `references/test-case-format.md` for exact structure.
+Follow `references/test-plan-format.md` for exact structure.
 
 State the file path, then say:
 
 ```
-QA test cases generated. Run all tests against the built system.
+QA test plan generated.
 
-If bugs are found: next is bug-fixer — pass {project-name}-qa-tasks.md with failed cases marked.
-If all tests pass: the Design & Dev phase is complete.
+Next: sync-qa-runner - pass {project-name}-qa-plan.md and specify the target environment
+(local, staging, or custom URL).
 ```
 
 ---
 
 ## Reference Files
 
-- `references/test-case-format.md` — Test case block structure and classification rules
-
+- `references/test-plan-format.md` - Test case block structure and classification rules
 
 ---
 
