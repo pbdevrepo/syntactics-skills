@@ -94,6 +94,18 @@ CONTEXT.md               # canonical domain language for all workflows
 
 Skills are distributed directly from the `main` branch. Install scripts download the GitHub archive ZIP (`/archive/refs/heads/main.zip`), discover workflows from the `skills/*-workflow/` directory structure, and copy only the selected skills to `~/.claude/skills/`. No CI or manifest file required.
 
+## Updating Docs After Any Change
+
+After adding, modifying, or removing any skill or reference file, always update these three files:
+
+- **CHANGELOG.md** — add an entry under `[Unreleased] - {today's date}` (create the block if it doesn't exist). Use `### Added`, `### Changed`, or `### Removed` as appropriate. One bullet per skill or reference file changed.
+- **README.md** — update the relevant workflow skill table and the Workflow Sequence diagram if the skill is new, renamed, removed, or its description changed.
+- **CONTEXT.md** — update the Sales/BA/Design/Engineering workflow terms and the Workflow Sequence diagram if new artifact types, term definitions, or workflow relationships were introduced.
+
+Only update a file if the change is relevant to it. A description tweak does not need a CONTEXT.md entry. A new skill always needs all three.
+
+---
+
 ## Adding a Skill
 
 1. Create `skills/{role}-workflow/sync-{skill-name}/SKILL.md` with frontmatter `name: sync-{skill-name}`, `version: 1.0.0`, `description`
