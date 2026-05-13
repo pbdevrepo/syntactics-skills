@@ -2,12 +2,9 @@
 name: sync-qa-to-ticket
 version: 1.0.0
 description: >
-  Converts QA test failures and manual findings into structured GitHub issues for Syntactics Inc.
-  Trigger when a QA tester says "create tickets", "generate issues", "qa to ticket", "log bugs",
-  or after sync-qa-runner marks test cases as failed. Creates GitHub issues via GitHub MCP with FDD
-  references and out-of-scope flags. Auto-bootstraps required labels if they do not exist. Never
-  provides fix suggestions. Always run after sync-qa-runner and before sync-dev-to-fix in the
-  QA workflow.
+  Converts QA failures and manual findings into GitHub issues with FDD references. Trigger: "create
+  tickets", "generate issues", "qa to ticket", "log bugs", or after qa-runner marks failures.
+  Run after qa-runner, before dev-to-fix.
 ---
 
 # QA to Ticket

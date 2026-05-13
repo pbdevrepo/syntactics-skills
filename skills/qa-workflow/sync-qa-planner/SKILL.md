@@ -2,12 +2,9 @@
 name: sync-qa-planner
 version: 1.0.0
 description: >
-  Generates a structured QA test plan for Syntactics Inc. from the FDD, frontend task list, and
-  backend task list. Replaces sync-qa-tester. Trigger when a QA tester says "generate test plan",
-  "create QA plan", "qa planner", "what do I need to test", or after sync-tdd-be and sync-tdd-fe
-  complete. Maps every test case to a specific FDD rule - nothing is tested that was not built,
-  nothing built is left untested. Always run after backend and frontend implementation and before
-  sync-qa-runner in the QA workflow.
+  Generates QA test plan from FDD, frontend task list, and backend task list. Trigger: "generate
+  test plan", "create QA plan", "qa planner", "what do I need to test". Run after tdd-be/tdd-fe,
+  before qa-runner.
 ---
 
 # QA Planner
@@ -16,8 +13,6 @@ Reads the FDD, frontend task list, and backend task list to produce a structured
 Every test case maps to a specific FDD rule. The plan is the input to sync-qa-runner for execution.
 
 Workflow: **sync-tdd-be / sync-tdd-fe - sync-qa-planner - sync-qa-runner**
-
-> Note: sync-qa-tester in design-dev-workflow is deprecated. Use this skill instead.
 
 ---
 

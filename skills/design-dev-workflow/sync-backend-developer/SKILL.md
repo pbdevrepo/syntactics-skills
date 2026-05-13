@@ -2,13 +2,9 @@
 name: sync-backend-developer
 version: 1.0.0
 description: >
-  Generates a module-by-module backend development task list for Syntactics Inc. from the Final
-  Design Document (FDD) and the completed frontend task list. Trigger when a backend developer says
-  "generate backend tasks", "what do I need to build on the backend", "backend task list",
-  "create backend tasks", "API tasks", or after frontend-developer completes. Reads FDD module
-  specs, database schema, business rules, and frontend task API requirements to produce an
-  implementation task list. Always run after frontend-developer and before qa-tester in the
-  design-dev workflow.
+  Generates backend task list from FDD and frontend task list. Trigger: "generate backend tasks",
+  "backend task list", "API tasks", or after frontend-developer completes.
+  Run after frontend-developer and before qa-tester.
 ---
 
 # Backend Developer

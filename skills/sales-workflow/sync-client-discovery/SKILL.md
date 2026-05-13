@@ -2,11 +2,9 @@
 name: sync-client-discovery
 version: 1.0.0
 description: >
-  Pre-requirement discovery skill for the Sales workflow at Syntactics Inc. Generates structured
-  discovery questions for clients who have no brief, document, or clear direction. Trigger when a
-  Sales team member says "client has no idea what they want", "no requirements yet", "start discovery",
-  "client discovery", "discovery questions", or when a new client has not yet provided any brief or RFP.
-  Always run before sync-requirement-analyzer when client input is absent or extremely vague.
+  Pre-requirement discovery for clients with no brief or direction. Trigger: "client has no idea
+  what they want", "no requirements yet", "start discovery", "client discovery", "discovery questions".
+  Run before sync-requirement-analyzer.
 ---
 
 # Client Discovery

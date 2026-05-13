@@ -2,7 +2,9 @@
 name: sync-sprint-planner
 version: 1.1.0
 description: >
-  Converts an approved Database Schema into a ready-to-assign sprint task list for Syntactics Inc. Trigger when user says "create the sprint plan", "plan the sprint", "task breakdown", "what tasks do we need", "generate the dev tasks", "break down the schema into tasks", "prepare the tasks for the dev team", "what's the build order", or shares a DB schema and asks what to build. Output is a plain markdown file organized by priority and dependency order — ready for the PM to assign directly to developers.
+  Converts an approved DB schema into a sprint task list ordered by build dependency. Trigger:
+  "create sprint plan", "task breakdown", "generate dev tasks", "break down the schema",
+  "what's the build order", or sharing a schema and asking what to build. Run after database-administrator.
 ---
 
 # Sprint Planner

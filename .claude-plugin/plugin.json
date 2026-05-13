@@ -5,7 +5,6 @@
     "./skills/ba-workflow/sync-database-administrator",
     "./skills/ba-workflow/sync-final-design",
     "./skills/ba-workflow/sync-sprint-planner",
-    "./skills/content-workflow/sync-ai-content-writer",
     "./skills/design-dev-workflow/sync-backend-developer",
     "./skills/design-dev-workflow/sync-frontend-developer",
     "./skills/design-dev-workflow/sync-ui-designer",

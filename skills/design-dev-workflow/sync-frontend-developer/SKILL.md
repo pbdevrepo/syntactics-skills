@@ -2,12 +2,9 @@
 name: sync-frontend-developer
 version: 1.0.0
 description: >
-  Generates a module-by-module frontend development task list for Syntactics Inc. from the Final
-  Design Document (FDD) and the completed design task list. Trigger when a frontend developer says
-  "generate frontend tasks", "what do I need to build on the frontend", "frontend task list",
-  "create frontend tasks", or after ui-designer completes. Reads FDD module specs, validation rules,
-  and design tasks to produce an implementation task list. Always run after ui-designer and before
-  backend-developer in the design-dev workflow.
+  Generates frontend task list from FDD and design task list. Trigger: "generate frontend tasks",
+  "frontend task list", "create frontend tasks", or after ui-designer completes.
+  Run after ui-designer and before backend-developer.
 ---
 
 # Frontend Developer

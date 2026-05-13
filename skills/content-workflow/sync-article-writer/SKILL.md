@@ -2,13 +2,9 @@
 name: sync-article-writer
 version: 1.0.0
 description: >
-  Write and optimize blog posts and articles - how-to guides, listicles, opinion pieces,
-  pillar content, and news articles - so they rank on Google AND get cited by AI agents
-  (ChatGPT Browse, Perplexity, Claude, Google AI Overviews). Use when the user wants to write
-  a blog post, article, how-to guide, listicle, opinion piece, long-form content, or news
-  article. Also trigger when the user asks about content for their blog, wants to write
-  something for SEO, needs a pillar article, or asks how to structure an article for AI
-  discoverability.
+  Write and optimize blog posts — how-to guides, listicles, pillar content, news articles —
+  for Google SEO and AI discoverability. Trigger: "write a blog post", "article", "how-to guide",
+  "listicle", "pillar article", or "content for SEO".
 ---
 
 # Article Writer

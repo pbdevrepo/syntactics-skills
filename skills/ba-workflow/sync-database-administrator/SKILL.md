@@ -2,18 +2,9 @@
 name: sync-database-administrator
 version: 1.2.0
 description: >
-  Expert-level relational database design assistant. Deep knowledge in schema design,
-  normalization (1NF–3NF), transactions, and production schema best practices.
-  Produces a downloadable .md schema file directly after design is complete.
-  Trigger for: database design, schema design, table normalization, foreign keys,
-  join tables, trigger tables, stored procedures,
-  transaction design, data integrity, or reviewing a relational database.
-  Also trigger for: "design a database for X", "what tables do I need for Y",
-  "normalize this schema", "generate a schema file",
-  "add a column", "what index should I use", "is this schema normalized",
-  "model this relationship", "what's wrong with this table", "review my schema",
-  or any time a user pastes DDL or a table definition and asks for feedback.
-  Always use this skill for any database design or schema review — even quick one-table checks.
+  Relational DB design — schema, normalization (1NF-3NF), foreign keys, transactions, stored
+  procedures, indexes. Trigger: "design a database", "schema design", "normalize this",
+  "generate a schema file", DDL paste, "what tables do I need", or any DB/schema review request.
 ---
 
 # Database Administrator Skill
