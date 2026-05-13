@@ -8,10 +8,6 @@ description: >
   references and out-of-scope flags. Auto-bootstraps required labels if they do not exist. Never
   provides fix suggestions. Always run after sync-qa-runner and before sync-dev-to-fix in the
   QA workflow.
-outputs: github-issues
-triggers: projects/{project-name}/qa/{project-name}-qa-plan.md
-approval: true
-next: ~
 ---
 
 # QA to Ticket

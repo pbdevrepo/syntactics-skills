@@ -6,10 +6,6 @@ description: >
   requirements document. Trigger when a Sales team member says "write the proposal", "generate the
   proposal", "create the project proposal", or after proposal-grill completes. Produces a
   professional, client-ready proposal .md file. Always run after proposal-grill and before quotation.
-outputs: projects/{project-name}/sales/{project-name}-proposal.md
-triggers: projects/{project-name}/sales/{project-name}-requirements.md
-approval: true
-next: sync-ba-project-intake
 ---
 
 # Proposal Writer

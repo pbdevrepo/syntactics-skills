@@ -8,10 +8,6 @@ description: >
   "create frontend tasks", or after ui-designer completes. Reads FDD module specs, validation rules,
   and design tasks to produce an implementation task list. Always run after ui-designer and before
   backend-developer in the design-dev workflow.
-outputs: projects/{project-name}/design-dev/{project-name}-frontend-tasks.md
-triggers: projects/{project-name}/design-dev/{project-name}-design-tasks.md
-approval: false
-next: sync-backend-developer
 ---
 
 # Frontend Developer

@@ -8,10 +8,6 @@ description: >
   complete. Maps every test case to a specific FDD rule - nothing is tested that was not built,
   nothing built is left untested. Always run after backend and frontend implementation and before
   sync-qa-runner in the QA workflow.
-outputs: projects/{project-name}/qa/{project-name}-qa-plan.md
-triggers: projects/{project-name}/design-dev/{project-name}-backend-tasks.md
-approval: false
-next: sync-qa-runner
 ---
 
 # QA Planner

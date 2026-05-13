@@ -9,10 +9,6 @@ description: >
   specs, database schema, business rules, and frontend task API requirements to produce an
   implementation task list. Always run after frontend-developer and before qa-tester in the
   design-dev workflow.
-outputs: projects/{project-name}/design-dev/{project-name}-backend-tasks.md
-triggers: projects/{project-name}/design-dev/{project-name}-frontend-tasks.md
-approval: false
-next: sync-qa-planner
 ---
 
 # Backend Developer
