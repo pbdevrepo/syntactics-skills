@@ -10,7 +10,17 @@ File: `projects/{project-name}/sales/{project-name}-proposal.md`
 **Prepared for:** {Client Name}
 **Prepared by:** Syntactics Inc.
 **Date:** {YYYY-MM-DD}
-**Version:** 1.0
+**Version:** {proposal-version}
+
+---
+
+## Revision Summary *(include only for v2 and above — remove this section for the initial proposal)*
+
+This revision incorporates the following client-requested changes from the previous version:
+
+- {Change 1 — e.g., "Added: Reporting module with export functionality"}
+- {Change 2 — e.g., "Removed: SMS notification feature (deferred to Phase 2)"}
+- {Change 3 — e.g., "Updated: User roles expanded to include Supervisor access"}
 
 ---
 
