@@ -2,9 +2,11 @@
 name: sync-quotation
 version: 1.0.0
 description: >
-  Generates itemized module-by-module quotation with placeholder hour ranges per role (Design,
-  Frontend, Backend). Trigger: "generate the quotation", "create the quote", "itemize the hours",
-  "how much will this cost". Run after proposal-writer.
+  Generates an itemized project quotation for the Sales workflow at Syntactics Inc. from an approved
+  proposal. Trigger when a Sales team member says "generate the quotation", "create the quote",
+  "itemize the hours", "how much will this cost", or after proposal-writer completes. Produces a
+  module-by-module breakdown with sub-items and placeholder hour ranges per role (Design, Frontend,
+  Backend). Human finalizes the numbers before sending to the client. Always run after proposal-writer.
 ---
 
 # Quotation

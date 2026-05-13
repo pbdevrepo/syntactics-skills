@@ -2,9 +2,11 @@
 name: sync-tdd-fe
 version: 1.0.0
 description: >
-  TDD frontend implementation — failing test → implement → refactor loop per frontend task, anchored
-  to FDD UI rules and validation. Trigger: "start frontend TDD", "implement frontend", "tdd frontend".
-  Run after sync-dev-session, before sync-qa-planner.
+  TDD-driven frontend implementation skill for Syntactics Inc. Guides a frontend developer through
+  a test-first development loop per task in the frontend task list, anchored to FDD UI behavior and
+  validation rules. Trigger when a frontend developer says "start frontend TDD", "implement frontend",
+  "tdd frontend", or after sync-dev-session completes for a FE or Full-Stack session. Always run
+  after sync-dev-session and before sync-qa-planner in the engineering workflow.
 ---
 
 # TDD - Frontend Developer

@@ -2,10 +2,12 @@
 name: sync-requirement-analyzer
 version: 1.0.0
 description: >
-  Sales workflow entry — analyzes client requirements from PDF or text and produces a structured
-  requirements doc. Trigger: "analyze client requirements", "new client", "I have client notes",
-  "start the sales workflow", or any brief/email/RFP. Run before proposal-grill; if client has
-  no brief run sync-client-discovery first.
+  Entry point for the Sales workflow at Syntactics Inc. when a client has provided a brief, notes,
+  or RFP. Analyzes client requirements from a PDF upload or free-form text and produces a structured
+  requirements document. Trigger when a Sales team member says "analyze client requirements",
+  "we have a new client", "I have client notes", "start the sales workflow", or shares any client
+  brief, email, or RFP. If the client has no brief or direction at all, run sync-client-discovery
+  first. Always run before proposal-grill, proposal-writer, and quotation.
 ---
 
 # Requirement Analyzer

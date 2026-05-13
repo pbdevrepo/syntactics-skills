@@ -2,9 +2,12 @@
 name: sync-dev-to-fix
 version: 1.0.0
 description: >
-  TDD bug fix from a GitHub issue — failing test → fix → verify loop anchored to FDD. Trigger:
-  "fix this issue", "dev to fix", "start bug fix", or a GitHub issue URL.
-  Run after sync-qa-to-ticket; QA closes the issue after sync-qa-runner confirms the fix.
+  TDD-driven bug fix skill for Syntactics Inc. Fetches a GitHub issue created by sync-qa-to-ticket,
+  reads the FDD for expected behavior, and guides the developer through a failing test - fix - verify
+  loop. Trigger when a developer says "fix this issue", "dev to fix", "start bug fix", or invokes
+  with a GitHub issue link (e.g. "/sync-dev-to-fix https://github.com/org/repo/issues/123").
+  Always run after sync-qa-to-ticket. Does NOT close issues - QA closes after sync-qa-runner confirms
+  the fix passes.
 ---
 
 # Dev to Fix

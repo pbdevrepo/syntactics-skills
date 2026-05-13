@@ -2,9 +2,12 @@
 name: sync-proposal-grill
 version: 1.0.0
 description: >
-  Stress-tests a requirements document before writing a proposal — surfaces missed modules, ambiguous
-  scope, and edge cases. Trigger: "grill the requirements", "stress-test the scope", "review
-  requirements before proposal". Run after requirement-analyzer, before proposal-writer.
+  Stress-tests a client requirements document for the Sales workflow at Syntactics Inc. before a
+  proposal is written. Trigger when a Sales team member says "grill the requirements", "stress-test
+  the scope", "review requirements before proposal", or after requirement-analyzer completes. Asks
+  targeted questions one at a time focused on missed modules, ambiguous scope, unstated integrations,
+  and edge cases that would surface in BA. Always run after requirement-analyzer and before
+  proposal-writer.
 ---
 
 # Proposal Grill

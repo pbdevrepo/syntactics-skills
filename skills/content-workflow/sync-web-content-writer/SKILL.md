@@ -2,9 +2,13 @@
 name: sync-web-content-writer
 version: 1.0.0
 description: >
-  Write and optimize static web pages — homepages, service pages, landing pages, FAQs, portfolio
-  entries — for Google SEO and AI discoverability. Trigger: "write website copy", "rewrite this page",
-  "optimize title tags", "better for Google", "better for AI search", or sharing a page draft.
+  Write and optimize static web pages - homepages, service pages, about pages, landing pages,
+  FAQ sections, and portfolio or case study entries - so they rank on Google AND get cited by
+  AI agents (ChatGPT Browse, Perplexity, Claude, Google AI Overviews). Use when the user wants
+  to write or rewrite website copy, create FAQ sections, build portfolio entries, optimize title
+  tags, meta descriptions, or headings, or make a page "better for AI search" or "better for
+  Google." Also trigger when the user shares a page draft or existing static page copy and asks
+  how to improve it.
 ---
 
 # Web Content Writer

@@ -2,9 +2,7 @@
 name: sync-final-design
 version: 1.0.0
 description: >
-  Produces Final Design Documents (FDD) for web/mobile projects following v2.0 Business Applications
-  Final Design Template. Trigger: "final design", "FDD", "design handoff", "module spec",
-  "spec table", "specification table", "fill out the final design for [module]".
+  Use this skill to produce Final Design Documents (FDD) for web and mobile application projects at Syntactics Inc. Trigger whenever the user mentions "final design", "FDD", "design handoff", "design document", "spec table", "module spec", "specification table", or asks to document modules, system behavior, access validations, wireframes, or database table usage for a project. Also trigger when a user says "fill out the final design for [module]", "create the final design doc", "add a module spec", or "generate the FD template". This skill strictly enforces the v2.0 Business Applications Final Design Template format — do not improvise structure.
 ---
 
 # Final Design Document Skill

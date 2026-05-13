@@ -2,8 +2,10 @@
 name: sync-ba-project-intake
 version: 1.0.1
 description: >
-  BA workflow entry. Trigger: "start the intake", "I have a proposal", "we got a new project", or
-  proposal PDF upload. Always run before database-administrator, sprint-planner, and final-design.
+  Entry point for the BA project lifecycle at Syntactics Inc. Trigger when a BA uploads a proposal
+  PDF, says "start the intake" / "I have a proposal" / "we got a new project", or shares any client
+  brief to begin project analysis. Always run this skill first — before database-administrator,
+  sprint-planner, and final-design.
 ---
 
 # BA Project Intake

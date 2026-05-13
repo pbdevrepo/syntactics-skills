@@ -2,9 +2,13 @@
 name: sync-content-strategist
 version: 1.0.0
 description: >
-  Audit existing web content for SEO and AI issues, rewrite flagged sections, or produce content
-  strategy recommendations. Trigger: "audit this page", "score my content", "what should I fix",
-  "what should I write", "make better for AI search", or sharing a URL for improvement.
+  Audit existing web content for SEO and AI readability issues, rewrite flagged sections, and
+  produce content strategy recommendations - what to write, fix, or prioritize. Use when the
+  user shares a URL or existing copy and wants it improved, optimized, or scored, or when the
+  user asks what content to write next, what to fix first, how to prioritize their blog or
+  service pages, or wants a content strategy. Also trigger when the user says "audit this page,"
+  "score my content," "what should I fix," "what should I write," or "make this better for AI
+  search" without providing a new page to write from scratch.
 ---
 
 # Content Strategist

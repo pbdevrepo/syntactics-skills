@@ -2,9 +2,12 @@
 name: sync-ui-designer
 version: 1.0.0
 description: >
-  Generates Figma design task list from FDD. Trigger: "start design tasks", "generate design tasks",
-  "design task list", or after final-design completes. Run first in design-dev workflow —
-  before frontend-developer, backend-developer, and qa-tester.
+  Generates a module-by-module design task list for the UI/UX Designer at Syntactics Inc. from the
+  Final Design Document (FDD). Trigger when a designer says "start the design tasks", "what do I
+  need to design", "generate design tasks", "design task list", or after final-design completes and
+  the project moves to the Design & Dev phase. Reads FDD wireframe specs and validation rules to
+  produce a structured Figma task list per module. Always run first in the design-dev workflow —
+  before frontend-developer, backend-developer, qa-tester, and bug-fixer.
 ---
 
 # UI Designer

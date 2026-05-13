@@ -2,9 +2,12 @@
 name: sync-dev-session
 version: 1.0.0
 description: >
-  Implementation grilling — grounds a dev in a module before coding by challenging decisions against
-  the FDD. Trigger: "dev session", "implementation session", "grill me on implementation",
-  "start dev session". Run before sync-tdd-be or sync-tdd-fe.
+  Implementation grilling session for Syntactics Inc. developers. Grounds a dev in a specific module
+  before coding by challenging implementation decisions against the FDD. Trigger when a developer says
+  "dev session", "implementation session", "grill me on implementation", "start dev session", or
+  invokes with a topic and FDD reference (e.g. "/sync-dev-session user-management @final-design.md").
+  Always run before sync-tdd-be or sync-tdd-fe. Saves a structured session summary to
+  docs/sessions/{be|fe|fullstack}/{topic}-{date}.md and ends with an explicit handoff to the TDD skill.
 ---
 
 # Dev Session

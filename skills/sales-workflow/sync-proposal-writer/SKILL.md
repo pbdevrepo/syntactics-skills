@@ -2,8 +2,10 @@
 name: sync-proposal-writer
 version: 1.0.0
 description: >
-  Writes a client-facing proposal from a grilled requirements document. Trigger: "write the proposal",
-  "generate the proposal", "create the project proposal". Run after proposal-grill, before quotation.
+  Writes a client-facing project proposal for the Sales workflow at Syntactics Inc. from a grilled
+  requirements document. Trigger when a Sales team member says "write the proposal", "generate the
+  proposal", "create the project proposal", or after proposal-grill completes. Produces a
+  professional, client-ready proposal .md file. Always run after proposal-grill and before quotation.
 ---
 
 # Proposal Writer

@@ -2,9 +2,12 @@
 name: sync-tdd-be
 version: 1.0.0
 description: >
-  TDD backend implementation — failing test → implement → refactor loop per backend task, anchored
-  to FDD. Generates Swagger YAML after tests pass. Trigger: "start backend TDD", "implement backend",
-  "tdd backend". Run after sync-dev-session, before sync-qa-planner.
+  TDD-driven backend implementation skill for Syntactics Inc. Guides a backend developer through
+  a test-first development loop per task in the backend task list, anchored to FDD expected behavior.
+  Trigger when a backend developer says "start backend TDD", "implement backend", "tdd backend",
+  or after sync-dev-session completes for a BE or Full-Stack session. Generates Swagger YAML for all
+  API endpoints in the module after tests pass. Always run after sync-dev-session and before
+  sync-qa-planner in the engineering workflow.
 ---
 
 # TDD - Backend Developer

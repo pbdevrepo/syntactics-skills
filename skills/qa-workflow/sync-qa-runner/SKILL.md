@@ -2,9 +2,12 @@
 name: sync-qa-runner
 version: 1.0.0
 description: >
-  Executes QA test plan via Playwright MCP (UI/E2E) and HTTP (API). Marks each case PASS/FAIL inline.
-  Trigger: "run tests", "execute test plan", "qa runner", "start qa run". Run after qa-planner,
-  before qa-to-ticket. Also used for targeted re-runs after dev-to-fix.
+  Executes the QA test plan for Syntactics Inc. using live Playwright MCP for UI/E2E tests and HTTP
+  requests for API tests. Marks each test case PASS or FAIL inline in the plan. Generates reusable
+  Playwright regression spec files. Trigger when a QA tester says "run tests", "execute test plan",
+  "qa runner", "start qa run", or after sync-qa-planner completes. Supports local, staging, and
+  custom URL environments. Always run after sync-qa-planner and before sync-qa-to-ticket in the
+  QA workflow. Also used for re-runs after sync-dev-to-fix applies a fix.
 ---
 
 # QA Runner
