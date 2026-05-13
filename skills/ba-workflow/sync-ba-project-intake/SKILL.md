@@ -6,6 +6,10 @@ description: >
   PDF, says "start the intake" / "I have a proposal" / "we got a new project", or shares any client
   brief to begin project analysis. Always run this skill first — before database-administrator,
   sprint-planner, and final-design.
+outputs: projects/{project-name}/ba/{project-name}-intake.md
+triggers: projects/{project-name}/sales/{project-name}-proposal.md
+approval: true
+next: sync-final-design
 ---
 
 # BA Project Intake

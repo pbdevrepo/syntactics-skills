@@ -8,6 +8,10 @@ description: >
   "qa runner", "start qa run", or after sync-qa-planner completes. Supports local, staging, and
   custom URL environments. Always run after sync-qa-planner and before sync-qa-to-ticket in the
   QA workflow. Also used for re-runs after sync-dev-to-fix applies a fix.
+outputs: projects/{project-name}/qa/{project-name}-qa-plan.md
+triggers: projects/{project-name}/qa/{project-name}-qa-plan.md
+approval: false
+next: sync-qa-to-ticket
 ---
 
 # QA Runner

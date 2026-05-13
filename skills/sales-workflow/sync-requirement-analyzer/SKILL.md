@@ -8,6 +8,10 @@ description: >
   "we have a new client", "I have client notes", "start the sales workflow", or shares any client
   brief, email, or RFP. If the client has no brief or direction at all, run sync-client-discovery
   first. Always run before proposal-grill, proposal-writer, and quotation.
+outputs: projects/{project-name}/sales/{project-name}-requirements.md
+triggers: ~
+approval: true
+next: sync-proposal-writer
 ---
 
 # Requirement Analyzer

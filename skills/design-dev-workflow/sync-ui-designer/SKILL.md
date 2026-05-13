@@ -8,6 +8,10 @@ description: >
   the project moves to the Design & Dev phase. Reads FDD wireframe specs and validation rules to
   produce a structured Figma task list per module. Always run first in the design-dev workflow —
   before frontend-developer, backend-developer, qa-tester, and bug-fixer.
+outputs: projects/{project-name}/design-dev/{project-name}-design-tasks.md
+triggers: projects/{project-name}/ba/FDD-{module}.md
+approval: false
+next: sync-frontend-developer
 ---
 
 # UI Designer
