@@ -2,6 +2,15 @@
 
 All notable changes to syntactics-skills are documented here.
 
+## [Unreleased] - 2026-05-13
+
+### Added
+- `sales-workflow`: `sync-proposal-revision` — handles client feedback and revision rounds on an existing proposal; reads client comments, diffs against the latest requirements version (not always v1), produces a new versioned `{project-name}-requirements-v{N}.md` with a Revision History section and delta summary, then chains to `sync-proposal-writer` and `sync-quotation`
+
+### Changed
+- `sales-workflow`: `sync-proposal-writer` v1.0.0 -> v1.1.0 — revision-aware versioning; detects existing proposals to determine the next version number; writes `{project-name}-proposal-v{N}.md` for revisions (first proposal retains no suffix for backward compatibility); adds a "Revision Summary" section to v2+ proposals; self-review checklist includes version label consistency check
+- `references/template-structure.md` (`sync-proposal-writer`) — `Version: 1.0` replaced with `Version: {proposal-version}` placeholder; added Revision Summary block template (with note to omit for the initial proposal)
+
 ## [Unreleased] - 2026-05-12
 
 ### Added

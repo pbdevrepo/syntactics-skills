@@ -113,7 +113,8 @@ curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/sc
 | `sync-client-discovery` | Generate structured discovery questions for clients with no brief or clear direction |
 | `sync-requirement-analyzer` | Extract and structure client requirements from PDF or free-form text |
 | `sync-proposal-grill` | Stress-test requirements for missed modules and ambiguous scope |
-| `sync-proposal-writer` | Write a client-facing project proposal |
+| `sync-proposal-writer` | Write a client-facing project proposal with automatic version numbering |
+| `sync-proposal-revision` | Apply client feedback to produce a new versioned requirements file and revised proposal |
 | `sync-quotation` | Generate itemized module/feature list with placeholder hour ranges per role |
 
 ### Business Analysis (`ba-workflow`)
@@ -166,6 +167,8 @@ Always installed regardless of workflow selection.
 
 ```
 Sales:  sync-client-discovery → sync-requirement-analyzer → sync-proposal-grill → sync-proposal-writer → sync-quotation
+                                                                                       ↓ (client revisions)
+                                                                               sync-proposal-revision → sync-proposal-writer → sync-quotation
                                                                                        ↓ (client approves)
 BA:     sync-ba-project-intake → sync-database-administrator → sync-sprint-planner → sync-final-design
                                                                                        ↓ (FDD approved)

@@ -68,6 +68,20 @@ placeholder hour ranges per role (Design, Frontend, Backend). Human-reviewed bef
 sending to the client.
 _Avoid_: estimate, invoice, pricing sheet
 
+**Proposal Revision**:
+A new versioned requirements artifact produced by `proposal-revision` when the client
+provides feedback on an existing proposal. The revision diffs client comments against the
+latest requirements version (not always the original) and produces
+`{project-name}-requirements-v{N}.md` with a Revision History section. Triggers a new
+versioned proposal and quotation.
+_Avoid_: amendment, update, change request (when referring to a formal revision round)
+
+**Delta Summary**:
+The list of changes between two consecutive requirements versions, classified as `Added`,
+`Removed`, or `Updated`. Produced by `proposal-revision` and surfaced in the Revision
+Summary section of the revised proposal.
+_Avoid_: diff, changelog (when referring to the client-facing change summary)
+
 ### BA Workflow Terms
 
 **Intake Document**:
@@ -131,11 +145,15 @@ _Avoid_: bug list, issue list, defect log
 - The **FDD** is the single source of truth for the Design & Dev workflow — all D&D skills read from it
 - The **Proposal** gates entry to the BA workflow — a rejected proposal does not proceed
 - The **Quotation** accompanies the **Proposal** but is a separate artifact
+- A **Proposal Revision** re-enters the sales loop — it produces a new versioned requirements file and a new versioned proposal without restarting from `requirement-analyzer`
+- A **Delta Summary** is always diffed against the prior version, never against v1, so revision round 3 captures only what changed from round 2
 
 ### Workflow Sequence
 
 ```
 Sales:      sync-client-discovery → sync-requirement-analyzer → sync-proposal-grill → sync-proposal-writer → sync-quotation
+                                                                                           ↓ (client revisions)
+                                                                                   sync-proposal-revision → sync-proposal-writer → sync-quotation
                                                                                            ↓ (client approves)
 BA:         sync-ba-project-intake → sync-database-administrator → sync-sprint-planner → sync-final-design
                                                                                            ↓ (FDD approved)
