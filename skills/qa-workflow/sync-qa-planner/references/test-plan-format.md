@@ -1,8 +1,14 @@
-# Test Plan Format — QA Planner
+# Test Plan Format - QA Planner
 
-File: `projects/{project-name}/qa/{project-name}-qa-plan.md`
+Output directory: `projects/{project-name}/qa/qa-plan/`
+
+Two file types: one index file and one per-module file per module.
+
+Module slug: kebab-case the module name from the FDD (e.g. "User Management" -> `user-management`).
 
 ---
+
+## Index File: `qa-plan/index.md`
 
 ```markdown
 # {Project Name} - QA Test Plan
@@ -15,17 +21,38 @@ File: `projects/{project-name}/qa/{project-name}-qa-plan.md`
 
 ---
 
-## Summary
+## Module Index
 
-| Module | Test Cases | P1-critical | P2-high | P3-medium | P4-low |
-|--------|-----------|-------------|---------|-----------|--------|
-| {Module Name} | {count} | {count} | {count} | {count} | {count} |
+| Module | File | Test Cases | P1-critical | P2-high | P3-medium | P4-low |
+|--------|------|-----------|-------------|---------|-----------|--------|
+| {Module Name} | [{module-slug}.md]({module-slug}.md) | {count} | {count} | {count} | {count} | {count} |
 
-Total Test Cases: {N}
+Total: {N} test cases across {M} modules
 
 ---
 
-## Module: {Module Name}
+## Test Run Log
+
+| Run # | Date | Environment | Tester | Pass | Fail | Notes |
+|-------|------|-------------|--------|------|------|-------|
+| 1 | {date} | {local/staging/url} | {name} | {count} | {count} | Initial run |
+```
+
+---
+
+## Per-Module File: `qa-plan/{module-slug}.md`
+
+```markdown
+# {Module Name} - QA Test Cases
+
+**Project:** {project-name}
+**Module:** {Module Name}
+**FDD Source:** {module FDD file name}
+**Plan Index:** [index.md](index.md)
+
+---
+
+## Test Cases
 
 ### QA-{NNNN} - {Test Case Name}
 
@@ -53,7 +80,7 @@ Total Test Cases: {N}
 
 ---
 
-{repeat QA-{NNNN} block for each test case}
+{repeat QA-{NNNN} block for each test case in this module, sorted P1 first}
 
 ---
 
@@ -62,12 +89,12 @@ Total Test Cases: {N}
 | ID | Test Case | Priority | Observed | Assigned To |
 |----|-----------|----------|----------|-------------|
 | QA-{NNNN} | {test name} | P{N} | {brief description of failure} | Frontend / Backend |
+```
 
 ---
 
-## Test Run Log
+## Numbering Rules
 
-| Run # | Date | Environment | Tester | Pass | Fail | Notes |
-|-------|------|-------------|--------|------|------|-------|
-| 1 | {date} | {local/staging/url} | {name} | {count} | {count} | Initial run |
-```
+- QA IDs are global and sequential across all modules: QA-0001, QA-0002, QA-0003...
+- Do not restart numbering per module.
+- Within each module file, sort test cases P1-critical first, then P2, P3, P4.

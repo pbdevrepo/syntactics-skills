@@ -8,6 +8,12 @@ All notable changes to syntactics-skills are documented here.
 - `engineering-workflow`: `sync-dev-tdd` — unified TDD skill covering red-green-refactor philosophy, tracer bullets, and vertical slicing; detects session type (BE/FE/FS) and generates Swagger YAML (`docs/api/{module}/{feature}_api.yaml`) for backend and full-stack sessions; frontend-only sessions skip Swagger output
 - `references/swagger-output-format.md` (`sync-dev-tdd`) — full OpenAPI 3.0.3 YAML template with shared response schemas and security scheme
 
+### Changed
+- `qa-workflow`: `sync-qa-planner` v1.0.0 -> v2.0.0 — output changed from a single `{project-name}-qa-plan.md` to a `qa-plan/` directory with `index.md` (module index + test run log) and one `{module-slug}.md` per module (test cases sorted P1 first); QA IDs remain global sequential across all modules; resolves context window, parallel work, navigation, and traceability issues on large projects
+- `references/test-plan-format.md` (`sync-qa-planner`) — replaced with two templates: index file format and per-module file format; added numbering rules (global IDs, no restart per module) and module slug derivation rule (kebab-case)
+- `qa-workflow`: `sync-qa-runner` v1.0.0 -> v1.1.0 — added Step 0 to read `index.md` and loop one module file at a time; Test Run Log appended to `index.md` after all modules complete; delivery messages updated to reference `index.md`
+- `qa-workflow`: `sync-qa-to-ticket` v1.0.0 -> v1.1.0 — reads module list from `index.md` then processes each `{module-slug}.md` for failures; updates Bug Ref in per-module files; delivery message updated to reference `qa-plan/` directory
+
 ## [Unreleased] - 2026-05-13
 
 ### Added

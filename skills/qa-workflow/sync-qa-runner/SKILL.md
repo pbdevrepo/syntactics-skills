@@ -1,6 +1,6 @@
 ---
 name: sync-qa-runner
-version: 1.0.0
+version: 1.1.0
 description: >
   Executes the QA test plan for Syntactics Inc. using live Playwright MCP for UI/E2E tests and HTTP
   requests for API tests. Marks each test case PASS or FAIL inline in the plan. Generates reusable
@@ -25,7 +25,7 @@ Re-run workflow: **sync-dev-to-fix - sync-qa-runner (targeted re-run)**
 ## Before You Start
 
 Confirm inputs:
-1. QA test plan: `projects/{project-name}/qa/{project-name}-qa-plan.md`
+1. QA test plan index: `projects/{project-name}/qa/qa-plan/index.md`
 2. Environment target — ask if not specified:
 
 ```
@@ -41,11 +41,17 @@ Which environment should tests run against?
 
 ## Workflow
 
+### Step 0 — Load Module List
+
+Read `qa-plan/index.md`. Extract the list of module files from the Module Index table.
+Execute Steps 1-3 once per module file in the order listed in the index.
+Complete all test cases in one module before moving to the next.
+
 ### Step 1 — Set Environment
 
 Confirm the base URL for this run. All Playwright navigation and API requests use this base URL.
 
-Log the environment at the top of the Test Run Log in the qa-plan.md.
+Log the environment at the top of the Test Run Log in `qa-plan/index.md`.
 
 ### Step 2 — Execute Tests
 
@@ -89,28 +95,28 @@ These files can be run independently for regression testing without re-running s
 
 ### Step 4 — Update the Test Run Log
 
-In `{project-name}-qa-plan.md`, append a row to the Test Run Log:
+After all modules are complete, append one row to the Test Run Log in `qa-plan/index.md`:
 
 ```
-| {run #} | {date} | {environment} | {tester} | {pass count} | {fail count} | {notes} |
+| {run #} | {date} | {environment} | {tester} | {total pass} | {total fail} | {notes} |
 ```
 
 ### Step 5 — Deliver
 
-State the updated plan path and spec file paths, then say:
+State the updated index path and spec file paths, then say:
 
 **If failures exist:**
 ```
-Test run complete. {N} test cases failed.
+Test run complete. {N} test cases failed across {M} modules.
 
 Spec files written to docs/qa/{module}/
 
-Next: sync-qa-to-ticket - pass the updated {project-name}-qa-plan.md for issue creation.
+Next: sync-qa-to-ticket - pass projects/{project-name}/qa/qa-plan/index.md for issue creation.
 ```
 
 **If all tests pass:**
 ```
-Test run complete. All {N} test cases passed.
+Test run complete. All {N} test cases passed across {M} modules.
 
 Spec files written to docs/qa/{module}/
 

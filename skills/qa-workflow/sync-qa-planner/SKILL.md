@@ -1,6 +1,6 @@
 ---
 name: sync-qa-planner
-version: 1.0.0
+version: 2.0.0
 description: >
   Generates a structured QA test plan for Syntactics Inc. from the FDD, frontend task list, and
   backend task list. Replaces sync-qa-tester. Trigger when a QA tester says "generate test plan",
@@ -50,6 +50,8 @@ From the backend task list, extract:
 - All API endpoints - become API test cases
 - All server-side validations - become validation test cases
 
+Before deriving test cases, derive the `{module-slug}` for each module by kebab-casing the module name from the FDD (e.g. "User Management" -> `user-management`). This becomes the per-module output file name.
+
 ### Step 2 — Derive Test Cases
 
 **Always generate:**
@@ -84,17 +86,25 @@ Tag every test case:
 
 ### Step 5 — Deliver
 
-Write file: `projects/{project-name}/qa/{project-name}-qa-plan.md`
+Write to directory: `projects/{project-name}/qa/qa-plan/`
 
-Follow `references/test-plan-format.md` for exact structure.
+Files to write:
+- `qa-plan/index.md` - module index and test run log
+- `qa-plan/{module-slug}.md` - one file per module, test cases sorted P1 first
 
-State the file path, then say:
+QA IDs are global and sequential across all modules (QA-0001, QA-0002...). Do not restart per module.
+
+Follow `references/test-plan-format.md` for exact structure of both file types.
+
+State the directory path, then say:
 
 ```
 QA test plan generated.
 
-Next: sync-qa-runner - pass {project-name}-qa-plan.md and specify the target environment
-(local, staging, or custom URL).
+Modules: {list each module-slug.md}
+
+Next: sync-qa-runner - pass projects/{project-name}/qa/qa-plan/index.md and specify the
+target environment (local, staging, or custom URL).
 ```
 
 ---

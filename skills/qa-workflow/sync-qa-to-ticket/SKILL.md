@@ -1,6 +1,6 @@
 ---
 name: sync-qa-to-ticket
-version: 1.0.0
+version: 1.1.0
 description: >
   Converts QA test failures and manual findings into structured GitHub issues for Syntactics Inc.
   Trigger when a QA tester says "create tickets", "generate issues", "qa to ticket", "log bugs",
@@ -23,7 +23,7 @@ Workflow: **sync-qa-runner - sync-qa-to-ticket - sync-dev-to-fix**
 ## Before You Start
 
 Confirm inputs:
-1. Updated QA plan with failures marked: `projects/{project-name}/qa/{project-name}-qa-plan.md`
+1. Updated QA plan index with failures marked: `projects/{project-name}/qa/qa-plan/index.md`
 2. GitHub repository (org/repo format)
 3. Manual QA findings — ask:
 
@@ -64,7 +64,10 @@ Via GitHub MCP, check if the required labels exist in the repository. Create any
 
 ### Step 2 — Process Failed Test Cases
 
-For each failed test case in the QA plan (Status: Fail):
+Read `index.md` to get the module list. For each module, read `{module-slug}.md` and collect
+all test cases where `Status: Fail`.
+
+For each failed test case:
 
 1. Read the QA-{NNNN} block: observed behavior, expected result, FDD ref, priority
 2. Check if the FDD ref flags the behavior as out-of-scope
@@ -120,7 +123,7 @@ File: {fdd file path}
 
 ### Step 5 — Update QA Plan with Issue Links
 
-In `{project-name}-qa-plan.md`, update the Bug Ref field of each failed test case with the
+In each `qa-plan/{module-slug}.md`, update the Bug Ref field of each failed test case with the
 GitHub issue URL.
 
 ### Step 6 — Deliver
@@ -130,7 +133,7 @@ State the issue count, then say:
 ```
 {N} GitHub issues created.
 
-QA plan updated with issue links: projects/{project-name}/qa/{project-name}-qa-plan.md
+QA plan updated with issue links: projects/{project-name}/qa/qa-plan/
 
 Next: sync-dev-to-fix - developers pick up issues labeled `ready-for-dev` and invoke
 /sync-dev-to-fix {issue URL}.
