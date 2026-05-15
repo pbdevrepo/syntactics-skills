@@ -135,8 +135,8 @@ curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/sc
 ### Engineering (`engineering-workflow`)
 | Skill | Description |
 |-------|-------------|
-| `sync-dev-session` | Implementation grilling session anchored to FDD - BE, FE, or Full-Stack |
-| `sync-dev-tdd` | Unified TDD skill - red-green-refactor loop; generates Swagger YAML for backend and full-stack sessions |
+| `sync-dev-session` | Task-level grilling session anchored to FDD - invoked as `/sync-dev-session BE-0001 users-module @tasks.md @fdd.md`; session type auto-derived |
+| `sync-dev-tdd` | TDD red-green-refactor loop per task or module; auto-loads prior session summary if found; standalone mode reads task list + FDD directly |
 | `sync-dev-to-fix` | TDD-driven bug fix loop from a GitHub issue - fetches, fixes, posts result |
 
 ### QA (`qa-workflow`)

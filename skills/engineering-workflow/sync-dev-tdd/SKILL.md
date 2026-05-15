@@ -1,9 +1,36 @@
 ---
 name: sync-dev-tdd
-description: Test-driven development with red-green-refactor loop. Use when user wants to build features or fix bugs using TDD, mentions "red-green-refactor", wants integration tests, or asks for test-first development.
+description: >
+  TDD implementation skill for Syntactics Inc. Executes a red-green-refactor loop for a specific
+  task or module, anchored to the FDD. Auto-detects a prior dev session summary and loads it as the
+  implementation baseline; runs standalone if no session exists. Trigger when a developer says
+  "start tdd", "implement", "tdd this task", "run tdd", or after sync-dev-session completes.
+  Invoked as: /sync-dev-tdd {Task-ID} {module} @{task-file}.md @{fdd-file}.md. Generates Swagger
+  YAML for backend and full-stack sessions. Always run after sync-dev-session when a session exists.
 ---
 
 # Test-Driven Development
+
+**Invocation:**
+```
+/sync-dev-tdd BE-0001 users-module @{project-name}-backend-tasks.md @fdd-{module}.md
+/sync-dev-tdd FE-0010 users-module @{project-name}-frontend-tasks.md @fdd-{module}.md
+/sync-dev-tdd users-module @{project-name}-backend-tasks.md @fdd-{module}.md  (module-scope)
+```
+
+---
+
+## Before You Start
+
+Required inputs:
+1. Task ID (recommended) or module name — the scope of this TDD session
+2. Module name — ties the session to the sprint module
+3. Task file — `{project-name}-backend-tasks.md` or `{project-name}-frontend-tasks.md`
+4. FDD file — always required; used for standalone mode and to verify behavior
+
+Do NOT ask for session type — it is auto-derived in Step 0.
+
+---
 
 ## Philosophy
 
@@ -42,12 +69,30 @@ RIGHT (vertical):
 
 ## Workflow
 
-### 0. Session Type
+### 0. Setup — Derive Type, Scope, and Mode
 
-Before anything else, ask: "Is this a **backend**, **frontend**, or **full-stack** session?"
+**Do not ask for session type.** Derive it from inputs:
+- Task ID starts with `BE-` and task file is backend tasks → **Backend** (generate Swagger)
+- Task ID starts with `FE-` and task file is frontend tasks → **Frontend** (skip Swagger)
+- Both backend and frontend task files passed → **Full-Stack** (generate Swagger)
+- Module-scope with backend task file → **Backend**; with frontend task file → **Frontend**
 
-- Backend or Full-Stack - Swagger YAML will be generated after all tests pass
-- Frontend only - skip Swagger output
+**Determine scope:**
+- Task ID provided → read that specific task row from the task file (Task, Type, Detail, Depends On)
+- Module name only → read all tasks in that module from the task file
+
+**Detect mode** — check for an existing session summary:
+- If Task ID provided: look for `docs/sessions/{be|fe|fullstack}/{Task-ID}-*.md`
+- If module-scope: look for `docs/sessions/{be|fe|fullstack}/{module}-*.md`
+- Most recent file wins if multiple exist
+
+**Session mode** (summary found): Load the session summary as the implementation baseline.
+Decisions Made and Constraints Identified in the summary are treated as confirmed — do not
+re-litigate them. Open Questions flagged in the summary must be resolved before coding begins.
+
+**Standalone mode** (no summary found): Read the task row from the task file and the relevant
+FDD module section to build context. Proceed directly to Planning (Step 1). Note in the TDD
+output that no prior dev session was found.
 
 ### 1. Planning
 

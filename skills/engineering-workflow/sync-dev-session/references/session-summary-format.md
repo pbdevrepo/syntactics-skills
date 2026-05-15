@@ -1,14 +1,15 @@
 # Session Summary Format
 
-File: `docs/sessions/{be|fe|fullstack}/{topic}-{YYYY-MM-DD}.md`
+File: `docs/sessions/{be|fe|fullstack}/{Task-ID or module}-{YYYY-MM-DD}.md`
 
 ---
 
 ```markdown
-# Session: {Topic} - {BE | FE | Full-Stack} - {YYYY-MM-DD}
+# Session: {Task-ID or Module} - {BE | FE | Full-Stack} - {YYYY-MM-DD}
 
 ## Context
 
+- **Task ID:** {BE-NNNN | FE-NNNN | "-" if module-scope}
 - **FDD Reference:** {file path}
 - **Module:** {module name}
 - **Session Type:** Backend | Frontend | Full-Stack
