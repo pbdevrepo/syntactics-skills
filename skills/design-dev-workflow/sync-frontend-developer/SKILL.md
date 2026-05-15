@@ -15,7 +15,7 @@ description: >
 Reads the FDD and the completed design task list to produce a structured frontend implementation
 task list. Tasks are component-level, assignable, and reference the FDD and Figma screens.
 
-Workflow: **ui-designer → frontend-developer → backend-developer → qa-tester → bug-fixer**
+Workflow: **ui-designer → frontend-developer → backend-developer**
 
 ---
 
@@ -23,15 +23,27 @@ Workflow: **ui-designer → frontend-developer → backend-developer → qa-test
 
 Confirm inputs:
 1. FDD files: all module `.md` files from the BA workflow
-2. Design task list: `projects/{project-name}/design-dev/{project-name}-design-tasks.md`
+2. Sprint plan: `projects/{project-name}/ba/{project-name}-sprint-tasks.md`
+3. Design task list: `projects/{project-name}/design-dev/{project-name}-design-tasks.md`
 
-All UI design tasks must be marked complete before this skill runs.
+Sprint N design tasks must be marked complete before Sprint N frontend tasks begin. Do not wait
+for all sprints' design tasks to complete — proceed sprint by sprint.
 
 Read `references/task-output-format.md` for the exact task block structure before generating.
 
 ---
 
 ## Workflow
+
+### Step 0 — Build Sprint Map
+
+Read `projects/{project-name}/ba/{project-name}-sprint-tasks.md`.
+
+For each Priority section (Priority 1 through Priority 6), note which modules appear. Map each
+module to its sprint number: Priority 1 = Sprint 1, Priority 2 = Sprint 2, and so on.
+
+If a module has no matching entry in the sprint plan, flag it as unresolved and assign it to the
+last sprint.
 
 ### Step 1 — Read All Inputs
 
@@ -47,7 +59,8 @@ From the design task list, extract:
 
 ### Step 2 — Derive Frontend Tasks
 
-One task = one discrete, implementable unit a single frontend developer can own.
+One task = one discrete, implementable unit a single frontend developer can own. Tag every task
+with the sprint number from the map built in Step 0.
 
 **Always generate:**
 
@@ -76,6 +89,7 @@ Every task must be tagged:
 ### Step 4 — Self-Review Before Delivering
 
 - [ ] Every design task has a corresponding frontend implementation task
+- [ ] Every task has a sprint number assigned
 - [ ] Every form task lists all fields and validation rules from the FDD
 - [ ] Every API call task names the endpoint (or flags it as TBD if backend not yet scoped)
 - [ ] Navigation and global layout tasks are included
@@ -90,9 +104,10 @@ Follow `references/task-output-format.md` for exact structure. Use the **compact
 State the file path, then say:
 
 ```
-Frontend tasks generated. Complete all frontend tasks before proceeding.
+Frontend tasks generated. Tasks are grouped by sprint.
 
-Next: backend-developer — pass the FDD files and {project-name}-frontend-tasks.md.
+Next: backend-developer — pass the FDD files, {project-name}-sprint-tasks.md,
+and {project-name}-frontend-tasks.md.
 ```
 
 ---

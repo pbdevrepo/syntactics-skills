@@ -9,6 +9,13 @@ All notable changes to syntactics-skills are documented here.
 - `references/swagger-output-format.md` (`sync-dev-tdd`) — full OpenAPI 3.0.3 YAML template with shared response schemas and security scheme
 
 ### Changed
+- `design-dev-workflow`: `sync-ui-designer` — now reads `{project-name}-sprint-tasks.md` from the BA workflow (Step 0); maps Priority N to Sprint N; groups design tasks by sprint in output; delivery message instructs sprint-by-sprint handoff to frontend-developer; removed qa-tester and bug-fixer from workflow chain
+- `design-dev-workflow`: `sync-frontend-developer` — now reads sprint plan as required input (Step 0); sprint-by-sprint gate replaces all-design-complete gate; tasks grouped by sprint in output; removed qa-tester and bug-fixer from workflow chain
+- `design-dev-workflow`: `sync-backend-developer` — now reads sprint plan as required input (Step 0); tasks grouped by sprint in output; delivery message hands off to sync-dev-session; removed qa-tester and bug-fixer from workflow chain
+- `references/task-output-format.md` (`sync-ui-designer`) — summary and task list restructured with sprint sections (Sprint 1, Sprint 2, ...); source header updated to include sprint plan
+- `references/task-output-format.md` (`sync-frontend-developer`) — summary and task list restructured with sprint sections; source header updated to include sprint plan
+- `references/task-output-format.md` (`sync-backend-developer`) — summary restructured with sprint/category rows; task list split into sprint sections; source header updated to include sprint plan
+- `engineering-workflow`: `sync-dev-session` — frontmatter and Step 5 handoffs updated from sync-tdd-be/sync-tdd-fe to sync-dev-tdd
 - `qa-workflow`: `sync-qa-planner` v1.0.0 -> v2.0.0 — output changed from a single `{project-name}-qa-plan.md` to a `qa-plan/` directory with `index.md` (module index + test run log) and one `{module-slug}.md` per module (test cases sorted P1 first); QA IDs remain global sequential across all modules; resolves context window, parallel work, navigation, and traceability issues on large projects
 - `references/test-plan-format.md` (`sync-qa-planner`) — replaced with two templates: index file format and per-module file format; added numbering rules (global IDs, no restart per module) and module slug derivation rule (kebab-case)
 - `qa-workflow`: `sync-qa-runner` v1.0.0 -> v1.1.0 — added Step 0 to read `index.md` and loop one module file at a time; Test Run Log appended to `index.md` after all modules complete; delivery messages updated to reference `index.md`

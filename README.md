@@ -128,16 +128,15 @@ curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/sc
 ### Design & Development (`design-dev-workflow`)
 | Skill | Description |
 |-------|-------------|
-| `sync-ui-designer` | Generate Figma design task list from FDD wireframe specs |
-| `sync-frontend-developer` | Generate frontend implementation task list from FDD + design tasks |
-| `sync-backend-developer` | Generate backend implementation task list from FDD + frontend tasks |
+| `sync-ui-designer` | Generate sprint-aware Figma design task list from FDD + BA sprint plan |
+| `sync-frontend-developer` | Generate sprint-aware frontend task list from FDD + design tasks + sprint plan |
+| `sync-backend-developer` | Generate sprint-aware backend task list from FDD + frontend tasks + sprint plan |
+
 ### Engineering (`engineering-workflow`)
 | Skill | Description |
 |-------|-------------|
 | `sync-dev-session` | Implementation grilling session anchored to FDD - BE, FE, or Full-Stack |
 | `sync-dev-tdd` | Unified TDD skill - red-green-refactor loop; generates Swagger YAML for backend and full-stack sessions |
-| `sync-tdd-be` | TDD-driven backend implementation loop with Swagger YAML generation |
-| `sync-tdd-fe` | TDD-driven frontend implementation loop |
 | `sync-dev-to-fix` | TDD-driven bug fix loop from a GitHub issue - fetches, fixes, posts result |
 
 ### QA (`qa-workflow`)

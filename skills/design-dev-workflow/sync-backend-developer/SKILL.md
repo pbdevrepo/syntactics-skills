@@ -17,7 +17,7 @@ Reads the FDD and the frontend task list to produce a structured backend impleme
 Tasks cover API endpoints, business logic, database interactions, and integrations — ordered by
 dependency so migrations and models are built before endpoints.
 
-Workflow: **ui-designer → frontend-developer → backend-developer → qa-tester → bug-fixer**
+Workflow: **ui-designer → frontend-developer → backend-developer**
 
 ---
 
@@ -25,13 +25,24 @@ Workflow: **ui-designer → frontend-developer → backend-developer → qa-test
 
 Confirm inputs:
 1. FDD files: all module `.md` files from the BA workflow
-2. Frontend task list: `projects/{project-name}/design-dev/{project-name}-frontend-tasks.md`
+2. Sprint plan: `projects/{project-name}/ba/{project-name}-sprint-tasks.md`
+3. Frontend task list: `projects/{project-name}/design-dev/{project-name}-frontend-tasks.md`
 
 Read `references/task-output-format.md` for the exact task block structure before generating.
 
 ---
 
 ## Workflow
+
+### Step 0 — Build Sprint Map
+
+Read `projects/{project-name}/ba/{project-name}-sprint-tasks.md`.
+
+For each Priority section (Priority 1 through Priority 6), note which modules appear. Map each
+module to its sprint number: Priority 1 = Sprint 1, Priority 2 = Sprint 2, and so on.
+
+If a module has no matching entry in the sprint plan, flag it as unresolved and assign it to the
+last sprint.
 
 ### Step 1 — Read All Inputs
 
@@ -46,7 +57,8 @@ From the frontend task list, extract:
 
 ### Step 2 — Derive Backend Tasks
 
-Build order — always follow this sequence:
+Tag every task with the sprint number from the map built in Step 0. Build order within each sprint
+always follows this sequence:
 
 ```
 Priority 1 — Migrations & Models
@@ -78,6 +90,7 @@ Priority 6 — Notifications & Background Jobs
 ### Step 3 — Self-Review Before Delivering
 
 - [ ] Every entity from the FDD has a migration and model task
+- [ ] Every task has a sprint number assigned
 - [ ] Every TBD endpoint in the frontend task list is now named and scoped
 - [ ] Every endpoint has server-side validation specified
 - [ ] Priority 1 tasks have no dependencies on Priority 2+ tasks
@@ -93,9 +106,10 @@ Follow `references/task-output-format.md` for exact structure. Use the **compact
 State the file path, then say:
 
 ```
-Backend tasks generated. Complete all backend tasks before proceeding.
+Backend tasks generated. Tasks are grouped by sprint.
 
-Next: qa-tester — pass the FDD files, {project-name}-frontend-tasks.md, and {project-name}-backend-tasks.md.
+Next: sync-dev-session — pass the FDD files, {project-name}-frontend-tasks.md,
+and {project-name}-backend-tasks.md.
 ```
 
 ---

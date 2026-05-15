@@ -110,28 +110,21 @@ _Avoid_: spec, design doc, requirements doc (the FDD is the definitive downstrea
 
 **Design Task List**:
 The artifact produced by `ui-designer`. A screen-by-screen list of Figma design tasks
-derived from FDD wireframe specs, including fields, states, and role variants.
+derived from FDD wireframe specs and the BA sprint plan. Tasks are grouped by sprint —
+Sprint N corresponds to Priority N in the BA sprint plan.
 _Avoid_: design brief, wireframe list
 
 **Frontend Task List**:
 The artifact produced by `frontend-developer`. A component-level implementation task list
-with API integration specs, validation rules, and Figma references.
+with API integration specs, validation rules, and Figma references. Tasks are grouped by
+sprint — sprint-by-sprint gate applies (Sprint N design must complete before Sprint N FE begins).
 _Avoid_: FE backlog, frontend tickets
 
 **Backend Task List**:
-The artifact produced by `backend-developer`. A priority-ordered implementation task list
-covering migrations, models, endpoints, business logic, and integrations.
+The artifact produced by `backend-developer`. A sprint-grouped implementation task list
+covering migrations, models, endpoints, business logic, and integrations. Build order within
+each sprint follows Priority 1-6 categories.
 _Avoid_: BE backlog, backend tickets
-
-**QA Task List / Test Cases**:
-The artifact produced by `qa-tester`. Test cases mapped to FDD validation rules, FE/BE
-tasks, role permissions, and workflow steps. Includes pass/fail status and test run log.
-_Avoid_: test plan, QA checklist
-
-**Bug Fix Task List**:
-The artifact produced by `bug-fixer`. A prioritized list of fix tasks (P1–P4) assigned to
-Frontend or Backend, derived from failed QA test cases.
-_Avoid_: bug list, issue list, defect log
 
 ---
 
@@ -158,7 +151,8 @@ Sales:      sync-client-discovery → sync-requirement-analyzer → sync-proposa
 BA:         sync-ba-project-intake → sync-database-administrator → sync-sprint-planner → sync-final-design
                                                                                            ↓ (FDD approved)
 Design&Dev: sync-ui-designer → sync-frontend-developer → sync-backend-developer
-Engineering: sync-dev-session → sync-tdd-be / sync-tdd-fe → sync-qa-planner → sync-qa-runner → sync-qa-to-ticket → sync-dev-to-fix → sync-qa-runner (re-run)
+            (each skill reads {project-name}-sprint-tasks.md; tasks grouped by sprint)
+Engineering: sync-dev-session → sync-dev-tdd → sync-qa-planner → sync-qa-runner → sync-qa-to-ticket → sync-dev-to-fix → sync-qa-runner (re-run)
 ```
 
 ---
@@ -169,9 +163,9 @@ Engineering: sync-dev-session → sync-tdd-be / sync-tdd-fe → sync-qa-planner 
 > **Sales:** "Yes — the **proposal** is the source document for the **intake**. ba-project-intake reads
 > it the same way it reads any client brief."
 
-> **Designer:** "Do I need to wait for all **modules** before I start Figma?"
-> **PM:** "Yes — `ui-designer` runs once across all **FDD** module files. All **modules** must be
-> complete before the **handoff** to `frontend-developer`."
+> **Designer:** "Do I need to finish all Figma screens before the frontend developer starts?"
+> **PM:** "No — work sprint by sprint. Finish Sprint 1 screens first, then hand off to
+> `frontend-developer` for Sprint 1 tasks. Sprint 2 design and Sprint 2 FE can follow in sequence."
 
 > **Dev:** "The backend task references FE-0023 as a dependency — does that mean I can't start?"
 > **PM:** "No — the **dependency** means FE-0023 needs the endpoint this task produces. You build

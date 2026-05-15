@@ -15,7 +15,7 @@ description: >
 Reads the Final Design Document (FDD) and produces a structured design task list for the UI/UX
 Designer. The designer uses this to build Figma screens — one task per screen or component.
 
-Workflow: **ui-designer → frontend-developer → backend-developer → qa-tester → bug-fixer**
+Workflow: **ui-designer → frontend-developer → backend-developer**
 
 ---
 
@@ -24,14 +24,27 @@ Workflow: **ui-designer → frontend-developer → backend-developer → qa-test
 Ask: **"What is the project name?"** and **"Where are the FDD files located?"**
 
 Accept FDD as: file path(s), uploaded `.md` files, or pasted content. If the FDD is split per
-module, collect all module files before proceeding — all modules must be completed before
-frontend-developer begins.
+module, collect all module files before proceeding.
+
+Required inputs:
+1. FDD files: all module `.md` files from the BA workflow
+2. Sprint plan: `projects/{project-name}/ba/{project-name}-sprint-tasks.md`
 
 Read `references/task-output-format.md` for the exact task block structure before generating.
 
 ---
 
 ## Workflow
+
+### Step 0 — Build Sprint Map
+
+Read `projects/{project-name}/ba/{project-name}-sprint-tasks.md`.
+
+For each Priority section (Priority 1 through Priority 6), note which modules appear. Map each
+module to its sprint number: Priority 1 = Sprint 1, Priority 2 = Sprint 2, and so on.
+
+If a module has no matching entry in the sprint plan, flag it as unresolved and assign it to the
+last sprint.
 
 ### Step 1 — Read All FDD Modules
 
@@ -45,7 +58,8 @@ Do not carry full behavior or validation narrative into context — that detail 
 
 ### Step 2 — Derive Design Tasks
 
-For each module, generate one design task per distinct screen or component.
+For each module, generate one design task per distinct screen or component. Tag every task with
+the sprint number from the map built in Step 0.
 
 **Always generate:**
 
@@ -68,6 +82,7 @@ task per role variant.
 ### Step 3 — Self-Review Before Delivering
 
 - [ ] Every module in the FDD has at least one design task
+- [ ] Every task has a sprint number assigned
 - [ ] Every form task includes a list of fields from the FDD
 - [ ] Every screen task references its module and FDD section
 - [ ] Role-specific variants are listed separately
@@ -82,9 +97,10 @@ Follow `references/task-output-format.md` for exact structure. Use the **compact
 State the file path, then say:
 
 ```
-Design tasks generated. Complete all Figma screens before proceeding.
+Design tasks generated. Tasks are grouped by sprint.
 
-Next: frontend-developer — pass the FDD files and {project-name}-design-tasks.md.
+Next: frontend-developer — complete Sprint 1 Figma screens first, then pass the FDD files,
+{project-name}-sprint-tasks.md, and {project-name}-design-tasks.md.
 ```
 
 ---

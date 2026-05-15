@@ -6,7 +6,7 @@ description: >
   before coding by challenging implementation decisions against the FDD. Trigger when a developer says
   "dev session", "implementation session", "grill me on implementation", "start dev session", or
   invokes with a topic and FDD reference (e.g. "/sync-dev-session user-management @final-design.md").
-  Always run before sync-tdd-be or sync-tdd-fe. Saves a structured session summary to
+  Always run before sync-dev-tdd. Saves a structured session summary to
   docs/sessions/{be|fe|fullstack}/{topic}-{date}.md and ends with an explicit handoff to the TDD skill.
 ---
 
@@ -16,7 +16,7 @@ Grills a developer on their implementation plan for a specific module, anchored 
 gaps, constraints, and risks before a single line of code is written. Saves a structured summary so
 decisions are traceable.
 
-Workflow: **sync-dev-session - sync-tdd-be / sync-tdd-fe**
+Workflow: **sync-dev-session - sync-dev-tdd**
 
 ---
 
@@ -93,23 +93,21 @@ After writing the summary, output the appropriate handoff:
 ```
 Session complete. Summary saved to docs/sessions/be/{topic}-{date}.md
 
-Proceed to: /sync-tdd-be {module} @{project-name}-backend-tasks.md
+Proceed to: /sync-dev-tdd {module} @{project-name}-backend-tasks.md
 ```
 
 **FE session:**
 ```
 Session complete. Summary saved to docs/sessions/fe/{topic}-{date}.md
 
-Proceed to: /sync-tdd-fe {module} @{project-name}-frontend-tasks.md
+Proceed to: /sync-dev-tdd {module} @{project-name}-frontend-tasks.md
 ```
 
 **Full-Stack session:**
 ```
 Session complete. Summary saved to docs/sessions/fullstack/{topic}-{date}.md
 
-Proceed to:
-- /sync-tdd-be {module} @{project-name}-backend-tasks.md
-- /sync-tdd-fe {module} @{project-name}-frontend-tasks.md
+Proceed to: /sync-dev-tdd {module} @{project-name}-backend-tasks.md @{project-name}-frontend-tasks.md
 ```
 
 ---
