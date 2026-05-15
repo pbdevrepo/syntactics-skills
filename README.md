@@ -135,6 +135,7 @@ curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/sc
 | Skill | Description |
 |-------|-------------|
 | `sync-dev-session` | Implementation grilling session anchored to FDD - BE, FE, or Full-Stack |
+| `sync-dev-tdd` | Unified TDD skill - red-green-refactor loop; generates Swagger YAML for backend and full-stack sessions |
 | `sync-tdd-be` | TDD-driven backend implementation loop with Swagger YAML generation |
 | `sync-tdd-fe` | TDD-driven frontend implementation loop |
 | `sync-dev-to-fix` | TDD-driven bug fix loop from a GitHub issue - fetches, fixes, posts result |

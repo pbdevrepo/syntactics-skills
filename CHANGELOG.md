@@ -2,6 +2,12 @@
 
 All notable changes to syntactics-skills are documented here.
 
+## [Unreleased] - 2026-05-15
+
+### Added
+- `engineering-workflow`: `sync-dev-tdd` — unified TDD skill covering red-green-refactor philosophy, tracer bullets, and vertical slicing; detects session type (BE/FE/FS) and generates Swagger YAML (`docs/api/{module}/{feature}_api.yaml`) for backend and full-stack sessions; frontend-only sessions skip Swagger output
+- `references/swagger-output-format.md` (`sync-dev-tdd`) — full OpenAPI 3.0.3 YAML template with shared response schemas and security scheme
+
 ## [Unreleased] - 2026-05-13
 
 ### Added
