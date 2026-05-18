@@ -203,6 +203,86 @@ Use these as starting points — expand or trim per project specifics.
 
 ---
 
+### Import / Export Module
+
+**System Behavior**
+- On load: show import and/or export controls; display history of previous imports/exports if applicable
+- **Import flow:** user selects file (CSV/XLSX) → system validates format and row data → shows preview of records to be imported → user confirms → system inserts records → shows success summary (X inserted, Y skipped, Z errors)
+- **Export flow:** user applies filters (optional) → clicks Export → system queries records → generates file → triggers browser download
+- Error state: if import file has invalid rows, display a row-level error report; do not partially commit — either all rows succeed or the import is rejected
+- Empty state: show "No records to export" if the filtered result set is empty; disable export button
+
+**System Validations**
+- Import file: required, must be CSV or XLSX (or project-specific format), max file size (e.g., 5 MB)
+- Required columns: list all columns that must be present in the import file; reject file if any are missing
+- Per-row validation: apply the same field rules as manual create (required fields, formats, uniqueness)
+- Duplicate rows: define what constitutes a duplicate (e.g., matching email) and whether to skip or reject
+- Export filter date range: start date must not be after end date; range cannot exceed project-defined limit
+
+**Access Validations**
+- Import: Admin and Manager only; hide Import button for Viewer role; return 403 if accessed via URL
+- Export: Manager and Admin only; hide Export button for Viewer role
+- View import/export history: same roles as import/export
+
+**Activity Logs**
+- `import_completed`: logs `user_id`, `file_name`, `total_rows`, `inserted`, `skipped`, `errors`, `timestamp`
+- `export_completed`: logs `user_id`, `filter_params`, `row_count`, `export_format`, `timestamp`
+
+---
+
+### File Upload Module
+
+**System Behavior**
+- On load: display current attachments (file name, size, upload date, uploader); show upload control
+- User selects file(s): system validates type and size client-side before upload begins
+- Upload in progress: show progress indicator per file
+- On success: file is stored, attachment record is created, file appears in the list immediately
+- User clicks delete on an attachment: show confirmation dialog → on confirm, soft-delete or hard-delete attachment → remove from list
+- If upload fails (network error, server error): show error message per file; allow retry without re-selecting
+
+**System Validations**
+- File type: allowed MIME types only (e.g., image/png, image/jpeg, application/pdf — specify per project)
+- File size: max per file (e.g., 10 MB) and max total per record (if applicable)
+- File count: max number of attachments per record (if applicable)
+- File name: sanitize on server side; reject executable file types regardless of extension spoofing
+
+**Access Validations**
+- View attachments: all authenticated users with access to the parent record
+- Upload: roles that can edit the parent record (e.g., Admin, Manager, Owner)
+- Delete attachment: Admin only, or the uploader for their own files — specify per project
+
+**Activity Logs**
+- `file_uploaded`: logs `user_id`, `record_id`, `file_name`, `file_size`, `timestamp`
+- `file_deleted`: logs `user_id`, `record_id`, `file_name`, `timestamp`
+
+---
+
+### Notifications Module
+
+**System Behavior**
+- **In-app notifications:** bell icon in nav shows unread count badge; clicking opens notification panel with list (message, timestamp, read/unread state)
+- User clicks a notification: mark as read, navigate to the relevant record or page
+- "Mark all as read" action: set all unread notifications to read
+- **Email notifications:** triggered by system events (e.g., record created, status changed, approval required); sent to the relevant user's registered email
+- **Push notifications (if applicable):** triggered by same events as email; requires user permission grant
+- Notification preferences: users can toggle which event types trigger email/push (if preferences UI exists)
+
+**System Validations**
+- In-app notifications: no user input required; system-generated only
+- Email: recipient email must be a valid registered user email; do not send to deactivated accounts
+- Notification content: must include record type, record ID/name, and a link to the relevant page
+
+**Access Validations**
+- View own notifications: all authenticated users
+- View another user's notifications: Admin only (if applicable)
+- Configure notification preferences: the user themselves, or Admin
+
+**Activity Logs**
+- `notification_sent`: logs `recipient_user_id`, `event_type`, `record_id`, `channel` (in-app/email/push), `timestamp`
+- `notification_read`: logs `user_id`, `notification_id`, `timestamp`
+
+---
+
 ### Approval / Workflow Module
 
 **System Behavior**

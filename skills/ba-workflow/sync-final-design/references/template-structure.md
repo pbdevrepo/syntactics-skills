@@ -97,6 +97,19 @@ List each step as a numbered sub-item:
 | **Change Log** | - 🔴 [UPDATED: 2025-10-01 — by: Juan — approved by: Client] Description changed from X to Y |
 ```
 
+### Output / Print-out Field
+
+Populate this field only when the module produces a printable report, an exported file, or a downloadable document. Describe the format and what triggers it.
+
+**Examples:**
+- `- PDF summary report; triggered by clicking "Export" button on the list view`
+- `- CSV export of filtered records; triggered by "Download" action in the toolbar`
+- `- Printed invoice; triggered by "Print" button on the detail view`
+
+If the module has no print or export output, leave the cell as `-` (a single dash). Do not write "N/A" or leave it blank.
+
+---
+
 ### Type Field — Valid Values Only
 - `Web Application`
 - `Mobile Application`

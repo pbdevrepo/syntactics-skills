@@ -5,6 +5,10 @@ All notable changes to syntactics-skills are documented here.
 ## [Unreleased] - 2026-05-18
 
 ### Changed
+- `ba-workflow`: `sync-final-design` v1.0.0 -> v1.1.0 — added explicit module-type classification step (Auth/CRUD/Dashboard/Settings/Approval/Import-Export/File Upload/Notifications); added draft-review gate (Step 3) before Write; added Tables To Use elicitation questions; tightened Pending enforcement rule; defined gather-all-modules-then-write sequencing; moved em-dash and formatting rules into Step 4; clarified Output/Print-out field as export/print only; module list now derived from sprint tasks file (`### {Module Name}` headings) rather than asked — user confirms extracted list before proceeding; Step 1 now reads all three upstream docs (sprint tasks, intake doc, DB schema) before asking anything — each mapped to the FDD fields it pre-populates; Step 2c updated to derive Tables To Use from the schema directly rather than eliciting from the user
+- `references/template-structure.md` (`sync-final-design`) — added Output/Print-out field guidance with examples and blank rule
+- `references/behavior-validation-guide.md` (`sync-final-design`) — added three new module patterns: Import/Export, File Upload, Notifications
+
 - `design-dev-workflow` renamed to `pm-workflow` — workflow is now run by the PM to generate role-specific task lists for the team
 - `sync-ui-designer` renamed to `sync-ui-task-creator`
 - `sync-frontend-developer` renamed to `sync-frontend-task-creator`
