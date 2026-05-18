@@ -81,10 +81,10 @@ Once the client approves the FDD, any updates must follow this protocol — remi
 
 | Step | Skill | Input Needed |
 |------|-------|--------------|
-| ← Upstream | `sprint-planner` | Intake doc + Schema doc |
-| → Downstream | `ui-designer` | All FDD module files |
+| ← Upstream | `sync-sprint-planner` | Intake doc + Schema doc |
+| → Downstream | `sync-ui-task-creator` | All FDD module files |
 
-After all module FDD files are generated and approved, pass them to `ui-designer` to begin the Design & Dev phase.
+After all module FDD files are generated and approved, pass them to `sync-ui-task-creator` to begin the Design & Dev phase.
 
 ---
 
