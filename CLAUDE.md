@@ -79,7 +79,7 @@ projects/
   {project-name}/
     sales/               # artifacts from sales-workflow
     ba/                  # artifacts from ba-workflow
-    design-dev/          # artifacts from design-dev-workflow
+    pm/                  # artifacts from pm-workflow
 CONTEXT.md               # canonical domain language for all workflows
 ```
 

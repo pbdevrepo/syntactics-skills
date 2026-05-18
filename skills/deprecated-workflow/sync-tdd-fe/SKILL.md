@@ -23,7 +23,7 @@ Workflow: **sync-dev-session - sync-tdd-fe - sync-qa-planner**
 
 Confirm inputs:
 1. Module name — the specific module being implemented
-2. Frontend task list: `projects/{project-name}/design-dev/{project-name}-frontend-tasks.md`
+2. Frontend task list: `projects/{project-name}/pm/{project-name}-frontend-tasks.md`
 3. FDD file — the relevant module section for UI behavior and validation rules
 
 All frontend tasks for the module must be present in the task list before proceeding.

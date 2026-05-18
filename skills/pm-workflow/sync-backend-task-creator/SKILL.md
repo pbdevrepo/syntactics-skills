@@ -1,23 +1,23 @@
 ---
-name: sync-backend-developer
+name: sync-backend-task-creator
 version: 1.0.0
 description: >
   Generates a module-by-module backend development task list for Syntactics Inc. from the Final
-  Design Document (FDD) and the completed frontend task list. Trigger when a backend developer says
-  "generate backend tasks", "what do I need to build on the backend", "backend task list",
-  "create backend tasks", "API tasks", or after frontend-developer completes. Reads FDD module
+  Design Document (FDD) and the completed frontend task list. Trigger when a PM says
+  "generate backend tasks", "what does the backend developer need to build", "backend task list",
+  "create backend tasks", "API tasks", or after sync-frontend-task-creator completes. Reads FDD module
   specs, database schema, business rules, and frontend task API requirements to produce an
-  implementation task list. Always run after frontend-developer and before qa-tester in the
-  design-dev workflow.
+  implementation task list. Always run after sync-frontend-task-creator and before sync-qa-planner in the
+  pm workflow.
 ---
 
-# Backend Developer
+# Backend Task Creator
 
 Reads the FDD and the frontend task list to produce a structured backend implementation task list.
 Tasks cover API endpoints, business logic, database interactions, and integrations — ordered by
 dependency so migrations and models are built before endpoints.
 
-Workflow: **ui-designer → frontend-developer → backend-developer**
+Workflow: **sync-ui-task-creator → sync-frontend-task-creator → sync-backend-task-creator**
 
 ---
 
@@ -26,7 +26,7 @@ Workflow: **ui-designer → frontend-developer → backend-developer**
 Confirm inputs:
 1. FDD files: all module `.md` files from the BA workflow
 2. Sprint plan: `projects/{project-name}/ba/{project-name}-sprint-tasks.md`
-3. Frontend task list: `projects/{project-name}/design-dev/{project-name}-frontend-tasks.md`
+3. Frontend task list: `projects/{project-name}/pm/{project-name}-frontend-tasks.md`
 
 Read `references/task-output-format.md` for the exact task block structure before generating.
 
@@ -99,7 +99,7 @@ Priority 6 — Notifications & Background Jobs
 
 ### Step 4 — Deliver
 
-Write file: `projects/{project-name}/design-dev/{project-name}-backend-tasks.md`
+Write file: `projects/{project-name}/pm/{project-name}-backend-tasks.md`
 
 Follow `references/task-output-format.md` for exact structure. Use the **compact table format** by default. Use the detailed block only for endpoints with complex business rules, multi-step side effects, or 5+ request fields that a table row cannot express.
 

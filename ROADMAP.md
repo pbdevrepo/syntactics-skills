@@ -13,9 +13,9 @@ sync-requirement-analyzer
   → sync-proposal-writer
     → sync-ba-project-intake
       → sync-final-design
-        → sync-ui-designer
-          → sync-frontend-developer
-            → sync-backend-developer
+        → sync-ui-task-creator
+          → sync-frontend-task-creator
+            → sync-backend-task-creator
               → sync-qa-planner
                 → sync-qa-runner
                   → sync-qa-to-ticket
@@ -24,7 +24,7 @@ sync-requirement-analyzer
 ### What needs to be built
 
 1. **Orchestrator skill** — reads the artifact produced by skill N and triggers skill N+1 automatically
-2. **Trigger conditions** — each skill declares what artifact it produces and what artifact triggers the next (e.g., when `FDD.md` is written, start `sync-ui-designer`)
+2. **Trigger conditions** — each skill declares what artifact it produces and what artifact triggers the next (e.g., when `FDD.md` is written, start `sync-ui-task-creator`)
 3. **Approval gates** — pause for human review at high-stakes handoffs: requirements → FDD → sprint plan
 
 ### Recommended approach: hybrid pipeline

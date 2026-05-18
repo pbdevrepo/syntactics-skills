@@ -1,6 +1,6 @@
-# Task Output Format — Frontend Developer
+# Task Output Format — Frontend Task Creator
 
-File: `projects/{project-name}/design-dev/{project-name}-frontend-tasks.md`
+File: `projects/{project-name}/pm/{project-name}-frontend-tasks.md`
 
 ---
 

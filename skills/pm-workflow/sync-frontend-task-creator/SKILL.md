@@ -1,21 +1,21 @@
 ---
-name: sync-frontend-developer
+name: sync-frontend-task-creator
 version: 1.0.0
 description: >
   Generates a module-by-module frontend development task list for Syntactics Inc. from the Final
-  Design Document (FDD) and the completed design task list. Trigger when a frontend developer says
-  "generate frontend tasks", "what do I need to build on the frontend", "frontend task list",
-  "create frontend tasks", or after ui-designer completes. Reads FDD module specs, validation rules,
-  and design tasks to produce an implementation task list. Always run after ui-designer and before
-  backend-developer in the design-dev workflow.
+  Design Document (FDD) and the completed design task list. Trigger when a PM says
+  "generate frontend tasks", "what does the frontend developer need to build", "frontend task list",
+  "create frontend tasks", or after sync-ui-task-creator completes. Reads FDD module specs, validation rules,
+  and design tasks to produce an implementation task list. Always run after sync-ui-task-creator and before
+  sync-backend-task-creator in the pm workflow.
 ---
 
-# Frontend Developer
+# Frontend Task Creator
 
 Reads the FDD and the completed design task list to produce a structured frontend implementation
 task list. Tasks are component-level, assignable, and reference the FDD and Figma screens.
 
-Workflow: **ui-designer → frontend-developer → backend-developer**
+Workflow: **sync-ui-task-creator → sync-frontend-task-creator → sync-backend-task-creator**
 
 ---
 
@@ -24,7 +24,7 @@ Workflow: **ui-designer → frontend-developer → backend-developer**
 Confirm inputs:
 1. FDD files: all module `.md` files from the BA workflow
 2. Sprint plan: `projects/{project-name}/ba/{project-name}-sprint-tasks.md`
-3. Design task list: `projects/{project-name}/design-dev/{project-name}-design-tasks.md`
+3. Design task list: `projects/{project-name}/pm/{project-name}-design-tasks.md`
 
 Sprint N design tasks must be marked complete before Sprint N frontend tasks begin. Do not wait
 for all sprints' design tasks to complete — proceed sprint by sprint.
@@ -97,7 +97,7 @@ Every task must be tagged:
 
 ### Step 5 — Deliver
 
-Write file: `projects/{project-name}/design-dev/{project-name}-frontend-tasks.md`
+Write file: `projects/{project-name}/pm/{project-name}-frontend-tasks.md`
 
 Follow `references/task-output-format.md` for exact structure. Use the **compact table format** by default. Use the detailed block only for tasks with complex conditional logic, 5+ API calls, or role-specific UI branching that a table row cannot express.
 
@@ -106,7 +106,7 @@ State the file path, then say:
 ```
 Frontend tasks generated. Tasks are grouped by sprint.
 
-Next: backend-developer — pass the FDD files, {project-name}-sprint-tasks.md,
+Next: sync-backend-task-creator — pass the FDD files, {project-name}-sprint-tasks.md,
 and {project-name}-frontend-tasks.md.
 ```
 

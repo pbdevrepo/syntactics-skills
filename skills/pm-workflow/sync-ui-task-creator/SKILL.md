@@ -1,21 +1,21 @@
 ---
-name: sync-ui-designer
+name: sync-ui-task-creator
 version: 1.0.0
 description: >
   Generates a module-by-module design task list for the UI/UX Designer at Syntactics Inc. from the
-  Final Design Document (FDD). Trigger when a designer says "start the design tasks", "what do I
-  need to design", "generate design tasks", "design task list", or after final-design completes and
-  the project moves to the Design & Dev phase. Reads FDD wireframe specs and validation rules to
-  produce a structured Figma task list per module. Always run first in the design-dev workflow —
-  before frontend-developer, backend-developer, qa-tester, and bug-fixer.
+  Final Design Document (FDD). Trigger when a PM says "generate design tasks", "create design tasks",
+  "what does the designer need to build", "design task list", or after final-design completes and
+  the project moves to the PM phase. Reads FDD wireframe specs and validation rules to
+  produce a structured Figma task list per module. Always run first in the pm workflow —
+  before sync-frontend-task-creator and sync-backend-task-creator.
 ---
 
-# UI Designer
+# UI Task Creator
 
 Reads the Final Design Document (FDD) and produces a structured design task list for the UI/UX
 Designer. The designer uses this to build Figma screens — one task per screen or component.
 
-Workflow: **ui-designer → frontend-developer → backend-developer**
+Workflow: **sync-ui-task-creator → sync-frontend-task-creator → sync-backend-task-creator**
 
 ---
 
@@ -90,7 +90,7 @@ task per role variant.
 
 ### Step 4 — Deliver
 
-Write file: `projects/{project-name}/design-dev/{project-name}-design-tasks.md`
+Write file: `projects/{project-name}/pm/{project-name}-design-tasks.md`
 
 Follow `references/task-output-format.md` for exact structure. Use the **compact table format** by default. Use the detailed block only for screens with complex design constraints (multi-step flows, conditional layouts, role-specific layout variants) that a table row cannot express.
 
@@ -99,7 +99,7 @@ State the file path, then say:
 ```
 Design tasks generated. Tasks are grouped by sprint.
 
-Next: frontend-developer — complete Sprint 1 Figma screens first, then pass the FDD files,
+Next: sync-frontend-task-creator — complete Sprint 1 Figma screens first, then pass the FDD files,
 {project-name}-sprint-tasks.md, and {project-name}-design-tasks.md.
 ```
 

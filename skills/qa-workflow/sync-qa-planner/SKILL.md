@@ -17,7 +17,7 @@ Every test case maps to a specific FDD rule. The plan is the input to sync-qa-ru
 
 Workflow: **sync-tdd-be / sync-tdd-fe - sync-qa-planner - sync-qa-runner**
 
-> Note: sync-qa-tester in design-dev-workflow is deprecated. Use this skill instead.
+> Note: sync-qa-tester (formerly in design-dev-workflow, now pm-workflow) is deprecated. Use this skill instead.
 
 ---
 
@@ -25,8 +25,8 @@ Workflow: **sync-tdd-be / sync-tdd-fe - sync-qa-planner - sync-qa-runner**
 
 Confirm inputs:
 1. FDD files: all module `.md` files from the BA workflow
-2. Frontend task list: `projects/{project-name}/design-dev/{project-name}-frontend-tasks.md`
-3. Backend task list: `projects/{project-name}/design-dev/{project-name}-backend-tasks.md`
+2. Frontend task list: `projects/{project-name}/pm/{project-name}-frontend-tasks.md`
+3. Backend task list: `projects/{project-name}/pm/{project-name}-backend-tasks.md`
 
 Read `references/test-plan-format.md` for the exact test case block structure.
 

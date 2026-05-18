@@ -17,7 +17,7 @@ _Avoid_: command, tool, plugin, script
 
 **Workflow**:
 An ordered sequence of skills belonging to one team role (e.g., `sales-workflow`,
-`ba-workflow`, `design-dev-workflow`). Each skill in a workflow consumes the previous
+`ba-workflow`, `pm-workflow`). Each skill in a workflow consumes the previous
 skill's artifact as input.
 _Avoid_: pipeline, process, flow
 
@@ -106,22 +106,22 @@ Generated per module (one file per module) to stay within model context limits, 
 delivered as a complete set.
 _Avoid_: spec, design doc, requirements doc (the FDD is the definitive downstream reference)
 
-### Design & Dev Workflow Terms
+### PM Workflow Terms
 
 **Design Task List**:
-The artifact produced by `ui-designer`. A screen-by-screen list of Figma design tasks
+The artifact produced by `sync-ui-task-creator`. A screen-by-screen list of Figma design tasks
 derived from FDD wireframe specs and the BA sprint plan. Tasks are grouped by sprint —
 Sprint N corresponds to Priority N in the BA sprint plan.
 _Avoid_: design brief, wireframe list
 
 **Frontend Task List**:
-The artifact produced by `frontend-developer`. A component-level implementation task list
+The artifact produced by `sync-frontend-task-creator`. A component-level implementation task list
 with API integration specs, validation rules, and Figma references. Tasks are grouped by
 sprint — sprint-by-sprint gate applies (Sprint N design must complete before Sprint N FE begins).
 _Avoid_: FE backlog, frontend tickets
 
 **Backend Task List**:
-The artifact produced by `backend-developer`. A sprint-grouped implementation task list
+The artifact produced by `sync-backend-task-creator`. A sprint-grouped implementation task list
 covering migrations, models, endpoints, business logic, and integrations. Build order within
 each sprint follows Priority 1-6 categories.
 _Avoid_: BE backlog, backend tickets
@@ -135,7 +135,7 @@ _Avoid_: BE backlog, backend tickets
 - An **Artifact** is consumed by the next **Skill** as its primary input
 - A **Module** appears consistently across all artifacts — module names must not drift between skills
 - A **Handoff** occurs when a skill's artifact is passed to the next skill; it is always initiated by a human
-- The **FDD** is the single source of truth for the Design & Dev workflow — all D&D skills read from it
+- The **FDD** is the single source of truth for the PM workflow — all PM skills read from it
 - The **Proposal** gates entry to the BA workflow — a rejected proposal does not proceed
 - The **Quotation** accompanies the **Proposal** but is a separate artifact
 - A **Proposal Revision** re-enters the sales loop — it produces a new versioned requirements file and a new versioned proposal without restarting from `requirement-analyzer`
@@ -150,7 +150,7 @@ Sales:      sync-client-discovery → sync-requirement-analyzer → sync-proposa
                                                                                            ↓ (client approves)
 BA:         sync-ba-project-intake → sync-database-administrator → sync-sprint-planner → sync-final-design
                                                                                            ↓ (FDD approved)
-Design&Dev: sync-ui-designer → sync-frontend-developer → sync-backend-developer
+PM:         sync-ui-task-creator → sync-frontend-task-creator → sync-backend-task-creator
             (each skill reads {project-name}-sprint-tasks.md; tasks grouped by sprint)
 Engineering: sync-dev-session → sync-dev-tdd → sync-qa-planner → sync-qa-runner → sync-qa-to-ticket → sync-dev-to-fix → sync-qa-runner (re-run)
 ```

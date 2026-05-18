@@ -23,7 +23,7 @@ Workflow: **sync-dev-session - sync-tdd-be - sync-qa-planner**
 
 Confirm inputs:
 1. Module name — the specific module being implemented
-2. Backend task list: `projects/{project-name}/design-dev/{project-name}-backend-tasks.md`
+2. Backend task list: `projects/{project-name}/pm/{project-name}-backend-tasks.md`
 3. FDD file — the relevant module section for expected behavior
 
 All backend tasks for the module must be present in the task list before proceeding.

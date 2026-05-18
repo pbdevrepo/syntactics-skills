@@ -53,8 +53,8 @@ Pick the workflows matching your role:
 |------|-----------------------|
 | Sales | `sales` |
 | Business Analyst | `ba` |
-| Designer | `design-dev` |
-| Frontend / Backend Developer | `design-dev`, `engineering` |
+| Designer | `pm` |
+| Frontend / Backend Developer | `pm`, `engineering` |
 | QA Tester | `qa` |
 | Content Writer | `content` |
 | All roles | Select all |
@@ -125,12 +125,12 @@ curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/sc
 | `sync-sprint-planner` | Convert approved DB schema into development task list |
 | `sync-final-design` | Produce Final Design Documents (FDD) per module |
 
-### Design & Development (`design-dev-workflow`)
+### PM (`pm-workflow`)
 | Skill | Description |
 |-------|-------------|
-| `sync-ui-designer` | Generate sprint-aware Figma design task list from FDD + BA sprint plan |
-| `sync-frontend-developer` | Generate sprint-aware frontend task list from FDD + design tasks + sprint plan |
-| `sync-backend-developer` | Generate sprint-aware backend task list from FDD + frontend tasks + sprint plan |
+| `sync-ui-task-creator` | PM generates sprint-aware Figma design task list from FDD + BA sprint plan |
+| `sync-frontend-task-creator` | PM generates sprint-aware frontend task list from FDD + design tasks + sprint plan |
+| `sync-backend-task-creator` | PM generates sprint-aware backend task list from FDD + frontend tasks + sprint plan |
 
 ### Engineering (`engineering-workflow`)
 | Skill | Description |
@@ -172,7 +172,7 @@ Sales:  sync-client-discovery → sync-requirement-analyzer → sync-proposal-gr
                                                                                        ↓ (client approves)
 BA:     sync-ba-project-intake → sync-database-administrator → sync-sprint-planner → sync-final-design
                                                                                        ↓ (FDD approved)
-D&D:    sync-ui-designer → sync-frontend-developer → sync-backend-developer
+PM:     sync-ui-task-creator → sync-frontend-task-creator → sync-backend-task-creator
 Eng:    sync-dev-session → sync-tdd-be / sync-tdd-fe → sync-qa-planner → sync-qa-runner → sync-qa-to-ticket → sync-dev-to-fix → sync-qa-runner (re-run)
 ```
 

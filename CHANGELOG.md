@@ -2,6 +2,16 @@
 
 All notable changes to syntactics-skills are documented here.
 
+## [Unreleased] - 2026-05-18
+
+### Changed
+- `design-dev-workflow` renamed to `pm-workflow` — workflow is now run by the PM to generate role-specific task lists for the team
+- `sync-ui-designer` renamed to `sync-ui-task-creator`
+- `sync-frontend-developer` renamed to `sync-frontend-task-creator`
+- `sync-backend-developer` renamed to `sync-backend-task-creator`
+- All three skill descriptions updated to trigger on PM phrases and reference pm-workflow ordering
+- Artifact output paths updated from `projects/{project-name}/design-dev/` to `projects/{project-name}/pm/`
+
 ## [Unreleased] - 2026-05-15
 
 ### Added
