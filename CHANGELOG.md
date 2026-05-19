@@ -6,6 +6,10 @@ All notable changes to syntactics-skills are documented here.
 
 ### Added
 - `pm-workflow`: `sync-design-to-tasks` v1.0.0 — orchestrator skill that chains sync-ui-task-creator → sync-frontend-task-creator → sync-backend-task-creator in sequence after FDD is complete; gates each stage on the previous output file existing before proceeding
+- `docs/adr/0001-version-mismatch-hard-block.md` — ADR: hard-block (not warn-and-gate) on artifact version mismatch; consuming artifact must be regenerated before skill proceeds
+- `docs/adr/0002-immediate-upstream-version-check.md` — ADR: each skill checks immediate upstream version only, not full ancestry; cascade propagates one step at a time
+- `CONTEXT.md` — added terms: Artifact Version, Source Version, Version Chain, Version Gate, Approval Gate; updated Workflow Sequence diagram with Approval Gate annotation and auto-trigger notation; added Version Chain diagram under Relationships
+
 
 ## [Unreleased] - 2026-05-18
 

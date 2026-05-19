@@ -42,3 +42,49 @@ This prevents a bad artifact at step 2 from silently poisoning all downstream st
 - Each existing skill gets an `outputs:` and `triggers:` field in its YAML frontmatter
 - Orchestrator reads those fields to build and walk the pipeline
 - Gates are declared per-skill as `approval: true/false`
+
+---
+
+## Planned: Artifact Versioning + Workflow Lean-up
+
+**Goal:** Make all artifacts version-tracked so downstream skills detect staleness and hard-block before generating output from a superseded spec. Reduce token waste from redundant reads and repeated inline rules.
+
+### Artifact versioning
+
+Every versioned artifact gets YAML frontmatter on write:
+
+```yaml
+---
+artifact_version: 1.0.0
+generated_by: sync-final-design@1.1.0
+generated_at: 2026-05-19
+source_versions:
+  sprint_tasks: 1.0.0
+  schema: 1.2.0
+---
+```
+
+Rules: patch bump for field edits, minor bump for adding/removing modules. Auto-applied by the producing skill on every write — no manual bump.
+
+**Artifacts to version:** Intake Document, Schema, Sprint Task List, FDD, PM Task Lists (design, frontend, backend), QA Plan.
+
+**Version Gate:** Each skill checks its immediate upstream `source_versions` on run. Mismatch = hard block. No warn-and-continue. The consuming artifact must be regenerated before the skill proceeds. See `docs/adr/0001-version-mismatch-hard-block.md`.
+
+**Version chain (immediate upstream only):**
+```
+Intake Doc → Schema → Sprint Task List → FDD → PM Task Lists → QA Plan → Dev Session
+```
+See `docs/adr/0002-immediate-upstream-version-check.md`.
+
+### Skill changes
+
+- `sync-final-design` — add approval gate prompt before auto-triggering `sync-design-to-tasks`; progressive reference loading (template-structure.md always, behavior-validation-guide.md after module type identified in Step 2a, database-standards.md at Step 2c Tables only)
+- `sync-design-to-tasks` — build Sprint Map once at orchestrator level; sub-skills skip Step 0 if sprint map already in context
+- `sync-qa-planner` — add version frontmatter and Version Gate check on FDD + task list versions
+- `sync-dev-session` — add Version Gate check on task file version + FDD version
+
+### Cleanup
+
+- `deprecated-workflow/` — delete entirely (sync-tdd-be and sync-tdd-fe superseded by sync-dev-tdd in engineering-workflow)
+- `engineering-workflow/sync-dev-tdd` — move loose files (deep-modules.md, interface-design.md, mocking.md, refactoring.md, tests.md) into references/ subfolder
+- `CLAUDE.md` — add global output formatting rule (no em dashes); add copyable project-setup reference block for applying the rule to client project CLAUDE.md files; remove per-skill `## Output Formatting` sections once global rule is in place

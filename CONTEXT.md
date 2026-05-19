@@ -133,6 +133,36 @@ previous stage's artifact existing before proceeding. Replaces running the three
 manually in sequence.
 _Avoid_: task batch, bulk task generation, auto-tasks
 
+**Artifact Version**:
+A semver identifier (`major.minor.patch`) embedded in every artifact's YAML frontmatter.
+Auto-bumped by the producing skill on every write — patch for field edits, minor for adding
+or removing modules. Stored as `artifact_version` in the frontmatter block.
+_Avoid_: revision number, document version, file version
+
+**Source Version**:
+The version of an upstream artifact recorded in a consuming artifact's frontmatter at
+generation time (`source_versions:` block). Used by the next downstream skill to detect
+whether its input has changed since the consuming artifact was last generated.
+_Avoid_: dependency version, input version
+
+**Version Chain**:
+The ordered sequence of artifacts whose versions are checked at each handoff:
+Intake Document → Schema → Sprint Task List → FDD → PM Task Lists → QA Plan → Dev Session.
+Each link checks its immediate upstream only — not the full ancestry.
+_Avoid_: version graph, dependency tree, audit trail
+
+**Version Gate**:
+A hard block enforced by a skill when its immediate upstream artifact's version does not
+match the `source_versions` recorded in the consuming artifact. The consuming artifact must
+be regenerated before the skill proceeds. There is no warn-and-continue option.
+_Avoid_: version check, staleness warning, version lock
+
+**Approval Gate**:
+An explicit confirmation prompt a skill surfaces before auto-triggering the next skill in the
+pipeline. Required at high-stakes handoffs where a bad artifact would poison the most
+downstream work. The FDD-to-task-pipeline transition is the primary approval gate.
+_Avoid_: review step, human-in-the-loop, confirmation dialog
+
 ---
 
 ## Relationships
@@ -156,11 +186,26 @@ Sales:      sync-client-discovery → sync-requirement-analyzer → sync-proposa
                                                                                    sync-proposal-revision → sync-proposal-writer → sync-quotation
                                                                                            ↓ (client approves)
 BA:         sync-ba-project-intake → sync-database-administrator → sync-sprint-planner → sync-final-design
-                                                                                           ↓ (FDD approved)
-PM:         sync-ui-task-creator → sync-frontend-task-creator → sync-backend-task-creator
-            (each skill reads {project-name}-sprint-tasks.md; tasks grouped by sprint)
-Engineering: sync-dev-session → sync-dev-tdd → sync-qa-planner → sync-qa-runner → sync-qa-to-ticket → sync-dev-to-fix → sync-qa-runner (re-run)
+                                                                                           ↓ (FDD approved — Approval Gate)
+PM:         sync-design-to-tasks [sync-ui-task-creator → sync-frontend-task-creator → sync-backend-task-creator]
+            (auto-triggered from sync-final-design after approval gate; each skill reads sprint-tasks.md; tasks grouped by sprint)
+                                                                                           ↓
+QA:         sync-qa-planner → sync-qa-runner → sync-qa-to-ticket
+Engineering: sync-dev-session → sync-dev-tdd → sync-dev-to-fix → sync-qa-runner (re-run)
 ```
+
+### Version Chain
+
+```
+Intake Doc (v) → Schema (v, checks intake_v)
+              → Sprint Task List (v, checks schema_v)
+                → FDD (v, checks sprint_tasks_v + schema_v)
+                  → PM Task Lists (v, checks fdd_v + sprint_tasks_v)
+                    → QA Plan (v, checks fdd_v + frontend_tasks_v + backend_tasks_v)
+                      → Dev Session (checks task_v + fdd_v)
+```
+
+Each skill checks its immediate upstream only. A mismatch triggers a Version Gate — hard block, no warn-and-continue.
 
 ---
 
