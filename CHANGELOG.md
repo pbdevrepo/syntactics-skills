@@ -2,6 +2,11 @@
 
 All notable changes to syntactics-skills are documented here.
 
+## [Unreleased] - 2026-05-19
+
+### Added
+- `pm-workflow`: `sync-design-to-tasks` v1.0.0 — orchestrator skill that chains sync-ui-task-creator → sync-frontend-task-creator → sync-backend-task-creator in sequence after FDD is complete; gates each stage on the previous output file existing before proceeding
+
 ## [Unreleased] - 2026-05-18
 
 ### Changed

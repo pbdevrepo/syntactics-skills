@@ -126,6 +126,13 @@ covering migrations, models, endpoints, business logic, and integrations. Build 
 each sprint follows Priority 1-6 categories.
 _Avoid_: BE backlog, backend tickets
 
+**Task Pipeline**:
+The automated orchestration of all three PM task-creation skills (UI, frontend, backend) in
+a single session, triggered by `sync-design-to-tasks`. The pipeline gates each stage on the
+previous stage's artifact existing before proceeding. Replaces running the three skills
+manually in sequence.
+_Avoid_: task batch, bulk task generation, auto-tasks
+
 ---
 
 ## Relationships

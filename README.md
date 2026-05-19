@@ -128,6 +128,7 @@ curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/sc
 ### PM (`pm-workflow`)
 | Skill | Description |
 |-------|-------------|
+| `sync-design-to-tasks` | Orchestrates full task pipeline from FDD — chains UI, frontend, and backend task creators in sequence |
 | `sync-ui-task-creator` | PM generates sprint-aware Figma design task list from FDD + BA sprint plan |
 | `sync-frontend-task-creator` | PM generates sprint-aware frontend task list from FDD + design tasks + sprint plan |
 | `sync-backend-task-creator` | PM generates sprint-aware backend task list from FDD + frontend tasks + sprint plan |
@@ -172,7 +173,7 @@ Sales:  sync-client-discovery → sync-requirement-analyzer → sync-proposal-gr
                                                                                        ↓ (client approves)
 BA:     sync-ba-project-intake → sync-database-administrator → sync-sprint-planner → sync-final-design
                                                                                        ↓ (FDD approved)
-PM:     sync-ui-task-creator → sync-frontend-task-creator → sync-backend-task-creator
+PM:     sync-design-to-tasks (orchestrates: sync-ui-task-creator → sync-frontend-task-creator → sync-backend-task-creator)
 Eng:    sync-dev-session → sync-tdd-be / sync-tdd-fe → sync-qa-planner → sync-qa-runner → sync-qa-to-ticket → sync-dev-to-fix → sync-qa-runner (re-run)
 ```
 
