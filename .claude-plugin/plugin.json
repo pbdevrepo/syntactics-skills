@@ -2,7 +2,7 @@
   "name": "syntactics-skills",
   "skills": [
     "./skills/ba-workflow/sync-ba-project-intake",
-    "./skills/ba-workflow/sync-database-administrator",
+    "./skills/ba-workflow/sync-database-designer",
     "./skills/ba-workflow/sync-final-design",
     "./skills/ba-workflow/sync-sprint-planner",
     "./skills/content-workflow/sync-article-writer",

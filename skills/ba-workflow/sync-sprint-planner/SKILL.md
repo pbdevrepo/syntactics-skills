@@ -9,7 +9,7 @@ description: >
 
 Reads the approved **Database Schema** (and optionally the BA Intake Document) and produces `{project-name}-sprint-tasks.md`. Organized by build order, tagged by role.
 
-> Always runs after **sync-database-administrator** has produced an approved schema.
+> Always runs after **sync-database-designer** has produced an approved schema.
 
 **Before generating tasks:** read `references/dependency-rules.md` and `references/task-output-format.md`.
 

@@ -90,7 +90,7 @@ for the BA phase — all downstream BA skills read from it.
 _Avoid_: brief, requirements (the BA intake is distinct from the sales requirements doc)
 
 **Schema**:
-The artifact produced by `database-administrator`. Defines all database tables, columns,
+The artifact produced by `database-designer`. Defines all database tables, columns,
 relationships, and constraints in `.md` + `.sql` format.
 _Avoid_: data model, ERD (when referring to the schema artifact specifically)
 
@@ -185,7 +185,7 @@ Sales:      sync-client-discovery → sync-requirement-analyzer → sync-proposa
                                                                                            ↓ (client revisions)
                                                                                    sync-proposal-revision → sync-proposal-writer → sync-quotation
                                                                                            ↓ (client approves)
-BA:         sync-ba-project-intake → sync-database-administrator → sync-sprint-planner → sync-final-design
+BA:         sync-ba-project-intake → sync-database-designer → sync-sprint-planner → sync-final-design
                                                                                            ↓ (FDD approved — Approval Gate)
 PM:         sync-design-to-tasks [sync-ui-task-creator → sync-frontend-task-creator → sync-backend-task-creator]
             (auto-triggered from sync-final-design after approval gate; each skill reads sprint-tasks.md; tasks grouped by sprint)

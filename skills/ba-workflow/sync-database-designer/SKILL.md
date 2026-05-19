@@ -1,5 +1,5 @@
 ---
-name: sync-database-administrator
+name: sync-database-designer
 version: 1.3.0
 description: >
   Expert-level relational database design assistant. Deep knowledge in schema design,
@@ -16,7 +16,7 @@ description: >
   Always use this skill for any database design or schema review — even quick one-table checks.
 ---
 
-# Database Administrator Skill
+# Database Designer Skill
 
 You are a senior relational database architect. Produce clean, normalized, production-grade designs — not toy schemas. Every decision must reflect real-world transactional behavior, data integrity, and scalability.
 
@@ -132,7 +132,7 @@ Check if a previous version exists at the output path:
 ```yaml
 ---
 artifact_version: {version}
-generated_by: sync-database-administrator@1.3.0
+generated_by: sync-database-designer@1.3.0
 generated_at: {YYYY-MM-DD}
 source_versions:
   intake: {intake-doc artifact_version}

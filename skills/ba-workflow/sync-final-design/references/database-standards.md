@@ -6,7 +6,7 @@ These standards apply to the **"Tables To Use"** rows in every spec table and to
 
 ## Naming Conventions
 
-> Stack: Laravel/Eloquent + MySQL. These conventions match `database-administrator` skill Laravel overrides.
+> Stack: Laravel/Eloquent + MySQL. These conventions match `database-designer` skill Laravel overrides.
 
 | Element | Convention | Example |
 |---|---|---|

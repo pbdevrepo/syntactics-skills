@@ -123,7 +123,7 @@ Items still unresolved after the Q&A session.
 - Confirmed dialect: [MySQL / PostgreSQL — based on proposal or default to MySQL for Laravel]
 
 **→ Sprint Planner:**
-Requires: Approved DB Schema (from database-administrator)
+Requires: Approved DB Schema (from database-designer)
 
 **→ Final Design:**
 Requires: This intake doc + approved DB Schema

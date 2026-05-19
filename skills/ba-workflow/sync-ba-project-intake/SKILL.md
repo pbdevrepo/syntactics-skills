@@ -4,7 +4,7 @@ version: 1.1.0
 description: >
   Entry point for the BA project lifecycle at Syntactics Inc. Trigger when a BA uploads a proposal
   PDF, says "start the intake" / "I have a proposal" / "we got a new project", or shares any client
-  brief to begin project analysis. Always run this skill first — before database-administrator,
+  brief to begin project analysis. Always run this skill first — before database-designer,
   sprint-planner, and final-design.
 ---
 
@@ -13,7 +13,7 @@ description: >
 Reads a proposal PDF plus any supporting input. Produces an intake `.md` file.
 Does not design, spec, or estimate. Produces clarity only.
 
-Workflow: **ba-project-intake → database-administrator → sprint-planner → final-design**
+Workflow: **ba-project-intake → database-designer → sprint-planner → final-design**
 
 ---
 
@@ -101,7 +101,7 @@ generated_at: {YYYY-MM-DD}
 Then `present_files` if available, otherwise state the file path. Then say:
 
 ```
-Intake done. Next: database-administrator — pass the intake doc.
+Intake done. Next: database-designer — pass the intake doc.
 ```
 
 ---

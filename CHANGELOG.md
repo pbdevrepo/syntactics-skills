@@ -5,6 +5,7 @@ All notable changes to syntactics-skills are documented here.
 ## [Unreleased] - 2026-05-19
 
 ### Changed
+- `ba-workflow`: `sync-database-administrator` renamed to `sync-database-designer` — name now reflects the skill's actual function (schema design, normalization, ERD); updated all internal references across ba-workflow skills and reference files
 - `qa-workflow`: `sync-qa-to-ticket` v1.1.0 → v1.2.0 — added area label classification (area:fe, area:be, area:fs); skill auto-classifies each failure by observed behavior symptom (UI symptoms → FE, data/API symptoms → BE, both → FS); new Step 4 presents classified table to QA tester for review and correction before GitHub issues are created; area label bootstrapped in Step 1 with distinct teal colors; area label applied to every created issue
 
 ### Added
