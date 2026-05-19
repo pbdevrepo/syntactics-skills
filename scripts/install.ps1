@@ -21,15 +21,22 @@ function Get-WorkflowSkills {
         Sort-Object
 }
 
+function Build-SkillMap {
+    param([string]$SkillsRoot)
+    $map = @{}
+    Get-ChildItem -Path $SkillsRoot -Directory | ForEach-Object {
+        Get-ChildItem -Path $_.FullName -Directory |
+            Where-Object { $_.Name -like 'sync-*' } |
+            ForEach-Object { if (-not $map.ContainsKey($_.Name)) { $map[$_.Name] = $_.FullName } }
+    }
+    $map
+}
+
 function Copy-Skills {
-    param([string[]]$Names, [string]$SkillsRoot, [string]$Target)
+    param([string[]]$Names, [hashtable]$SkillMap, [string]$Target)
     $n = 0
     foreach ($name in $Names) {
-        $src = Get-ChildItem -Path $SkillsRoot -Directory | ForEach-Object {
-            $candidate = Join-Path $_.FullName $name
-            if (Test-Path $candidate) { $candidate }
-        } | Select-Object -First 1
-
+        $src = $SkillMap[$name]
         if ($src) {
             $dest = Join-Path $Target $name
             if (Test-Path $dest) { Remove-Item $dest -Recurse -Force }
@@ -44,12 +51,13 @@ function Copy-Skills {
 
 try {
     Write-Host "Downloading latest skills..."
-    Invoke-WebRequest $ZipUrl -OutFile $TmpZip -UseBasicParsing
+    Invoke-WebRequest $ZipUrl -OutFile $TmpZip -UseBasicParsing -Headers @{'Accept-Encoding' = 'gzip'}
 
     New-Item -ItemType Directory -Force -Path $TmpDir | Out-Null
     Expand-Archive -Path $TmpZip -DestinationPath $TmpDir -Force
 
     $SkillsRoot = Join-Path $TmpDir "syntactics-skills-main\skills"
+    $SkillMap   = Build-SkillMap -SkillsRoot $SkillsRoot
 
     # Determine install location
     if ($Local) {
@@ -98,11 +106,15 @@ try {
         }
 
     } else {
+        # Cache skill lists once — reused for both display and selection
+        $wfSkillCache = @{}
+        foreach ($wfDir in $wfDirs) { $wfSkillCache[$wfDir.Name] = @(Get-WorkflowSkills -WfDir $wfDir.FullName) }
+
         Write-Host ""
         Write-Host "Available workflows:"
         for ($i = 0; $i -lt $wfDirs.Count; $i++) {
             $wfName = $wfDirs[$i].Name -replace '-workflow$', ''
-            $cnt    = @(Get-WorkflowSkills -WfDir $wfDirs[$i].FullName).Count
+            $cnt    = $wfSkillCache[$wfDirs[$i].Name].Count
             Write-Host ("  [{0}] {1}-workflow ({2} skills)" -f ($i + 1), $wfName, $cnt)
         }
         $allNum = $wfDirs.Count + 1
@@ -110,12 +122,12 @@ try {
 
         $answer = Read-Host ("`nEnter numbers separated by commas [{0}]" -f $allNum)
         if ([string]::IsNullOrWhiteSpace($answer) -or $answer.Trim() -eq "$allNum") {
-            foreach ($wfDir in $wfDirs) { $selected += @(Get-WorkflowSkills -WfDir $wfDir.FullName) }
+            foreach ($wfDir in $wfDirs) { $selected += $wfSkillCache[$wfDir.Name] }
         } else {
             foreach ($part in ($answer -split ',')) {
                 $idx = [int]$part.Trim() - 1
                 if ($idx -ge 0 -and $idx -lt $wfDirs.Count) {
-                    $selected += @(Get-WorkflowSkills -WfDir $wfDirs[$idx].FullName)
+                    $selected += $wfSkillCache[$wfDirs[$idx].Name]
                 }
             }
         }
@@ -124,7 +136,7 @@ try {
     $all = ($mustHave + $selected) | Select-Object -Unique
 
     New-Item -ItemType Directory -Force -Path $SkillDir | Out-Null
-    $count = Copy-Skills -Names $all -SkillsRoot $SkillsRoot -Target $SkillDir
+    $count = Copy-Skills -Names $all -SkillMap $SkillMap -Target $SkillDir
 
     Write-Host ""
     Write-Host "Installed $count skill(s) to $SkillDir"

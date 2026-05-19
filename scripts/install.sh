@@ -23,7 +23,7 @@ cleanup() { rm -f "$TMP_ZIP"; rm -rf "$TMP_DIR"; }
 trap cleanup EXIT
 
 echo "Downloading latest skills..."
-curl -fsSL "https://github.com/${REPO}/archive/refs/heads/main.zip" -o "$TMP_ZIP"
+curl -fsSL --compressed "https://github.com/${REPO}/archive/refs/heads/main.zip" -o "$TMP_ZIP"
 mkdir -p "$TMP_DIR"
 unzip -q -o "$TMP_ZIP" -d "$TMP_DIR"
 
@@ -124,29 +124,33 @@ else
     fi
 fi
 
-# Merge must-have + selected, deduplicated
+# Build skill→path map once (first occurrence wins)
+declare -A SKILL_MAP=()
+for wf_dir in "$SKILLS_ROOT"/*/; do
+    for skill_dir in "$wf_dir"sync-*/; do
+        [[ -d "$skill_dir" ]] || continue
+        skill=$(basename "$skill_dir")
+        [[ -z "${SKILL_MAP[$skill]+_}" ]] && SKILL_MAP[$skill]="$skill_dir"
+    done
+done
+
+# Merge must-have + selected, deduplicated via associative array
+declare -A _seen=()
 ALL_SELECTED=()
 for skill in "${MUST_HAVE[@]+"${MUST_HAVE[@]}"}" "${SELECTED[@]+"${SELECTED[@]}"}"; do
-    already=0
-    for existing in "${ALL_SELECTED[@]+"${ALL_SELECTED[@]}"}"; do
-        [[ "$existing" == "$skill" ]] && already=1 && break
-    done
-    [[ $already -eq 0 ]] && ALL_SELECTED+=("$skill")
+    [[ -z "${_seen[$skill]+_}" ]] && _seen[$skill]=1 && ALL_SELECTED+=("$skill")
 done
 
 mkdir -p "$SKILLS_DIR"
 COUNT=0
 for skill in "${ALL_SELECTED[@]+"${ALL_SELECTED[@]}"}"; do
-    for wf_dir in "$SKILLS_ROOT"/*/; do
-        src="${wf_dir}${skill}"
-        if [[ -d "$src" ]]; then
-            dest="$SKILLS_DIR/$skill"
-            [[ -d "$dest" ]] && rm -rf "$dest"
-            cp -r "$src" "$SKILLS_DIR/"
-            COUNT=$((COUNT + 1))
-            break
-        fi
-    done
+    src="${SKILL_MAP[$skill]+${SKILL_MAP[$skill]}}"
+    if [[ -n "$src" && -d "$src" ]]; then
+        dest="$SKILLS_DIR/$skill"
+        [[ -d "$dest" ]] && rm -rf "$dest"
+        cp -r "$src" "$SKILLS_DIR/"
+        COUNT=$((COUNT + 1))
+    fi
 done
 
 echo ""
