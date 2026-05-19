@@ -4,6 +4,9 @@ All notable changes to syntactics-skills are documented here.
 
 ## [Unreleased] - 2026-05-19
 
+### Changed
+- `qa-workflow`: `sync-qa-to-ticket` v1.1.0 → v1.2.0 — added area label classification (area:fe, area:be, area:fs); skill auto-classifies each failure by observed behavior symptom (UI symptoms → FE, data/API symptoms → BE, both → FS); new Step 4 presents classified table to QA tester for review and correction before GitHub issues are created; area label bootstrapped in Step 1 with distinct teal colors; area label applied to every created issue
+
 ### Added
 - `pm-workflow`: `sync-design-to-tasks` v1.0.0 — orchestrator skill that chains sync-ui-task-creator → sync-frontend-task-creator → sync-backend-task-creator in sequence after FDD is complete; gates each stage on the previous output file existing before proceeding
 - `docs/adr/0001-version-mismatch-hard-block.md` — ADR: hard-block (not warn-and-gate) on artifact version mismatch; consuming artifact must be regenerated before skill proceeds

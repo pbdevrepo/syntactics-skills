@@ -1,6 +1,6 @@
 ---
 name: sync-qa-to-ticket
-version: 1.1.0
+version: 1.2.0
 description: >
   Converts QA test failures and manual findings into structured GitHub issues for Syntactics Inc.
   Trigger when a QA tester says "create tickets", "generate issues", "qa to ticket", "log bugs",
@@ -56,6 +56,11 @@ Via GitHub MCP, check if the required labels exist in the repository. Create any
 - `for-ba-confirmation` — color: `#fbca04`
 - `needs-info` — color: `#d93f0b`
 
+**Area labels:**
+- `area:fe` — color: `#0891b2`
+- `area:be` — color: `#0e7490`
+- `area:fs` — color: `#155e75`
+
 **Priority labels:**
 - `P1-critical` — color: `#b60205`
 - `P2-high` — color: `#e11d48`
@@ -81,7 +86,36 @@ For each item in the QA tester's manual findings:
 2. Flag as out-of-scope if the FDD explicitly excludes this behavior
 3. Create a GitHub issue (see Step 4 for format)
 
-### Step 4 — Create GitHub Issues
+### Step 4 — Classify Area and Confirm
+
+For each collected failure (from both the QA plan and manual findings), read the **Observed Behavior**
+field and apply this rule:
+
+| Signal in Observed Behavior | Area |
+|-----------------------------|------|
+| Wrong display, missing UI element, bad validation message, form field error, layout broken, label/text incorrect | `area:fe` |
+| Wrong API response, missing or incorrect record, failed save, incorrect data returned, auth failure, server error | `area:be` |
+| Both UI and data/API symptoms present in the same case | `area:fs` |
+
+Build a classification table and present it to the QA tester:
+
+```
+Area Classification — please review before issues are created:
+
+| Ref        | Description                        | Classified Area |
+|------------|------------------------------------|-----------------|
+| QA-0001    | {short description}                | area:fe         |
+| QA-0002    | {short description}                | area:be         |
+| Manual-001 | {short description}                | area:fs         |
+
+To correct a classification, reply with: QA-NNNN: area:fe (or area:be / area:fs)
+To correct a manual finding, reply with: Manual-NNN: area:be
+If all classifications are correct, reply: confirmed
+```
+
+Wait for the QA tester's response. Apply all corrections, then proceed to Step 5.
+
+### Step 5 — Create GitHub Issues
 
 Via GitHub MCP, create one issue per failure. Use this structure:
 
@@ -118,15 +152,16 @@ File: {fdd file path}
 - Priority: `P1-critical` / `P2-high` / `P3-medium` / `P4-low` (match QA plan priority)
 - Status: `needs-triage`
 - Escalation: `for-ba-confirmation` only if out-of-scope flag is present
+- Area: `area:fe` / `area:be` / `area:fs` (resolved in Step 4)
 
 **Never include fix suggestions in any issue body.**
 
-### Step 5 — Update QA Plan with Issue Links
+### Step 6 — Update QA Plan with Issue Links
 
 In each `qa-plan/{module-slug}.md`, update the Bug Ref field of each failed test case with the
 GitHub issue URL.
 
-### Step 6 — Deliver
+### Step 7 — Deliver
 
 State the issue count, then say:
 
