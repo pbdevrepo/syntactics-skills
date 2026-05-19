@@ -45,7 +45,7 @@ This prevents a bad artifact at step 2 from silently poisoning all downstream st
 
 ---
 
-## Planned: Artifact Versioning + Workflow Lean-up
+## Implemented: Artifact Versioning + Workflow Lean-up (2026-05-19)
 
 **Goal:** Make all artifacts version-tracked so downstream skills detect staleness and hard-block before generating output from a superseded spec. Reduce token waste from redundant reads and repeated inline rules.
 

@@ -82,9 +82,3 @@ the client input to extract modules and generate a requirements document.
 
 - `references/question-bank.md` — Discovery questions by category
 - `references/output-format.md` — Discovery summary structure
-
----
-
-## Output Formatting
-
-- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.

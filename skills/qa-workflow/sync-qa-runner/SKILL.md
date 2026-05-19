@@ -123,8 +123,3 @@ Spec files written to docs/qa/{module}/
 QA phase is complete for this run. Issues can be closed by QA.
 ```
 
----
-
-## Output Formatting
-
-- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.

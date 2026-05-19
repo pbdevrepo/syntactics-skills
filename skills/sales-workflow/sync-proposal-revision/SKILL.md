@@ -127,9 +127,3 @@ Trigger sync-proposal-writer. It will:
 - Write `{project-name}-proposal-v{N}.md` with a Revision Summary section.
 
 After the proposal is written, trigger sync-quotation on the new proposal file.
-
----
-
-## Output Formatting
-
-- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.

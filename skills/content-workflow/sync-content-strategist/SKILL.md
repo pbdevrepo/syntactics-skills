@@ -57,6 +57,3 @@ Red flags to always call out:
 - **Audit:** Score table | Flagged issues | Top 3 full rewrites | Remaining issues listed
 - **Strategy:** Priority matrix | Reason per item | Quick win to start with
 
-## Output Formatting
-
-- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.

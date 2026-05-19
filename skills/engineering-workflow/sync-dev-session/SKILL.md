@@ -1,6 +1,6 @@
 ---
 name: sync-dev-session
-version: 1.1.0
+version: 1.2.0
 description: >
   Implementation grilling session for Syntactics Inc. developers. Grounds a dev in a specific task
   or module before coding by challenging implementation decisions against the FDD. Trigger when a
@@ -42,6 +42,13 @@ Confirm inputs:
 4. FDD file — the Final Design Document module file for this project
 
 Do NOT ask the developer for session type — derive it in Step 1.
+
+**Version Gate** — if a previous session summary already exists for this Task ID or module:
+1. Read the task file's `artifact_version` and the FDD module file's `artifact_version`
+2. Compare them to the existing session summary's `source_versions.task_list` and `source_versions.fdd`
+3. If either differs: **hard stop.** Name which artifact changed and say: "The session summary was generated from older inputs. Regenerate the session using the current task list and FDD before proceeding."
+
+Do not warn-and-continue. Regeneration is required.
 
 ---
 
@@ -142,8 +149,3 @@ Proceed to: /sync-dev-tdd {module} @{task-file}.md @{fdd-file}.md
 
 - `references/session-summary-format.md` - Structured session summary format
 
----
-
-## Output Formatting
-
-- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.

@@ -66,6 +66,3 @@ Phrase headings as questions people actually search:
 
 Deliver: **Title tag** | **Meta description** | **URL slug** | **H1** | **Article body** | **FAQ** | **Schema type note**
 
-## Output Formatting
-
-- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.

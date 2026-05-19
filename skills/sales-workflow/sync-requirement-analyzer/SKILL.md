@@ -104,9 +104,3 @@ Requirements captured. Next: proposal-grill — pass {project-name}-requirements
 - `references/question-bank.md` — Question pool for Phase 3
 - `references/output-format.md` — Requirements doc structure
 
-
----
-
-## Output Formatting
-
-- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.

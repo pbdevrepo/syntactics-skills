@@ -77,6 +77,3 @@ Facts can be warm. Don't over-optimize - if a page reads like a data sheet, it's
 
 Deliver: **Title tag** | **Meta description** | **H1** | **Body sections** | **FAQ** | **Schema type note**
 
-## Output Formatting
-
-- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.

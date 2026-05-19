@@ -108,9 +108,3 @@ Next: proposal-writer — pass {project-name}-requirements.md to write the clien
 
 - `references/question-bank.md` — Targeted question pool by category
 
-
----
-
-## Output Formatting
-
-- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.

@@ -10,6 +10,27 @@ All notable changes to syntactics-skills are documented here.
 - `docs/adr/0002-immediate-upstream-version-check.md` — ADR: each skill checks immediate upstream version only, not full ancestry; cascade propagates one step at a time
 - `CONTEXT.md` — added terms: Artifact Version, Source Version, Version Chain, Version Gate, Approval Gate; updated Workflow Sequence diagram with Approval Gate annotation and auto-trigger notation; added Version Chain diagram under Relationships
 
+### Changed
+- `ba-workflow`: `sync-ba-project-intake` v1.0.1 → v1.1.0 — artifact version frontmatter writing added to Phase 4 output; removed per-skill Output Formatting section (now covered by global CLAUDE.md rule)
+- `ba-workflow`: `sync-database-administrator` v1.2.0 → v1.3.0 — Version Gate added (hard-blocks if intake doc version changed since last schema generation); artifact version frontmatter writing added to Step 7; removed per-skill Output Formatting section
+- `ba-workflow`: `sync-sprint-planner` v1.1.0 → v1.2.0 — Version Gate added (hard-blocks if schema version changed since last sprint task generation); artifact version frontmatter writing added to Step 5; removed per-skill Output Formatting section
+- `ba-workflow`: `sync-final-design` v1.1.0 → v1.2.0 — Version Gate added (hard-blocks if sprint tasks or schema changed); progressive reference loading (template-structure.md always; behavior-validation-guide.md deferred to Step 2a; database-standards.md deferred to Step 2c); Approval Gate added to Step 5 (waits for explicit "approve FDD" before triggering sync-design-to-tasks); artifact version frontmatter writing added to Step 4
+- `pm-workflow`: `sync-design-to-tasks` v1.0.0 → v1.1.0 — Sprint Map built once in Before You Start and passed to sub-skills; sub-skills skip Step 0 when Sprint Map already in context
+- `pm-workflow`: `sync-ui-task-creator` v1.0.0 → v1.1.0 — Version Gate added; Sprint Map skip note added to Step 0; artifact version frontmatter writing added to Step 4; removed per-skill Output Formatting section
+- `pm-workflow`: `sync-frontend-task-creator` v1.0.0 → v1.1.0 — Version Gate added; Sprint Map skip note added to Step 0; artifact version frontmatter writing added to Step 5; removed per-skill Output Formatting section
+- `pm-workflow`: `sync-backend-task-creator` v1.0.0 → v1.1.0 — Version Gate added; Sprint Map skip note added to Step 0; artifact version frontmatter writing added to Step 4; removed per-skill Output Formatting section
+- `qa-workflow`: `sync-qa-planner` v2.0.0 → v2.1.0 — Version Gate added (hard-blocks if FDD, frontend tasks, or backend tasks changed); artifact version frontmatter writing added to Step 5 index.md output; removed per-skill Output Formatting section
+- `engineering-workflow`: `sync-dev-session` v1.1.0 → v1.2.0 — Version Gate added (hard-blocks if task list or FDD changed since last session); removed per-skill Output Formatting section
+- `engineering-workflow`: `sync-dev-tdd` — added version: 1.1.0 to frontmatter (was missing); updated internal file references from root-relative to `references/` path (tests.md, mocking.md, deep-modules.md, interface-design.md, refactoring.md)
+- `CLAUDE.md` — added global Output Formatting rule (no em dashes); added Project Setup copyable block for applying the rule to client project CLAUDE.md files
+
+### Removed
+- `deprecated-workflow/` — deleted entirely; `sync-tdd-be` and `sync-tdd-fe` were superseded by `sync-dev-tdd` in engineering-workflow
+- Per-skill `## Output Formatting` sections removed from all BA, PM, QA, and Engineering skills — rule now lives globally in CLAUDE.md
+
+### Moved
+- `engineering-workflow/sync-dev-tdd`: deep-modules.md, interface-design.md, mocking.md, refactoring.md, tests.md → moved into `references/` subfolder
+
 
 ## [Unreleased] - 2026-05-18
 

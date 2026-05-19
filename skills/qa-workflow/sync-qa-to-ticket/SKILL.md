@@ -139,8 +139,3 @@ Next: sync-dev-to-fix - developers pick up issues labeled `ready-for-dev` and in
 /sync-dev-to-fix {issue URL}.
 ```
 
----
-
-## Output Formatting
-
-- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.

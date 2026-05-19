@@ -106,8 +106,3 @@ Ready for QA re-run via sync-qa-runner.
 3. Apply label `ready-for-qa`
 4. Do NOT close the issue — QA closes it after sync-qa-runner confirms the fix passes
 
----
-
-## Output Formatting
-
-- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.

@@ -1,6 +1,6 @@
 ---
 name: sync-qa-planner
-version: 2.0.0
+version: 2.1.0
 description: >
   Generates a structured QA test plan for Syntactics Inc. from the FDD, frontend task list, and
   backend task list. Replaces sync-qa-tester. Trigger when a QA tester says "generate test plan",
@@ -29,6 +29,13 @@ Confirm inputs:
 3. Backend task list: `projects/{project-name}/pm/{project-name}-backend-tasks.md`
 
 Read `references/test-plan-format.md` for the exact test case block structure.
+
+**Version Gate** — if `projects/{project-name}/qa/qa-plan/index.md` already exists:
+1. Read the FDD module file(s)' `artifact_version`, the frontend task list's `artifact_version`, and the backend task list's `artifact_version`
+2. Compare them to the existing QA plan's `source_versions`
+3. If any differ: **hard stop.** Name which artifact changed and say: "Regenerate the QA plan from the updated inputs before proceeding."
+
+Do not warn-and-continue. Regeneration is required.
 
 ---
 
@@ -94,6 +101,28 @@ Files to write:
 
 QA IDs are global and sequential across all modules (QA-0001, QA-0002...). Do not restart per module.
 
+**Artifact version frontmatter:** Write this YAML block at the very top of `index.md` before any other content.
+
+Check if a previous version exists:
+- No previous version: `artifact_version: 1.0.0`
+- Previous version exists: read current `artifact_version`, then bump:
+  - Any module added or removed → bump minor (e.g. `1.0.0` → `1.1.0`)
+  - Any other test case edit → bump patch (e.g. `1.0.0` → `1.0.1`)
+
+```yaml
+---
+artifact_version: {version}
+generated_by: sync-qa-planner@2.1.0
+generated_at: {YYYY-MM-DD}
+source_versions:
+  fdd_modules:
+    {module-slug}: {module fdd artifact_version}
+    (one entry per FDD module file read)
+  frontend_tasks: {frontend-tasks artifact_version}
+  backend_tasks: {backend-tasks artifact_version}
+---
+```
+
 Follow `references/test-plan-format.md` for exact structure of both file types.
 
 State the directory path, then say:
@@ -113,8 +142,3 @@ target environment (local, staging, or custom URL).
 
 - `references/test-plan-format.md` - Test case block structure and classification rules
 
----
-
-## Output Formatting
-
-- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.

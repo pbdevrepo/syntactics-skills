@@ -96,9 +96,3 @@ If approved → start BA workflow with ba-project-intake, passing the proposal a
 - `references/hour-ranges.md` — Complexity-based placeholder hour ranges by sub-item type
 - `references/output-format.md` — Quotation file structure
 
-
----
-
-## Output Formatting
-
-- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.

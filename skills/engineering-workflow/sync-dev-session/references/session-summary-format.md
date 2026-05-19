@@ -5,6 +5,14 @@ File: `docs/sessions/{be|fe|fullstack}/{Task-ID or module}-{YYYY-MM-DD}.md`
 ---
 
 ```markdown
+---
+generated_by: sync-dev-session@1.2.0
+generated_at: {YYYY-MM-DD}
+source_versions:
+  task_list: {task-file artifact_version}
+  fdd: {fdd-module artifact_version}
+---
+
 # Session: {Task-ID or Module} - {BE | FE | Full-Stack} - {YYYY-MM-DD}
 
 ## Context
