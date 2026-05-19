@@ -117,6 +117,22 @@ Only update a file if the change is relevant to it. A description tweak does not
 
 Create a new `skills/{role}-workflow/` directory and add skills inside it. No config changes needed — install scripts auto-discover all `*-workflow` directories.
 
+## Output Formatting
+
+All skills apply this rule globally. Do not add per-skill `## Output Formatting` sections — the rule here covers all skills.
+
+- Never use em dashes (--) in any generated `.md` output. Use a hyphen (-) instead.
+
+### Project Setup — Copy This Block
+
+When setting up a new client project, copy this block into the client project's `CLAUDE.md` before running any skills. Skills no longer carry individual Output Formatting sections — this rule must exist in the project where output is generated.
+
+```md
+## Output Formatting
+
+- Never use em dashes (--) in any generated `.md` output. Use a hyphen (-) instead.
+```
+
 ## Agent skills
 
 ### Issue tracker
