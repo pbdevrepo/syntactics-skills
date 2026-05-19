@@ -11,6 +11,7 @@ All notable changes to syntactics-skills are documented here.
 - `CONTEXT.md` — added terms: Artifact Version, Source Version, Version Chain, Version Gate, Approval Gate; updated Workflow Sequence diagram with Approval Gate annotation and auto-trigger notation; added Version Chain diagram under Relationships
 
 ### Changed
+- `sales-workflow`: `sync-proposal-writer` v1.1.0 → v1.2.0 — revision mode now reads only the Revision History section and delta-flagged modules from the requirements file; unchanged modules are copied verbatim from the prior proposal (token optimization)
 - `ba-workflow`: `sync-ba-project-intake` v1.0.1 → v1.1.0 — artifact version frontmatter writing added to Phase 4 output; removed per-skill Output Formatting section (now covered by global CLAUDE.md rule)
 - `ba-workflow`: `sync-database-administrator` v1.2.0 → v1.3.0 — Version Gate added (hard-blocks if intake doc version changed since last schema generation); artifact version frontmatter writing added to Step 7; removed per-skill Output Formatting section
 - `ba-workflow`: `sync-sprint-planner` v1.1.0 → v1.2.0 — Version Gate added (hard-blocks if schema version changed since last sprint task generation); artifact version frontmatter writing added to Step 5; removed per-skill Output Formatting section
