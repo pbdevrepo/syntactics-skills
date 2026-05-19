@@ -1,6 +1,6 @@
 ---
 name: sync-ba-project-intake
-version: 1.0.1
+version: 1.1.0
 description: >
   Entry point for the BA project lifecycle at Syntactics Inc. Trigger when a BA uploads a proposal
   PDF, says "start the intake" / "I have a proposal" / "we got a new project", or shares any client
@@ -82,6 +82,22 @@ After Q&A is answered (or BA says "skip — proceed"):
 
 File: `{project-name}-intake.md` · Use `create_file` · Follow `references/output-format.md`
 
+**Artifact version frontmatter:** Write this YAML block at the very top of the file before any other content.
+
+Check if a previous version exists at the output path:
+- No previous version: `artifact_version: 1.0.0`
+- Previous version exists: read the current `artifact_version`, then bump:
+  - Any module added or removed → bump minor (e.g. `1.0.0` → `1.1.0`)
+  - Any other field edit → bump patch (e.g. `1.0.0` → `1.0.1`)
+
+```yaml
+---
+artifact_version: {version}
+generated_by: sync-ba-project-intake@1.1.0
+generated_at: {YYYY-MM-DD}
+---
+```
+
 Then `present_files` if available, otherwise state the file path. Then say:
 
 ```
@@ -96,8 +112,3 @@ Intake done. Next: database-administrator — pass the intake doc.
 - `references/question-bank.md` — Question pool for Phase 3
 - `references/output-format.md` — Intake doc structure
 
----
-
-## Output Formatting
-
-- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.

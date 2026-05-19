@@ -1,6 +1,6 @@
 ---
 name: sync-backend-task-creator
-version: 1.0.0
+version: 1.1.0
 description: >
   Generates a module-by-module backend development task list for Syntactics Inc. from the Final
   Design Document (FDD) and the completed frontend task list. Trigger when a PM says
@@ -30,11 +30,20 @@ Confirm inputs:
 
 Read `references/task-output-format.md` for the exact task block structure before generating.
 
+**Version Gate** — if `{project-name}-backend-tasks.md` already exists:
+1. Read each FDD module file's `artifact_version`, the sprint task list's `artifact_version`, and the frontend task list's `artifact_version`
+2. Compare them to the existing backend task list's `source_versions`
+3. If any differ: **hard stop.** Name which artifact changed and say: "Regenerate the backend task list from the updated inputs before proceeding."
+
+Do not warn-and-continue. Regeneration is required.
+
 ---
 
 ## Workflow
 
 ### Step 0 — Build Sprint Map
+
+> If Sprint Map has already been built and shared in context by `sync-design-to-tasks`, skip this step.
 
 Read `projects/{project-name}/ba/{project-name}-sprint-tasks.md`.
 
@@ -101,6 +110,28 @@ Priority 6 — Notifications & Background Jobs
 
 Write file: `projects/{project-name}/pm/{project-name}-backend-tasks.md`
 
+**Artifact version frontmatter:** Write this YAML block at the very top of the file before any other content.
+
+Check if a previous version exists at the output path:
+- No previous version: `artifact_version: 1.0.0`
+- Previous version exists: read current `artifact_version`, then bump:
+  - Any module added or removed → bump minor (e.g. `1.0.0` → `1.1.0`)
+  - Any other task edit → bump patch (e.g. `1.0.0` → `1.0.1`)
+
+```yaml
+---
+artifact_version: {version}
+generated_by: sync-backend-task-creator@1.1.0
+generated_at: {YYYY-MM-DD}
+source_versions:
+  fdd_modules:
+    {module-slug}: {module fdd artifact_version}
+    (one entry per FDD module file read)
+  sprint_tasks: {sprint-tasks artifact_version}
+  frontend_tasks: {frontend-tasks artifact_version}
+---
+```
+
 Follow `references/task-output-format.md` for exact structure. Use the **compact table format** by default. Use the detailed block only for endpoints with complex business rules, multi-step side effects, or 5+ request fields that a table row cannot express.
 
 State the file path, then say:
@@ -119,8 +150,3 @@ and {project-name}-backend-tasks.md.
 - `references/task-output-format.md` — Task block structure and markdown format
 
 
----
-
-## Output Formatting
-
-- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.

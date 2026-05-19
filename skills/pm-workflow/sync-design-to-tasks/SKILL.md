@@ -1,6 +1,6 @@
 ---
 name: sync-design-to-tasks
-version: 1.0.0
+version: 1.1.0
 description: >
   Orchestrates the full PM task-generation pipeline for Syntactics Inc. after the Final Design
   Document (FDD) is complete. Trigger when a PM says "generate all tasks", "run task creators",
@@ -30,6 +30,8 @@ Ask the user:
 Confirm sprint plan exists at `projects/{project-name}/ba/{project-name}-sprint-tasks.md`. If missing, stop and ask the user to run `sync-sprint-planner` first.
 
 Do not proceed until both FDD files and sprint plan are confirmed present.
+
+**Sprint Map — build once here.** Read `projects/{project-name}/ba/{project-name}-sprint-tasks.md`. For each Priority section (Priority 1 through Priority 6), map modules to their sprint number: Priority N = Sprint N. Flag unresolved modules (no match) → assign to last sprint. Pass this sprint map in context to all three sub-skills so they skip their Step 0.
 
 ---
 

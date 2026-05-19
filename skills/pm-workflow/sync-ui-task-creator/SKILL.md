@@ -1,6 +1,6 @@
 ---
 name: sync-ui-task-creator
-version: 1.0.0
+version: 1.1.0
 description: >
   Generates a module-by-module design task list for the UI/UX Designer at Syntactics Inc. from the
   Final Design Document (FDD). Trigger when a PM says "generate design tasks", "create design tasks",
@@ -32,11 +32,20 @@ Required inputs:
 
 Read `references/task-output-format.md` for the exact task block structure before generating.
 
+**Version Gate** — if `{project-name}-design-tasks.md` already exists:
+1. Read each FDD module file's `artifact_version` and the sprint task list's `artifact_version`
+2. Compare them to the existing design task list's `source_versions`
+3. If any differ: **hard stop.** Name which artifact changed and say: "Regenerate the design task list from the updated inputs before proceeding."
+
+Do not warn-and-continue. Regeneration is required.
+
 ---
 
 ## Workflow
 
 ### Step 0 — Build Sprint Map
+
+> If Sprint Map has already been built and shared in context by `sync-design-to-tasks`, skip this step.
 
 Read `projects/{project-name}/ba/{project-name}-sprint-tasks.md`.
 
@@ -92,6 +101,27 @@ task per role variant.
 
 Write file: `projects/{project-name}/pm/{project-name}-design-tasks.md`
 
+**Artifact version frontmatter:** Write this YAML block at the very top of the file before any other content.
+
+Check if a previous version exists at the output path:
+- No previous version: `artifact_version: 1.0.0`
+- Previous version exists: read current `artifact_version`, then bump:
+  - Any module added or removed → bump minor (e.g. `1.0.0` → `1.1.0`)
+  - Any other task edit → bump patch (e.g. `1.0.0` → `1.0.1`)
+
+```yaml
+---
+artifact_version: {version}
+generated_by: sync-ui-task-creator@1.1.0
+generated_at: {YYYY-MM-DD}
+source_versions:
+  fdd_modules:
+    {module-slug}: {module fdd artifact_version}
+    (one entry per FDD module file read)
+  sprint_tasks: {sprint-tasks artifact_version}
+---
+```
+
 Follow `references/task-output-format.md` for exact structure. Use the **compact table format** by default. Use the detailed block only for screens with complex design constraints (multi-step flows, conditional layouts, role-specific layout variants) that a table row cannot express.
 
 State the file path, then say:
@@ -110,8 +140,3 @@ Next: sync-frontend-task-creator — complete Sprint 1 Figma screens first, then
 - `references/task-output-format.md` — Task block structure and markdown format
 
 
----
-
-## Output Formatting
-
-- Never use em dashes (--) in any generated .md output. Use a hyphen (-) instead.
