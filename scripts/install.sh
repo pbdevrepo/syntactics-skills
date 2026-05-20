@@ -124,27 +124,31 @@ else
     fi
 fi
 
-# Build skill→path map once (first occurrence wins)
-declare -A SKILL_MAP=()
-for wf_dir in "$SKILLS_ROOT"/*/; do
-    for skill_dir in "$wf_dir"sync-*/; do
-        [[ -d "$skill_dir" ]] || continue
-        skill=$(basename "$skill_dir")
-        [[ -z "${SKILL_MAP[$skill]+_}" ]] && SKILL_MAP[$skill]="$skill_dir"
-    done
-done
+# bash 3.2 compatible: find skill dir by name (first occurrence wins)
+find_skill_path() {
+    find "$SKILLS_ROOT" -mindepth 3 -maxdepth 3 -type d -name "$1" | head -1
+}
 
-# Merge must-have + selected, deduplicated via associative array
-declare -A _seen=()
+# bash 3.2 compatible: check if array contains a value
+array_contains() {
+    local val="$1"; shift
+    local item
+    for item in "$@"; do
+        [[ "$item" == "$val" ]] && return 0
+    done
+    return 1
+}
+
+# Merge must-have + selected, deduplicated
 ALL_SELECTED=()
 for skill in "${MUST_HAVE[@]+"${MUST_HAVE[@]}"}" "${SELECTED[@]+"${SELECTED[@]}"}"; do
-    [[ -z "${_seen[$skill]+_}" ]] && _seen[$skill]=1 && ALL_SELECTED+=("$skill")
+    array_contains "$skill" "${ALL_SELECTED[@]+"${ALL_SELECTED[@]}"}" || ALL_SELECTED+=("$skill")
 done
 
 mkdir -p "$SKILLS_DIR"
 COUNT=0
 for skill in "${ALL_SELECTED[@]+"${ALL_SELECTED[@]}"}"; do
-    src="${SKILL_MAP[$skill]+${SKILL_MAP[$skill]}}"
+    src=$(find_skill_path "$skill")
     if [[ -n "$src" && -d "$src" ]]; then
         dest="$SKILLS_DIR/$skill"
         [[ -d "$dest" ]] && rm -rf "$dest"

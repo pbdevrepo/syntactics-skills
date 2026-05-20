@@ -2,6 +2,11 @@
 
 All notable changes to syntactics-skills are documented here.
 
+## [Unreleased] - 2026-05-20
+
+### Fixed
+- `scripts/install.sh` — replaced `declare -A` associative arrays with bash 3.2-compatible equivalents (`find_skill_path` function and `array_contains` helper); fixes crash on macOS where the default `/bin/bash` is v3.2 and does not support associative arrays
+
 ## [Unreleased] - 2026-05-19
 
 ### Changed
