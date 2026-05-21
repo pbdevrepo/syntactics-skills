@@ -30,7 +30,7 @@ Confirm inputs:
 
 Read `references/test-plan-format.md` for the exact test case block structure.
 
-**Version Gate** — if `projects/{project-name}/qa/qa-plan/index.md` already exists:
+**Version Gate** — if `docs/qa/qa-plan/index.md` already exists:
 1. Read the FDD module file(s)' `artifact_version`, the frontend task list's `artifact_version`, and the backend task list's `artifact_version`
 2. Compare them to the existing QA plan's `source_versions`
 3. If any differ: **hard stop.** Name which artifact changed and say: "Regenerate the QA plan from the updated inputs before proceeding."
@@ -93,7 +93,7 @@ Tag every test case:
 
 ### Step 5 — Deliver
 
-Write to directory: `projects/{project-name}/qa/qa-plan/`
+Write to directory: `docs/qa/qa-plan/`
 
 Files to write:
 - `qa-plan/index.md` - module index and test run log
@@ -132,7 +132,7 @@ QA test plan generated.
 
 Modules: {list each module-slug.md}
 
-Next: sync-qa-runner - pass projects/{project-name}/qa/qa-plan/index.md and specify the
+Next: sync-qa-runner - pass docs/qa/qa-plan/index.md and specify the
 target environment (local, staging, or custom URL).
 ```
 

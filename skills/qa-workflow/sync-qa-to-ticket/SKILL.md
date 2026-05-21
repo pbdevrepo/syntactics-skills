@@ -23,7 +23,7 @@ Workflow: **sync-qa-runner - sync-qa-to-ticket - sync-dev-to-fix**
 ## Before You Start
 
 Confirm inputs:
-1. Updated QA plan index with failures marked: `projects/{project-name}/qa/qa-plan/index.md`
+1. Updated QA plan index with failures marked: `docs/qa/qa-plan/index.md`
 2. GitHub repository (org/repo format)
 3. Manual QA findings — ask:
 
@@ -168,7 +168,7 @@ State the issue count, then say:
 ```
 {N} GitHub issues created.
 
-QA plan updated with issue links: projects/{project-name}/qa/qa-plan/
+QA plan updated with issue links: docs/qa/qa-plan/
 
 Next: sync-dev-to-fix - developers pick up issues labeled `ready-for-dev` and invoke
 /sync-dev-to-fix {issue URL}.
