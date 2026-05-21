@@ -28,7 +28,7 @@ module, collect all module files before proceeding.
 
 Required inputs:
 1. FDD files: all module `.md` files from the BA workflow
-2. Sprint plan: `projects/{project-name}/ba/{project-name}-sprint-tasks.md`
+2. Sprint plan: `docs/ba/{project-name}-sprint-tasks.md`
 
 Read `references/task-output-format.md` for the exact task block structure before generating.
 
@@ -47,7 +47,7 @@ Do not warn-and-continue. Regeneration is required.
 
 > If Sprint Map has already been built and shared in context by `sync-design-to-tasks`, skip this step.
 
-Read `projects/{project-name}/ba/{project-name}-sprint-tasks.md`.
+Read `docs/ba/{project-name}-sprint-tasks.md`.
 
 For each Priority section (Priority 1 through Priority 6), note which modules appear. Map each
 module to its sprint number: Priority 1 = Sprint 1, Priority 2 = Sprint 2, and so on.
@@ -99,7 +99,7 @@ task per role variant.
 
 ### Step 4 — Deliver
 
-Write file: `projects/{project-name}/pm/{project-name}-design-tasks.md`
+Write file: `docs/pm/{project-name}-design-tasks.md`
 
 **Artifact version frontmatter:** Write this YAML block at the very top of the file before any other content.
 

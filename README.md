@@ -177,7 +177,7 @@ PM:     sync-design-to-tasks (orchestrates: sync-ui-task-creator → sync-fronte
 Eng:    sync-dev-session → sync-tdd-be / sync-tdd-fe → sync-qa-planner → sync-qa-runner → sync-qa-to-ticket → sync-dev-to-fix → sync-qa-runner (re-run)
 ```
 
-QA plan artifacts are written to `docs/qa/qa-plan/`. All other artifacts are written to `projects/{project-name}/{workflow-phase}/{artifact}.md`.
+QA plan artifacts are written to `docs/qa/qa-plan/`. All other artifacts are written to `docs/{workflow-phase}/{artifact}.md`.
 
 ## Development
 

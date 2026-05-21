@@ -325,8 +325,8 @@ Swagger:          docs/api/{module}/{feature}_api.yaml (backend/full-stack only)
 Next: sync-qa-planner
 
 Pass these inputs to generate the QA test plan:
-  @projects/{project-name}/pm/{project-name}-frontend-tasks.md
-  @projects/{project-name}/pm/{project-name}-backend-tasks.md
+  @docs/pm/{project-name}-frontend-tasks.md
+  @docs/pm/{project-name}-backend-tasks.md
   @{all fdd module files for this project}
 
 Run: /sync-qa-planner

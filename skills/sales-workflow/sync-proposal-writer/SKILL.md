@@ -26,7 +26,7 @@ Revision workflow: **proposal-revision → proposal-writer → quotation**
 ## Before You Start
 
 1. Determine the requirements source and proposal version:
-   - Check `projects/{project-name}/sales/` for existing `{project-name}-proposal.md` and any `{project-name}-proposal-v*.md` files.
+   - Check `docs/sales/` for existing `{project-name}-proposal.md` and any `{project-name}-proposal-v*.md` files.
    - If no proposal exists yet: requirements source is `{project-name}-requirements.md`, output will be `{project-name}-proposal.md`, version label is `1.0`.
    - If a proposal already exists: find the highest existing version (v2, v3, etc.), use the matching requirements file (`{project-name}-requirements-v{N}.md`) as the source, and write `{project-name}-proposal-v{N+1}.md` with version label `{N+1}.0`.
 2. Read the requirements document - scope depends on run type:
@@ -86,8 +86,8 @@ Structure:
 ### Step 4 — Deliver
 
 Write file using the versioned path resolved in "Before You Start":
-- First proposal: `projects/{project-name}/sales/{project-name}-proposal.md`
-- Revisions: `projects/{project-name}/sales/{project-name}-proposal-v{N}.md`
+- First proposal: `docs/sales/{project-name}-proposal.md`
+- Revisions: `docs/sales/{project-name}-proposal-v{N}.md`
 
 State the file path, then say:
 

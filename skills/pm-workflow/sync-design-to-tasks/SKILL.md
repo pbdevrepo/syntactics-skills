@@ -24,14 +24,14 @@ Each step gates on the previous output file existing before proceeding.
 
 Ask the user:
 
-1. **Project name** — used to locate all files under `projects/{project-name}/`
-2. **FDD location** — path(s) to module `.md` files, or confirm they are already at `projects/{project-name}/ba/`
+1. **Project name** — used to locate all files under `docs/`
+2. **FDD location** — path(s) to module `.md` files, or confirm they are already at `docs/ba/`
 
-Confirm sprint plan exists at `projects/{project-name}/ba/{project-name}-sprint-tasks.md`. If missing, stop and ask the user to run `sync-sprint-planner` first.
+Confirm sprint plan exists at `docs/ba/{project-name}-sprint-tasks.md`. If missing, stop and ask the user to run `sync-sprint-planner` first.
 
 Do not proceed until both FDD files and sprint plan are confirmed present.
 
-**Sprint Map — build once here.** Read `projects/{project-name}/ba/{project-name}-sprint-tasks.md`. For each Priority section (Priority 1 through Priority 6), map modules to their sprint number: Priority N = Sprint N. Flag unresolved modules (no match) → assign to last sprint. Pass this sprint map in context to all three sub-skills so they skip their Step 0.
+**Sprint Map — build once here.** Read `docs/ba/{project-name}-sprint-tasks.md`. For each Priority section (Priority 1 through Priority 6), map modules to their sprint number: Priority N = Sprint N. Flag unresolved modules (no match) → assign to last sprint. Pass this sprint map in context to all three sub-skills so they skip their Step 0.
 
 ---
 
@@ -42,7 +42,7 @@ Do not proceed until both FDD files and sprint plan are confirmed present.
 Load and execute `sync-ui-task-creator` in full.
 
 **Input:** FDD module files + sprint plan
-**Output:** `projects/{project-name}/pm/{project-name}-design-tasks.md`
+**Output:** `docs/pm/{project-name}-design-tasks.md`
 
 Announce before starting:
 > "Stage 1 of 3 — Generating UI design tasks..."
@@ -58,7 +58,7 @@ Gate: confirm `{project-name}-design-tasks.md` was written before continuing.
 Load and execute `sync-frontend-task-creator` in full.
 
 **Input:** FDD module files + sprint plan + `{project-name}-design-tasks.md`
-**Output:** `projects/{project-name}/pm/{project-name}-frontend-tasks.md`
+**Output:** `docs/pm/{project-name}-frontend-tasks.md`
 
 Announce before starting:
 > "Stage 2 of 3 — Generating frontend development tasks..."
@@ -74,7 +74,7 @@ Gate: confirm `{project-name}-frontend-tasks.md` was written before continuing.
 Load and execute `sync-backend-task-creator` in full.
 
 **Input:** FDD module files + sprint plan + `{project-name}-frontend-tasks.md`
-**Output:** `projects/{project-name}/pm/{project-name}-backend-tasks.md`
+**Output:** `docs/pm/{project-name}-backend-tasks.md`
 
 Announce before starting:
 > "Stage 3 of 3 — Generating backend development tasks..."
@@ -90,9 +90,9 @@ After all three stages complete, report:
 ```
 Pipeline complete.
 
-  Design tasks:   projects/{project-name}/pm/{project-name}-design-tasks.md
-  Frontend tasks: projects/{project-name}/pm/{project-name}-frontend-tasks.md
-  Backend tasks:  projects/{project-name}/pm/{project-name}-backend-tasks.md
+  Design tasks:   docs/pm/{project-name}-design-tasks.md
+  Frontend tasks: docs/pm/{project-name}-frontend-tasks.md
+  Backend tasks:  docs/pm/{project-name}-backend-tasks.md
 
 Next: sync-dev-session (backend) or sync-dev-session (frontend)
 ```

@@ -1,6 +1,6 @@
 # Task Output Format — UI Designer
 
-File: `projects/{project-name}/pm/{project-name}-design-tasks.md`
+File: `docs/pm/{project-name}-design-tasks.md`
 
 ---
 

@@ -32,8 +32,8 @@ them as the **module filter**. If no arguments were passed, the run targets all 
 ### Confirm inputs
 
 1. FDD module files: `docs/fdd/{module-slug}.md` — one file per module (required, see format check below)
-2. Frontend task list: `projects/{project-name}/pm/{project-name}-frontend-tasks.md`
-3. Backend task list: `projects/{project-name}/pm/{project-name}-backend-tasks.md`
+2. Frontend task list: `docs/pm/{project-name}-frontend-tasks.md`
+3. Backend task list: `docs/pm/{project-name}-backend-tasks.md`
 
 Read `references/test-plan-format.md` for the exact test case block structure.
 
@@ -84,8 +84,8 @@ Never load multiple module files into context at once.
 
 Read:
 - `docs/fdd/{module-slug}.md`
-- `projects/{project-name}/pm/{project-name}-frontend-tasks.md` (filter to sections for this module)
-- `projects/{project-name}/pm/{project-name}-backend-tasks.md` (filter to sections for this module)
+- `docs/pm/{project-name}-frontend-tasks.md` (filter to sections for this module)
+- `docs/pm/{project-name}-backend-tasks.md` (filter to sections for this module)
 
 #### Step 2b — Derive test cases
 
