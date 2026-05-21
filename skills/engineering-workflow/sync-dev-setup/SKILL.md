@@ -45,19 +45,44 @@ Default posture: these skills were designed for GitHub. If a `git remote` points
 - **Local markdown** — issues live as files under `.scratch/<feature>/` in this repo (good for solo projects or repos without a remote)
 - **Other** (Jira, Linear, etc.) — ask the user to describe the workflow in one paragraph; the skill will record it as freeform prose
 
-**Section B — Triage label vocabulary.**
+**Section B — Label vocabulary.**
 
-> Explainer: When the `triage` skill processes an incoming issue, it moves it through a state machine — needs evaluation, waiting on reporter, ready for an AFK agent to pick up, ready for a human, or won't fix. To do that, it needs to apply labels (or the equivalent in your issue tracker) that match strings *you've actually configured*. If your repo already uses different label names (e.g. `bug:triage` instead of `needs-triage`), map them here so the skill applies the right ones instead of creating duplicates.
+> Explainer: All engineering and QA skills share a single label set. This setup step creates every label the workflow needs — triage roles, QA status, type, priority, area, and escalation. Skills like `sync-qa-to-ticket` and `sync-qa-runner` will halt and tell you to run this first if labels are missing. You only need to run this once per repo.
 
-The five canonical roles:
+Create the following labels via the issue tracker. For GitHub, use the `gh` CLI or GitHub MCP:
 
-- `needs-triage` — maintainer needs to evaluate
-- `needs-info` — waiting on reporter
-- `ready-for-agent` — fully specified, AFK-ready (an agent can pick it up with no human context)
-- `ready-for-human` — needs human implementation
-- `wontfix` — will not be actioned
+**Triage labels:**
+- `needs-triage` — color: `#ededed` — maintainer needs to evaluate
+- `needs-info` — color: `#d93f0b` — waiting on reporter
+- `ready-for-agent` — color: `#0075ca` — fully specified, AFK-ready
+- `ready-for-dev` — color: `#0075ca` — ready for a developer to implement
+- `ongoing` — color: `#6f42c1` — dev is actively working on this
+- `ready-for-qa` — color: `#0e8a16` — fix submitted, ready for QA re-run
+- `verified` — color: `#2cbe4e` — QA confirmed fix passes
+- `wontfix` — color: `#ffffff` — will not be actioned
 
-Default: each role's string equals its name. Ask the user if they want to override any. If their issue tracker has no existing labels, the defaults are fine.
+**Type labels:**
+- `bug` — color: `#d73a4a`
+- `regression` — color: `#f9d0c4`
+- `out-of-scope` — color: `#e4e669`
+
+**Priority labels:**
+- `P1-critical` — color: `#b60205`
+- `P2-high` — color: `#e11d48`
+- `P3-medium` — color: `#f97316`
+- `P4-low` — color: `#84cc16`
+
+**Area labels:**
+- `area:fe` — color: `#0891b2`
+- `area:be` — color: `#0e7490`
+- `area:fs` — color: `#155e75`
+
+**Escalation labels:**
+- `for-ba-confirmation` — color: `#fbca04`
+
+Note: `turnover:N` labels (e.g. `turnover:1`, `turnover:2`) are created dynamically by `sync-qa-runner` during re-runs. Do not pre-create them here.
+
+Ask the user if they want to override any label names to match their existing vocabulary. If their repo already has labels, check for conflicts before creating.
 
 **Section C — Domain docs.**
 

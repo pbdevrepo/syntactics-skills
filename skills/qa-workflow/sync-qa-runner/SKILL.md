@@ -142,6 +142,23 @@ Search for test files matching the detected framework's conventions:
 3. Add a `Spec File:` reference line in the qa-plan module file pointing to the generated path
 4. Do not write a separate `.md` log - the qa-plan is the source of truth for results
 
+### Step 3c — Handle Re-run Failures (Turnover)
+
+After all test cases are executed, check if this is a targeted re-run (i.e. the run was triggered after `sync-dev-to-fix`). A re-run is detected when a failing test case has a GitHub issue URL in its Bug Ref field.
+
+For each failing test case with a Bug Ref URL, via GitHub MCP:
+
+1. Read the current labels on the issue
+2. Find any existing `turnover:N` label (e.g. `turnover:1`, `turnover:2`)
+3. Calculate the next count: if no `turnover:N` exists, next = 1; otherwise next = N + 1
+4. Remove the existing `turnover:N` label (if present)
+5. Create `turnover:{next}` label if it does not exist — color: `#ff6b35`
+6. Apply `turnover:{next}` to the issue
+7. Remove label `ready-for-qa`
+8. Apply label `ready-for-dev`
+
+Skip this step entirely on a first-run (no Bug Ref URLs present in any failing test case).
+
 ### Step 4 — Update the Test Run Log
 
 After all modules are complete, append one row to the Test Run Log in `qa-plan/index.md`:
@@ -154,13 +171,26 @@ After all modules are complete, append one row to the Test Run Log in `qa-plan/i
 
 State the updated index path and spec file paths, then say:
 
-**If failures exist:**
+**If failures exist (first run):**
 ```
 Test run complete. {N} test cases failed across {M} modules.
 
 Spec files: {list each spec file path, or "existing tests used" per module}
 
 Next: sync-qa-to-ticket - pass docs/qa/qa-plan/index.md for issue creation.
+```
+
+**If failures exist (re-run — turnover detected):**
+```
+Test run complete. {N} test cases failed across {M} modules.
+
+Turnover updates applied:
+{For each turned-over ticket:}
+- {issue URL} - now turnover:{N}, moved back to ready-for-dev
+
+Spec files: {list each spec file path, or "existing tests used" per module}
+
+Next: sync-dev-to-fix - developers pick up issues labeled ready-for-dev.
 ```
 
 **If all tests pass:**

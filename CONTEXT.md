@@ -106,6 +106,16 @@ Generated per module (one file per module) to stay within model context limits, 
 delivered as a complete set.
 _Avoid_: spec, design doc, requirements doc (the FDD is the definitive downstream reference)
 
+### Engineering and QA Workflow Terms
+
+**Turnover**:
+A failed re-run of a QA test case on a ticket that was previously marked `ready-for-qa` after a dev fix. Indicates the fix did not resolve the issue. The ticket is automatically moved back to `ready-for-dev`.
+_Avoid_: bounce, re-open, regression (regression is a separate label type for previously passing tests)
+
+**Turnover Count**:
+The number of times a ticket has been turned over, tracked via a `turnover:N` label on the GitHub issue. The label is replaced (not accumulated) on each turnover — only one `turnover:N` label exists on a ticket at any time.
+_Avoid_: retry count, fix attempts, cycle count
+
 ### PM Workflow Terms
 
 **Design Task List**:

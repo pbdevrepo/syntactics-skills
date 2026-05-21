@@ -68,6 +68,12 @@ Is this a Backend, Frontend, or Full-Stack fix?
 From the FDD reference in the issue, read the exact rule or spec being violated.
 This is the definition of "fixed" — the test must assert this behavior.
 
+### Step 3b — Mark Ongoing
+
+Via GitHub MCP:
+1. Remove label `ready-for-dev` (if present)
+2. Apply label `ongoing`
+
 ### Step 4 — TDD Fix Loop
 
 **1. Write the failing test that reproduces the bug**
@@ -102,7 +108,7 @@ Fix applied.
 Ready for QA re-run via sync-qa-runner.
 ```
 
-2. Remove label `ready-for-dev` (if present)
+2. Remove label `ongoing`
 3. Apply label `ready-for-qa`
 4. Do NOT close the issue — QA closes it after sync-qa-runner confirms the fix passes
 
