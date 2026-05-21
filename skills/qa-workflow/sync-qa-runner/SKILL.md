@@ -25,7 +25,7 @@ Re-run workflow: **sync-dev-to-fix - sync-qa-runner (targeted re-run)**
 ## Before You Start
 
 Confirm inputs:
-1. QA test plan index: `projects/{project-name}/qa/qa-plan/index.md`
+1. QA test plan index: `docs/qa/qa-plan/index.md`
 2. Environment target — ask if not specified:
 
 ```
@@ -111,7 +111,7 @@ Test run complete. {N} test cases failed across {M} modules.
 
 Spec files written to docs/qa/{module}/
 
-Next: sync-qa-to-ticket - pass projects/{project-name}/qa/qa-plan/index.md for issue creation.
+Next: sync-qa-to-ticket - pass docs/qa/qa-plan/index.md for issue creation.
 ```
 
 **If all tests pass:**
