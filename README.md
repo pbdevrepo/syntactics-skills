@@ -123,7 +123,7 @@ curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/sc
 | `sync-ba-project-intake` | Entry point — gather and structure requirements from proposal |
 | `sync-database-designer` | ERD design, normalization, schema best practices |
 | `sync-sprint-planner` | Convert approved DB schema into development task list |
-| `sync-final-design` | Produce Final Design Documents (FDD) per module |
+| `sync-final-design` | Produce Final Design Documents (FDD) — outputs one file per module to `docs/fdd/{module-slug}.md`, each self-contained with its own artifact version |
 
 ### PM (`pm-workflow`)
 | Skill | Description |
