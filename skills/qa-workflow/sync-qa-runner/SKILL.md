@@ -15,9 +15,9 @@ description: >
 
 # QA Runner
 
-Executes the QA test plan live — UI tests via the project's detected test framework, API tests via
-HTTP against the generated Swagger YAML. Marks each test case inline and generates regression spec
-files in the detected framework's format as a side artifact.
+Executes the QA test plan live — detects the project's test framework once up front, then runs UI
+and API tests using that framework. Falls back to Swagger YAML HTTP requests for API cases with no
+existing coverage. Marks each test case inline and generates regression spec files as a side artifact.
 
 Workflow: **sync-qa-planner - sync-qa-runner - sync-qa-to-ticket**
 
@@ -47,44 +47,16 @@ Which environment should tests run against?
 ### Step 0 — Load Module List
 
 Read `qa-plan/index.md`. Extract the list of module files from the Module Index table.
-Execute Steps 1-3 once per module file in the order listed in the index.
+Execute Steps 2-3 once per module file in the order listed in the index.
 Complete all test cases in one module before moving to the next.
 
 ### Step 1 — Set Environment
 
-Confirm the base URL for this run. All Playwright navigation and API requests use this base URL.
+Confirm the base URL for this run. All browser navigation and API requests use this base URL.
 
 Log the environment at the top of the Test Run Log in `qa-plan/index.md`.
 
-### Step 2 — Execute Tests
-
-Process test cases in priority order: P1-critical first, then P2, P3, P4.
-
-**For UI and E2E test cases (Type: UI, Functional, Access Control, Integration):**
-
-Use the framework detected in Step 3a. If Playwright or Cypress is detected, drive the browser via the MCP tool. Otherwise execute via the runner command. For each test case:
-1. Navigate to the target URL
-2. Execute each step in the test case
-3. Assert the expected result
-4. Mark the test case `Pass` or `Fail` inline in qa-plan.md
-5. If `Fail`: capture the observed behavior and note it in the Bug Ref field
-
-**For API test cases (Type: API):**
-
-Use the framework detected in Step 3a. Apply in this order:
-
-1. **Existing API tests found** (PHPUnit, Pest, Jest, Vitest, etc.) - run them via the detected runner command, report each result (PASS / FAIL) inline in qa-plan.md, capture error output on failure
-2. **No existing API tests + Swagger YAML exists** (`docs/api/{module}/{feature}_api.yaml`) - fall back to raw HTTP requests: send the specified method, path, and body; assert the response status code and body match the YAML spec; mark `Pass` or `Fail` inline; capture the actual response on failure
-3. **No existing API tests + no Swagger YAML** - flag as `Manual`, pause and prompt the QA tester to execute and report the result before continuing
-
-**Manual test cases:**
-
-Flag cases that cannot be automated (e.g. email delivery, third-party OAuth) as `Manual`.
-Pause and prompt the QA tester to execute and report the result before continuing.
-
-### Step 3 — Detect Framework, Discover and Handle Test Files
-
-#### Step 3a — Detect the test framework
+### Step 1b — Detect Test Framework
 
 Read the following files in the project root to identify what testing packages are in use:
 
@@ -112,7 +84,37 @@ Resolve to one primary framework per test type:
 
 If no framework is detected, default to Playwright for UI/E2E and note the assumption.
 
-#### Step 3b — Discover existing tests
+Log the detected frameworks at the top of the Test Run Log alongside the environment.
+
+### Step 2 — Execute Tests
+
+Process test cases in priority order: P1-critical first, then P2, P3, P4.
+
+**For UI and E2E test cases (Type: UI, Functional, Access Control, Integration):**
+
+Use the framework detected in Step 1b. If Playwright or Cypress is detected, drive the browser via the MCP tool. Otherwise execute via the runner command. For each test case:
+1. Navigate to the target URL
+2. Execute each step in the test case
+3. Assert the expected result
+4. Mark the test case `Pass` or `Fail` inline in qa-plan.md
+5. If `Fail`: capture the observed behavior and note it in the Bug Ref field
+
+**For API test cases (Type: API):**
+
+Use the framework detected in Step 1b. Apply in this order:
+
+1. **Existing API tests found** (PHPUnit, Pest, Jest, Vitest, etc.) - run them via the detected runner command, report each result (PASS / FAIL) inline in qa-plan.md, capture error output on failure
+2. **No existing API tests + Swagger YAML exists** (`docs/api/{module}/{feature}_api.yaml`) - fall back to raw HTTP requests: send the specified method, path, and body; assert the response status code and body match the YAML spec; mark `Pass` or `Fail` inline; capture the actual response on failure
+3. **No existing API tests + no Swagger YAML** - flag as `Manual`, pause and prompt the QA tester to execute and report the result before continuing
+
+**Manual test cases:**
+
+Flag cases that cannot be automated (e.g. email delivery, third-party OAuth) as `Manual`.
+Pause and prompt the QA tester to execute and report the result before continuing.
+
+### Step 3 — Discover and Handle Test Files
+
+#### Step 3a — Discover existing tests
 
 Search for test files matching the detected framework's conventions:
 
@@ -121,7 +123,7 @@ Search for test files matching the detected framework's conventions:
 - **Go**: `*_test.go`
 - **RSpec**: `*_spec.rb`
 
-#### Step 3c — Run or generate
+#### Step 3b — Run or generate
 
 **If existing tests are found for the feature:**
 1. Run them using the detected runner command
