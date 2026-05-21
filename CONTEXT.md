@@ -201,7 +201,8 @@ PM:         sync-design-to-tasks [sync-ui-task-creator → sync-frontend-task-cr
             (auto-triggered from sync-final-design after approval gate; each skill reads sprint-tasks.md; tasks grouped by sprint)
                                                                                            ↓
 QA:         sync-qa-planner → sync-qa-runner → sync-qa-to-ticket
-Engineering: sync-dev-session → sync-dev-tdd → sync-dev-to-fix → sync-qa-runner (re-run)
+Engineering (one-time setup): sync-dev-setup
+Engineering (per-task loop):  sync-dev-session → sync-dev-tdd → sync-dev-to-fix → sync-qa-runner (re-run)
 ```
 
 ### Version Chain
