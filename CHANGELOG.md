@@ -4,6 +4,10 @@ All notable changes to syntactics-skills are documented here.
 
 ## [Unreleased] - 2026-05-21
 
+### Fixed
+- `engineering-workflow`: `sync-dev-setup` Section A explainer - replaced generic skill names (`to-issues`, `triage`, `to-prd`, `qa`) with sync equivalents (`sync-qa-to-ticket`, `sync-qa-runner`, `sync-dev-session`, `sync-dev-tdd`)
+- `engineering-workflow`: `sync-dev-setup` domain.md - replaced `grill-with-docs` references with `sync-grill-with-docs`
+
 ### Changed
 - `ba-workflow`: `sync-final-design` v1.2.0 → v2.0.0 — breaking change: now outputs one markdown file per module to `docs/fdd/{module-slug}.md` instead of a single monolithic `{system-name}-final-design.md`; each file is self-contained with system context and its own `artifact_version` frontmatter; Version Gate checks per-module files instead of a single file; processes one module at a time with per-module progress line
 - `qa-workflow`: `sync-qa-planner` v2.1.0 → v3.0.0 — breaking change: now requires one FDD file per module in `docs/fdd/` (hard rejects monolithic FDD); processes one module at a time to stay within context on large codebases; accepts optional module filter at invocation (`/sync-qa-planner user-management invoicing`) to target a subset of modules; Version Gate now checks only selected modules instead of all; prints per-module progress line after each write; QA IDs continue from highest existing ID on partial runs; output path updated from `projects/{project-name}/qa/qa-plan/` to `docs/qa/qa-plan/`

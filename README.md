@@ -136,6 +136,7 @@ curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/sc
 ### Engineering (`engineering-workflow`)
 | Skill | Description |
 |-------|-------------|
+| `sync-dev-setup` | One-time per-repo setup - scaffolds `## Agent skills` block and `docs/agents/` files so engineering skills know the issue tracker, triage labels, and domain doc layout |
 | `sync-dev-session` | Task-level grilling session anchored to FDD - invoked as `/sync-dev-session BE-0001 users-module @tasks.md @fdd.md`; session type auto-derived |
 | `sync-dev-tdd` | TDD red-green-refactor loop per task or module; auto-loads prior session summary if found; standalone mode reads task list + FDD directly |
 | `sync-dev-to-fix` | TDD-driven bug fix loop from a GitHub issue - fetches, fixes, posts result |
@@ -174,7 +175,7 @@ Sales:  sync-client-discovery → sync-requirement-analyzer → sync-proposal-gr
 BA:     sync-ba-project-intake → sync-database-designer → sync-sprint-planner → sync-final-design
                                                                                        ↓ (FDD approved)
 PM:     sync-design-to-tasks (orchestrates: sync-ui-task-creator → sync-frontend-task-creator → sync-backend-task-creator)
-Eng:    sync-dev-session → sync-tdd-be / sync-tdd-fe → sync-qa-planner → sync-qa-runner → sync-qa-to-ticket → sync-dev-to-fix → sync-qa-runner (re-run)
+Eng:    sync-dev-session → sync-dev-tdd → sync-qa-planner → sync-qa-runner → sync-qa-to-ticket → sync-dev-to-fix → sync-qa-runner (re-run)
 ```
 
 QA plan artifacts are written to `docs/qa/qa-plan/`. All other artifacts are written to `docs/{workflow-phase}/{artifact}.md`.
