@@ -7,6 +7,7 @@ All notable changes to syntactics-skills are documented here.
 ### Fixed
 - `engineering-workflow`: `sync-dev-setup` Section A explainer - replaced generic skill names (`to-issues`, `triage`, `to-prd`, `qa`) with sync equivalents (`sync-qa-to-ticket`, `sync-qa-runner`, `sync-dev-session`, `sync-dev-tdd`)
 - `engineering-workflow`: `sync-dev-setup` domain.md - replaced `grill-with-docs` references with `sync-grill-with-docs`
+- `README`: added `sync-dev-diagnose`, `sync-improve-codebase-architecture`, and `sync-grill-with-docs` to Engineering skill table; removed `sync-grill-with-docs` from Must-Have table (now lives in `engineering-workflow`)
 
 ### Changed
 - `ba-workflow`: `sync-final-design` v1.2.0 → v2.0.0 — breaking change: now outputs one markdown file per module to `docs/fdd/{module-slug}.md` instead of a single monolithic `{system-name}-final-design.md`; each file is self-contained with system context and its own `artifact_version` frontmatter; Version Gate checks per-module files instead of a single file; processes one module at a time with per-module progress line

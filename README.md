@@ -140,6 +140,9 @@ curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/sc
 | `sync-dev-session` | Task-level grilling session anchored to FDD - invoked as `/sync-dev-session BE-0001 users-module @tasks.md @fdd.md`; session type auto-derived |
 | `sync-dev-tdd` | TDD red-green-refactor loop per task or module; auto-loads prior session summary if found; standalone mode reads task list + FDD directly |
 | `sync-dev-to-fix` | TDD-driven bug fix loop from a GitHub issue - fetches, fixes, posts result |
+| `sync-dev-diagnose` | Disciplined diagnosis loop for hard bugs and performance regressions - reproduce, minimise, hypothesise, instrument, fix, regression-test |
+| `sync-improve-codebase-architecture` | Find deepening opportunities in a codebase informed by CONTEXT.md and ADRs - refactoring, module consolidation, testability improvements |
+| `sync-grill-with-docs` | Grilling session that challenges a plan against the existing domain model and updates CONTEXT.md and ADRs inline as decisions crystallise |
 
 ### QA (`qa-workflow`)
 | Skill | Description |
@@ -156,7 +159,6 @@ Always installed regardless of workflow selection.
 |-------|-------------|
 | `sync-caveman` | Ultra-compressed communication mode — cuts token usage ~75% |
 | `sync-grill-me` | Interview the user relentlessly about a plan or design until reaching shared understanding |
-| `sync-grill-with-docs` | Grilling session that challenges a plan against the existing domain model and updates docs inline |
 
 ### Content (`content-workflow`)
 | Skill | Description |
