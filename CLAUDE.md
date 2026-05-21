@@ -75,6 +75,8 @@ skills/
     sync-{skill-name}/
       SKILL.md           # required: YAML frontmatter + ## sections
       references/*.md    # optional: templates, question banks, output formats
+    agents/              # optional: Claude Code subagents bundled with this workflow
+      {agent-name}.md    # installed to .claude/agents/ alongside the workflow's skills
 projects/
   {project-name}/
     sales/               # artifacts from sales-workflow

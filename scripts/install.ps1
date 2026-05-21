@@ -88,10 +88,12 @@ try {
 
     $wfDirs = @($allWfDirs | Where-Object { $_.Name -ne 'must-have-workflow' } | Sort-Object Name)
 
-    $selected = @()
+    $selected       = @()
+    $selectedWfDirs = @()   # workflow dirs whose agents should also be copied
 
     if ($Skill.Count -gt 0) {
         $selected = $Skill | ForEach-Object { if ($_ -notmatch '^sync-') { "sync-$_" } else { $_ } }
+        # skill-specific installs: no agent copying
 
     } elseif ($Workflow.Count -gt 0) {
         foreach ($wf in $Workflow) {
@@ -102,6 +104,7 @@ try {
                 Write-Warning "Workflow not found: $($wf -replace '-workflow$', '')  (available: $avail)"
             } else {
                 $selected += @(Get-WorkflowSkills -WfDir $wfDir.FullName)
+                $selectedWfDirs += $wfDir
             }
         }
 
@@ -122,12 +125,16 @@ try {
 
         $answer = Read-Host ("`nEnter numbers separated by commas [{0}]" -f $allNum)
         if ([string]::IsNullOrWhiteSpace($answer) -or $answer.Trim() -eq "$allNum") {
-            foreach ($wfDir in $wfDirs) { $selected += $wfSkillCache[$wfDir.Name] }
+            foreach ($wfDir in $wfDirs) {
+                $selected += $wfSkillCache[$wfDir.Name]
+                $selectedWfDirs += $wfDir
+            }
         } else {
             foreach ($part in ($answer -split ',')) {
                 $idx = [int]$part.Trim() - 1
                 if ($idx -ge 0 -and $idx -lt $wfDirs.Count) {
                     $selected += $wfSkillCache[$wfDirs[$idx].Name]
+                    $selectedWfDirs += $wfDirs[$idx]
                 }
             }
         }
@@ -138,8 +145,25 @@ try {
     New-Item -ItemType Directory -Force -Path $SkillDir | Out-Null
     $count = Copy-Skills -Names $all -SkillMap $SkillMap -Target $SkillDir
 
+    # Copy agents from each selected workflow's agents/ subdir
+    $AgentDir    = $SkillDir -replace '\\skills$', '\agents'
+    $agentCount  = 0
+    foreach ($wfDir in $selectedWfDirs) {
+        $agentsSrc = Join-Path $wfDir.FullName "agents"
+        if (Test-Path $agentsSrc) {
+            New-Item -ItemType Directory -Force -Path $AgentDir | Out-Null
+            Get-ChildItem -Path $agentsSrc -Filter "*.md" | ForEach-Object {
+                Copy-Item -Path $_.FullName -Destination (Join-Path $AgentDir $_.Name) -Force
+                $agentCount++
+            }
+        }
+    }
+
     Write-Host ""
     Write-Host "Installed $count skill(s) to $SkillDir"
+    if ($agentCount -gt 0) {
+        Write-Host "Installed $agentCount agent(s) to $AgentDir"
+    }
     Write-Host "Previously installed skills were not removed."
     Write-Host "Restart Claude Code to load the skills."
 
