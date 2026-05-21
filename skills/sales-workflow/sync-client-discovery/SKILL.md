@@ -47,7 +47,7 @@ See `references/question-bank.md` for the full question pool.
 
 Write the questionnaire directly to file — do not output it in chat.
 
-File: `projects/{project-name}/sales/{project-name}-discovery.md`
+File: `docs/sales/{project-name}-discovery.md`
 
 Use all questions from `references/question-bank.md`, grouped and numbered, formatted for a
 client to fill in. Add a blank answer line after each question.
@@ -65,7 +65,7 @@ Once answered, pass it to sync-requirement-analyzer as the client input.
 
 After all groups are answered, write the summary directly to file — do not output it in chat.
 
-File: `projects/{project-name}/sales/{project-name}-discovery.md`
+File: `docs/sales/{project-name}-discovery.md`
 
 Follow `references/output-format.md` for the exact structure.
 

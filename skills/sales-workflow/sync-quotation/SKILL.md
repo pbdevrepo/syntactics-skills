@@ -22,7 +22,7 @@ Workflow: **requirement-analyzer → proposal-grill → proposal-writer → quot
 
 ## Before You Start
 
-1. Confirm the proposal file: `projects/{project-name}/sales/{project-name}-proposal.md`
+1. Confirm the proposal file: `docs/sales/{project-name}-proposal.md`
 2. Read the full proposal — every module in Section 4 must appear in the quotation.
 3. Read `references/hour-ranges.md` for complexity-based placeholder ranges.
 
@@ -75,7 +75,7 @@ Grand Total: X–Y hrs
 
 ### Step 5 — Deliver
 
-Write file: `projects/{project-name}/sales/{project-name}-quotation.md`
+Write file: `docs/sales/{project-name}-quotation.md`
 
 Follow `references/output-format.md` for the exact structure.
 

@@ -1,6 +1,6 @@
 # Test Plan Format - QA Planner
 
-Output directory: `projects/{project-name}/qa/qa-plan/`
+Output directory: `docs/qa/qa-plan/`
 
 Two file types: one index file and one per-module file per module.
 

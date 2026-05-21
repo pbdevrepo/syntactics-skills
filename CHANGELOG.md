@@ -2,6 +2,14 @@
 
 All notable changes to syntactics-skills are documented here.
 
+## [Unreleased] - 2026-05-21
+
+### Changed
+- `ba-workflow`: `sync-final-design` v1.2.0 → v2.0.0 — breaking change: now outputs one markdown file per module to `docs/fdd/{module-slug}.md` instead of a single monolithic `{system-name}-final-design.md`; each file is self-contained with system context and its own `artifact_version` frontmatter; Version Gate checks per-module files instead of a single file; processes one module at a time with per-module progress line
+- `qa-workflow`: `sync-qa-planner` v2.1.0 → v3.0.0 — breaking change: now requires one FDD file per module in `docs/fdd/` (hard rejects monolithic FDD); processes one module at a time to stay within context on large codebases; accepts optional module filter at invocation (`/sync-qa-planner user-management invoicing`) to target a subset of modules; Version Gate now checks only selected modules instead of all; prints per-module progress line after each write; QA IDs continue from highest existing ID on partial runs; output path updated from `projects/{project-name}/qa/qa-plan/` to `docs/qa/qa-plan/`
+- `qa-workflow`: `sync-qa-runner` v1.1.0 → v1.5.0 — detects the project's active test framework from package.json, composer.json, go.mod, or Gemfile before running or generating any tests; Step 2 API tests now follow detect-first logic: runs existing PHPUnit/Pest/Jest tests if found, falls back to HTTP requests against Swagger YAML only when no framework tests exist, flags Manual when neither exists; Step 2 UI/E2E uses detected framework instead of hardcoded Playwright; Step 3 generates specs in the detected framework's format; updated input and output paths from `projects/{project-name}/qa/qa-plan/` to `docs/qa/qa-plan/`
+- `qa-workflow`: `sync-qa-to-ticket` v1.2.0 — updated QA plan path references from `projects/{project-name}/qa/qa-plan/` to `docs/qa/qa-plan/`
+
 ## [Unreleased] - 2026-05-20
 
 ### Fixed

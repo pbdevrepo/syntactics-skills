@@ -123,7 +123,7 @@ curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/sc
 | `sync-ba-project-intake` | Entry point — gather and structure requirements from proposal |
 | `sync-database-designer` | ERD design, normalization, schema best practices |
 | `sync-sprint-planner` | Convert approved DB schema into development task list |
-| `sync-final-design` | Produce Final Design Documents (FDD) per module |
+| `sync-final-design` | Produce Final Design Documents (FDD) — outputs one file per module to `docs/fdd/{module-slug}.md`, each self-contained with its own artifact version |
 
 ### PM (`pm-workflow`)
 | Skill | Description |
@@ -143,7 +143,7 @@ curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/sc
 ### QA (`qa-workflow`)
 | Skill | Description |
 |-------|-------------|
-| `sync-qa-planner` | Generate structured QA test plan mapped to FDD rules and implemented tasks |
+| `sync-qa-planner` | Generate structured QA test plan from split FDD module files (`docs/fdd/{module-slug}.md`), one module at a time. Accepts optional module filter: `/sync-qa-planner user-management invoicing` |
 | `sync-qa-runner` | Execute test plan live via Playwright MCP and HTTP - marks PASS/FAIL, generates regression specs |
 | `sync-qa-to-ticket` | Convert QA failures into GitHub issues with labels and FDD references |
 
@@ -177,7 +177,7 @@ PM:     sync-design-to-tasks (orchestrates: sync-ui-task-creator → sync-fronte
 Eng:    sync-dev-session → sync-tdd-be / sync-tdd-fe → sync-qa-planner → sync-qa-runner → sync-qa-to-ticket → sync-dev-to-fix → sync-qa-runner (re-run)
 ```
 
-Artifacts are written to `projects/{project-name}/{workflow-phase}/{artifact}.md`.
+QA plan artifacts are written to `docs/qa/qa-plan/`. All other artifacts are written to `docs/{workflow-phase}/{artifact}.md`.
 
 ## Development
 

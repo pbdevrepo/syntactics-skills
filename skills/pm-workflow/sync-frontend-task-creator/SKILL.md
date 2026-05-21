@@ -23,8 +23,8 @@ Workflow: **sync-ui-task-creator → sync-frontend-task-creator → sync-backend
 
 Confirm inputs:
 1. FDD files: all module `.md` files from the BA workflow
-2. Sprint plan: `projects/{project-name}/ba/{project-name}-sprint-tasks.md`
-3. Design task list: `projects/{project-name}/pm/{project-name}-design-tasks.md`
+2. Sprint plan: `docs/ba/{project-name}-sprint-tasks.md`
+3. Design task list: `docs/pm/{project-name}-design-tasks.md`
 
 Sprint N design tasks must be marked complete before Sprint N frontend tasks begin. Do not wait
 for all sprints' design tasks to complete — proceed sprint by sprint.
@@ -46,7 +46,7 @@ Do not warn-and-continue. Regeneration is required.
 
 > If Sprint Map has already been built and shared in context by `sync-design-to-tasks`, skip this step.
 
-Read `projects/{project-name}/ba/{project-name}-sprint-tasks.md`.
+Read `docs/ba/{project-name}-sprint-tasks.md`.
 
 For each Priority section (Priority 1 through Priority 6), note which modules appear. Map each
 module to its sprint number: Priority 1 = Sprint 1, Priority 2 = Sprint 2, and so on.
@@ -106,7 +106,7 @@ Every task must be tagged:
 
 ### Step 5 — Deliver
 
-Write file: `projects/{project-name}/pm/{project-name}-frontend-tasks.md`
+Write file: `docs/pm/{project-name}-frontend-tasks.md`
 
 **Artifact version frontmatter:** Write this YAML block at the very top of the file before any other content.
 

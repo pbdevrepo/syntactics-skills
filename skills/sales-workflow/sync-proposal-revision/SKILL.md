@@ -27,7 +27,7 @@ Workflow: **client feedback → proposal-revision → proposal-writer → quotat
 1. Ask Sales for:
    - The project name
    - The client comments or revision notes (paste, upload, or describe them)
-2. Scan `projects/{project-name}/sales/` to find the latest requirements file:
+2. Scan `docs/sales/` to find the latest requirements file:
    - If only `{project-name}-requirements.md` exists: this is v1, next version is v2.
    - If `{project-name}-requirements-v{N}.md` exists: find the highest N, next version is N+1.
 3. Read the latest requirements file in full — this is the baseline for the diff.
@@ -98,7 +98,7 @@ Once Sales confirms the delta:
 **Status:** Pending Grilling
 ```
 
-4. Write the file: `projects/{project-name}/sales/{project-name}-requirements-v{N}.md`
+4. Write the file: `docs/sales/{project-name}-requirements-v{N}.md`
 
 ### Step 3 — Check for New Ambiguities
 

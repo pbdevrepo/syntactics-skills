@@ -1,6 +1,6 @@
 # Output Format — Client Discovery Summary
 
-File: `projects/{project-name}/sales/{project-name}-discovery.md`
+File: `docs/sales/{project-name}-discovery.md`
 
 ---
 

@@ -36,36 +36,20 @@ If yes, paste them now. If no, type "none".
 
 ## Workflow
 
-### Step 1 — Bootstrap Labels
+### Step 1 — Verify Labels Exist
 
-Via GitHub MCP, check if the required labels exist in the repository. Create any that are missing:
+Via GitHub MCP, check that the following labels exist in the repository:
 
-**Type labels:**
-- `bug` — color: `#d73a4a`
-- `out-of-scope` — color: `#e4e669`
-- `regression` — color: `#f9d0c4`
+`bug`, `out-of-scope`, `regression`, `needs-triage`, `ready-for-dev`, `ongoing`, `ready-for-qa`, `verified`, `for-ba-confirmation`, `needs-info`, `area:fe`, `area:be`, `area:fs`, `P1-critical`, `P2-high`, `P3-medium`, `P4-low`
 
-**Status labels:**
-- `needs-triage` — color: `#ededed`
-- `ready-for-dev` — color: `#0075ca`
-- `in-fix` — color: `#6f42c1`
-- `ready-for-qa` — color: `#0e8a16`
-- `verified` — color: `#2cbe4e`
+If any are missing, halt immediately and tell the user:
 
-**Escalation labels:**
-- `for-ba-confirmation` — color: `#fbca04`
-- `needs-info` — color: `#d93f0b`
+```
+Required labels are missing from this repository. Run /sync-dev-setup to create them before proceeding.
+Missing: {list the missing label names}
+```
 
-**Area labels:**
-- `area:fe` — color: `#0891b2`
-- `area:be` — color: `#0e7490`
-- `area:fs` — color: `#155e75`
-
-**Priority labels:**
-- `P1-critical` — color: `#b60205`
-- `P2-high` — color: `#e11d48`
-- `P3-medium` — color: `#f97316`
-- `P4-low` — color: `#84cc16`
+Do not create labels here. Label setup is owned by sync-dev-setup.
 
 ### Step 2 — Process Failed Test Cases
 
