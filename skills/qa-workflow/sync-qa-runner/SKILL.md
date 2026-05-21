@@ -9,7 +9,8 @@ description: >
   YAML if no tests exist, flags Manual if neither exists. Generates new specs in the detected
   framework's format only when no coverage exists. Trigger when a QA tester says "run tests",
   "execute test plan", "qa runner", "start qa run", or after sync-qa-planner completes. Supports
-  local, staging, and custom URL environments. Always run after sync-qa-planner and before
+  local, staging, and custom URL environments. Accepts an optional module filter:
+  /sync-qa-runner user-management activity-logs. Always run after sync-qa-planner and before
   sync-qa-to-ticket in the QA workflow. Also used for re-runs after sync-dev-to-fix applies a fix.
 ---
 
@@ -27,7 +28,13 @@ Re-run workflow: **sync-dev-to-fix - sync-qa-runner (targeted re-run)**
 
 ## Before You Start
 
-Confirm inputs:
+### Check invocation arguments
+
+If module slugs were passed as arguments (e.g. `/sync-qa-runner user-management activity-logs`),
+capture them as the **module filter**. If no arguments were passed, the run targets all modules.
+
+### Confirm inputs
+
 1. QA test plan index: `docs/qa/qa-plan/index.md`
 2. Environment target — ask if not specified:
 
@@ -47,6 +54,10 @@ Which environment should tests run against?
 ### Step 0 — Load Module List
 
 Read `qa-plan/index.md`. Extract the list of module files from the Module Index table.
+
+If a module filter was passed, restrict the list to only those slugs. If a slug in the filter
+does not match any module in the index, hard stop and name the unrecognised slug.
+
 Execute Steps 2-3 once per module file in the order listed in the index.
 Complete all test cases in one module before moving to the next.
 
@@ -174,6 +185,7 @@ State the updated index path and spec file paths, then say:
 **If failures exist (first run):**
 ```
 Test run complete. {N} test cases failed across {M} modules.
+{If module filter was active: "Targeted run: {list slugs}"}
 
 Spec files: {list each spec file path, or "existing tests used" per module}
 
