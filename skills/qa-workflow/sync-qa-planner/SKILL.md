@@ -12,8 +12,8 @@ description: >
 
 # QA Planner
 
-Reads split FDD module files, the frontend task list, and the backend task list to produce a
-structured QA test plan. Every test case maps to a specific FDD rule. Processes one module at a time
+Read split FDD module files, the frontend task list, and the backend task list. Produce a
+structured QA test plan. Every test case maps to a specific FDD rule. Process one module at a time
 to stay within context on large codebases. The plan is the input to sync-qa-runner for execution.
 
 Workflow: **sync-tdd-be / sync-tdd-fe - sync-qa-planner - sync-qa-runner**

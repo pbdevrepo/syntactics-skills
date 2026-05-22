@@ -12,8 +12,8 @@ description: >
 
 # QA to Ticket
 
-Reads the failed test cases from the QA plan and any manual QA findings, then creates structured
-GitHub issues via GitHub MCP. Each issue is anchored to the FDD. No fixes — only clear, scoped
+Read the failed test cases from the QA plan and any manual QA findings. Create structured
+GitHub issues via GitHub MCP. Each issue is anchored to the FDD. No fixes - only clear, scoped
 problem statements.
 
 Workflow: **sync-qa-runner - sync-qa-to-ticket - sync-dev-to-fix**
