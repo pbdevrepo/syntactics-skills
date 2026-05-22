@@ -10,8 +10,7 @@ description: >
 
 # BA Project Intake
 
-Reads a proposal PDF plus any supporting input. Produces an intake `.md` file.
-Does not design, spec, or estimate. Produces clarity only.
+Read the proposal and any supporting input. Produce the intake document. Do not design, spec, or estimate. Produce clarity only.
 
 Workflow: **ba-project-intake → database-designer → sprint-planner → final-design**
 

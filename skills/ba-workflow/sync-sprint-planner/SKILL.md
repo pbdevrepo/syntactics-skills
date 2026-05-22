@@ -7,9 +7,9 @@ description: >
 
 # Sprint Planner
 
-Reads the approved **Database Schema** (and optionally the BA Intake Document) and produces `{project-name}-sprint-tasks.md`. Organized by build order, tagged by role.
+Read the approved **Database Schema**. Produce `{project-name}-sprint-tasks.md`. Every task must have a build order and a role tag.
 
-> Always runs after **sync-database-designer** has produced an approved schema.
+Run only after **sync-database-designer** produces an approved schema.
 
 **Before generating tasks:** read `references/dependency-rules.md` and `references/task-output-format.md`.
 
