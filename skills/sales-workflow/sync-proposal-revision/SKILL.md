@@ -12,11 +12,9 @@ description: >
 
 # Proposal Revision
 
-Applies client feedback to the latest requirements document, produces a versioned requirements
-file with a delta summary, then triggers sync-proposal-writer and sync-quotation on the new version.
+Apply client feedback to the latest requirements document. Produce a versioned requirements file with a delta summary. Trigger sync-proposal-writer and sync-quotation on the new version.
 
-Handles multiple revision rounds: always diffs client feedback against the prior version, not the
-original, so the delta is accurate for round 2, round 3, and beyond.
+Handle multiple revision rounds: always diff against the prior version, not the original. The delta must be accurate for round 2, round 3, and beyond.
 
 Workflow: **client feedback -> proposal-revision -> proposal-writer -> quotation**
 

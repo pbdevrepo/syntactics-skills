@@ -12,8 +12,7 @@ description: >
 
 # Requirement Analyzer
 
-Reads client requirements from a PDF or free-form text. Produces a structured requirements `.md` file.
-Does not write a proposal. Does not estimate. Produces clarity only.
+Read client requirements from a PDF or free-form text. Produce the requirements document. Do not write a proposal. Do not estimate. Produce clarity only.
 
 Workflow: **requirement-analyzer -> proposal-grill -> proposal-writer -> quotation**
 

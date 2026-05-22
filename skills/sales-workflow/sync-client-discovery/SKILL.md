@@ -11,8 +11,8 @@ description: >
 
 # Client Discovery
 
-Generates a structured discovery conversation for clients who have not provided a brief or RFP.
-Produces a discovery summary `.md` that feeds directly into `sync-requirement-analyzer`.
+Generate a structured discovery conversation for clients who have not provided a brief or RFP.
+Produce a discovery summary `.md` that feeds directly into `sync-requirement-analyzer`.
 
 Workflow: **client-discovery -> requirement-analyzer -> proposal-grill -> proposal-writer -> quotation**
 

@@ -12,11 +12,9 @@ description: >
 
 # Proposal Writer
 
-Reads the grilled requirements document and writes a professional, client-facing project proposal.
-Does not estimate hours - that is handled by quotation. Focuses on clarity, completeness, and
-presenting the project scope in terms the client understands.
+Read the grilled requirements document. Write a professional, client-facing project proposal. Do not estimate hours - that belongs in the quotation. Focus on clarity, completeness, and scope the client understands.
 
-Supports versioning: detects existing proposals and writes the next version automatically.
+Detect existing proposals and write the next version automatically.
 
 Workflow: **requirement-analyzer -> proposal-grill -> proposal-writer -> quotation**
 Revision workflow: **proposal-revision -> proposal-writer -> quotation**

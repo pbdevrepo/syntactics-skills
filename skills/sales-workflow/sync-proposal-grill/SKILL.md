@@ -12,8 +12,7 @@ description: >
 
 # Proposal Grill
 
-Reads the requirements document from `requirement-analyzer` and interrogates it relentlessly until
-every branch of scope is resolved. Focused on what Sales missed - not on what the client said.
+Read the requirements document from `requirement-analyzer`. Interrogate it relentlessly until every branch of scope is resolved. Focus on what Sales missed - not on what the client said.
 
 Workflow: **requirement-analyzer -> proposal-grill -> proposal-writer -> quotation**
 

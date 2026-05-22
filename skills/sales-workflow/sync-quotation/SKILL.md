@@ -11,11 +11,9 @@ description: >
 
 # Quotation
 
-Reads the project proposal and produces an itemized quotation `.md` file. Lists every module,
-breaks each into implementable sub-items, and assigns placeholder hour ranges per role.
+Read the project proposal. Produce an itemized quotation `.md` file. List every module, break each into implementable sub-items, assign placeholder hour ranges per role.
 
-Hour ranges are placeholders - Sales reviews and adjusts before the quotation goes to the client.
-The goal here is a complete, structured breakdown that Sales can edit, not a committed estimate.
+Hour ranges are placeholders - Sales reviews and adjusts before sending. Produce a complete, structured breakdown Sales can edit. Do not commit to estimates.
 
 Workflow: **requirement-analyzer -> proposal-grill -> proposal-writer -> quotation -> [client decision]**
 
