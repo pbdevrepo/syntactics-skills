@@ -2,6 +2,11 @@
 
 All notable changes to syntactics-skills are documented here.
 
+## [Unreleased] - 2026-05-22
+
+### Changed
+- `sales-workflow`: `sync-proposal-grill` v1.0.0 -> v1.1.0 - inherited three patterns from `sync-grill-with-docs`: sharpen fuzzy language rule (propose canonical terms when vague ones appear), concrete scenario stress-testing (invent failure scenarios per module), and inline document updates (update requirements doc as each item is resolved rather than batching at the end); added hard-to-reverse scope decision flagging; updated Grilling Summary to include flagged decisions
+
 ## [Unreleased] - 2026-05-21
 
 ### Fixed
