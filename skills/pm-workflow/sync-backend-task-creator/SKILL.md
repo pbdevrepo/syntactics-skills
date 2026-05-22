@@ -1,23 +1,22 @@
 ---
 name: sync-backend-task-creator
-version: 1.1.0
+version: 1.2.0
 description: >
   Generates a module-by-module backend development task list for Syntactics Inc. from the Final
-  Design Document (FDD) and the completed frontend task list. Trigger when a PM says
-  "generate backend tasks", "what does the backend developer need to build", "backend task list",
-  "create backend tasks", "API tasks", or after sync-frontend-task-creator completes. Reads FDD module
-  specs, database schema, business rules, and frontend task API requirements to produce an
-  implementation task list. Always run after sync-frontend-task-creator and before sync-qa-planner in the
-  pm workflow.
+  Design Document (FDD) and the database schema. Trigger when a PM says "generate backend tasks",
+  "what does the backend developer need to build", "backend task list", "create backend tasks",
+  or "API tasks". Reads FDD module specs, database schema, and business rules to produce an
+  implementation task list. Runs in parallel with sync-ui-task-creator — both read directly from
+  the FDD. Frontend tasks are generated after both complete.
 ---
 
 # Backend Task Creator
 
-Read the FDD and the frontend task list. Produce a structured backend implementation task list.
+Read the FDD and the database schema. Produce a structured backend implementation task list.
 Tasks cover API endpoints, business logic, database interactions, and integrations - ordered by
 dependency so migrations and models are built before endpoints.
 
-Workflow: **sync-ui-task-creator → sync-frontend-task-creator → sync-backend-task-creator**
+Workflow: **Stage 1 (parallel): sync-backend-task-creator + sync-ui-task-creator → Stage 2: sync-frontend-task-creator**
 
 ---
 
@@ -26,12 +25,12 @@ Workflow: **sync-ui-task-creator → sync-frontend-task-creator → sync-backend
 Confirm inputs:
 1. FDD files: all module `.md` files from the BA workflow
 2. Sprint plan: `docs/ba/{project-name}-sprint-tasks.md`
-3. Frontend task list: `docs/pm/{project-name}-frontend-tasks.md`
+3. Database schema: `docs/ba/{project-name}-database-schema.md`
 
 Read `references/task-output-format.md` for the exact task block structure before generating.
 
 **Version Gate** — if `{project-name}-backend-tasks.md` already exists:
-1. Read each FDD module file's `artifact_version`, the sprint task list's `artifact_version`, and the frontend task list's `artifact_version`
+1. Read each FDD module file's `artifact_version`, the sprint task list's `artifact_version`, and the database schema's `artifact_version`
 2. Compare them to the existing backend task list's `source_versions`
 3. If any differ: **hard stop.** Name which artifact changed and say: "Regenerate the backend task list from the updated inputs before proceeding."
 
@@ -61,8 +60,8 @@ From the FDD per module, extract only what is needed for implementation tasks:
 - Workflow/status transitions (e.g., draft → pending → approved) — as a list, not narrative
 - Integration names and trigger events (not full integration docs)
 
-From the frontend task list, extract:
-- Every endpoint marked TBD — task ID, associated resource, and HTTP method — to resolve and name them
+From the database schema, extract:
+- Table names, column definitions, and relationships — cross-reference against FDD entities to catch any schema additions or deviations
 
 ### Step 2 — Derive Backend Tasks
 
@@ -100,7 +99,7 @@ Priority 6 — Notifications & Background Jobs
 
 - [ ] Every entity from the FDD has a migration and model task
 - [ ] Every task has a sprint number assigned
-- [ ] Every TBD endpoint in the frontend task list is now named and scoped
+- [ ] Every endpoint implied by FDD entities and business rules is explicitly named
 - [ ] Every endpoint has server-side validation specified
 - [ ] Priority 1 tasks have no dependencies on Priority 2+ tasks
 - [ ] Every RBAC rule from the FDD is covered by a policy task
@@ -121,14 +120,14 @@ Check if a previous version exists at the output path:
 ```yaml
 ---
 artifact_version: {version}
-generated_by: sync-backend-task-creator@1.1.0
+generated_by: sync-backend-task-creator@1.2.0
 generated_at: {YYYY-MM-DD}
 source_versions:
   fdd_modules:
     {module-slug}: {module fdd artifact_version}
     (one entry per FDD module file read)
   sprint_tasks: {sprint-tasks artifact_version}
-  frontend_tasks: {frontend-tasks artifact_version}
+  database_schema: {database-schema artifact_version}
 ---
 ```
 
@@ -139,8 +138,8 @@ State the file path, then say:
 ```
 Backend tasks generated. Tasks are grouped by sprint.
 
-Next: sync-dev-session — pass the FDD files, {project-name}-frontend-tasks.md,
-and {project-name}-backend-tasks.md.
+Next: sync-frontend-task-creator — pass the FDD files, {project-name}-sprint-tasks.md,
+{project-name}-database-schema.md, {project-name}-design-tasks.md, and {project-name}-backend-tasks.md.
 ```
 
 ---

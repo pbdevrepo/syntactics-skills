@@ -126,12 +126,12 @@ curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/sc
 | `sync-final-design` | Produce Final Design Documents (FDD) — outputs one file per module to `docs/fdd/{module-slug}.md`, each self-contained with its own artifact version |
 
 ### PM (`pm-workflow`)
-| Skill | Description |
-|-------|-------------|
-| `sync-design-to-tasks` | Orchestrates full task pipeline from FDD — chains UI, frontend, and backend task creators in sequence |
-| `sync-ui-task-creator` | PM generates sprint-aware Figma design task list from FDD + BA sprint plan |
-| `sync-frontend-task-creator` | PM generates sprint-aware frontend task list from FDD + design tasks + sprint plan |
-| `sync-backend-task-creator` | PM generates sprint-aware backend task list from FDD + frontend tasks + sprint plan |
+| Skill / Agent | Description |
+|---------------|-------------|
+| `pm-task-orchestrator` (agent) | Orchestrates full task pipeline from FDD - Stage 1 generates backend tasks and UI design tasks in parallel (both from FDD directly), Stage 2 generates frontend tasks from both Stage 1 outputs; no TBD endpoints |
+| `sync-ui-task-creator` | Generates sprint-aware Figma design task list from FDD + sprint plan (Stage 1 - parallel with backend) |
+| `sync-frontend-task-creator` | Generates sprint-aware frontend task list from FDD + design tasks + backend tasks + sprint plan (Stage 2 - all endpoints named) |
+| `sync-backend-task-creator` | Generates sprint-aware backend task list from FDD + database schema + sprint plan (Stage 1 - parallel with UI design) |
 
 ### Engineering (`engineering-workflow`)
 | Skill | Description |
@@ -176,7 +176,7 @@ Sales:  sync-client-discovery → sync-requirement-analyzer → sync-proposal-gr
                                                                                        ↓ (client approves)
 BA:     sync-ba-project-intake → sync-database-designer → sync-sprint-planner → sync-final-design
                                                                                        ↓ (FDD approved)
-PM:     sync-design-to-tasks (orchestrates: sync-ui-task-creator → sync-frontend-task-creator → sync-backend-task-creator)
+PM:     pm-task-orchestrator [Stage 1: sync-backend-task-creator + sync-ui-task-creator (parallel) → Stage 2: sync-frontend-task-creator]
 Eng:    sync-dev-session → sync-dev-tdd → sync-qa-planner → sync-qa-runner → sync-qa-to-ticket → sync-dev-to-fix → sync-qa-runner (re-run)
 ```
 

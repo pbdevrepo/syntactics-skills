@@ -126,21 +126,26 @@ _Avoid_: design brief, wireframe list
 
 **Frontend Task List**:
 The artifact produced by `sync-frontend-task-creator`. A component-level implementation task list
-with API integration specs, validation rules, and Figma references. Tasks are grouped by
-sprint — sprint-by-sprint gate applies (Sprint N design must complete before Sprint N FE begins).
+with API integration specs, validation rules, Figma references, and named backend endpoints. Tasks
+are grouped by sprint — sprint-by-sprint gate applies (Sprint N design must complete before Sprint
+N FE begins). No TBD endpoints — every API call references a named endpoint from the Backend Task
+List.
 _Avoid_: FE backlog, frontend tickets
 
 **Backend Task List**:
 The artifact produced by `sync-backend-task-creator`. A sprint-grouped implementation task list
-covering migrations, models, endpoints, business logic, and integrations. Build order within
-each sprint follows Priority 1-6 categories.
+covering migrations, models, endpoints, business logic, and integrations. Derived from FDD +
+database schema with no dependency on design or frontend tasks. Build order within each sprint
+follows Priority 1-6 categories. Serves as the endpoint reference for frontend task generation.
 _Avoid_: BE backlog, backend tickets
 
 **Task Pipeline**:
-The automated orchestration of all three PM task-creation skills (UI, frontend, backend) in
-a single session, triggered by `sync-design-to-tasks`. The pipeline gates each stage on the
-previous stage's artifact existing before proceeding. Replaces running the three skills
-manually in sequence.
+The automated orchestration of all three PM task-creation skills (UI, frontend, backend) in two
+stages, triggered by `pm-task-orchestrator` agent. Stage 1 generates backend tasks and UI design
+tasks in parallel - both read directly from the FDD with no dependency on each other. Stage 2
+generates frontend tasks after both Stage 1 outputs exist — frontend references named endpoints
+from backend tasks and Figma IDs from design tasks. Replaces the sequential `sync-design-to-tasks`
+skill.
 _Avoid_: task batch, bulk task generation, auto-tasks
 
 **Artifact Version**:
@@ -197,8 +202,8 @@ Sales:      sync-client-discovery → sync-requirement-analyzer → sync-proposa
                                                                                            ↓ (client approves)
 BA:         sync-ba-project-intake → sync-database-designer → sync-sprint-planner → sync-final-design
                                                                                            ↓ (FDD approved — Approval Gate)
-PM:         sync-design-to-tasks [sync-ui-task-creator → sync-frontend-task-creator → sync-backend-task-creator]
-            (auto-triggered from sync-final-design after approval gate; each skill reads sprint-tasks.md; tasks grouped by sprint)
+PM:         pm-task-orchestrator [Stage 1: sync-backend-task-creator + sync-ui-task-creator (parallel, both from FDD) → Stage 2: sync-frontend-task-creator]
+            (agent triggered after FDD approval gate; Stage 1 approval gate before Stage 2; tasks grouped by sprint; no TBD endpoints)
                                                                                            ↓
 QA:         sync-qa-planner → sync-qa-runner → sync-qa-to-ticket
 Engineering (one-time setup): sync-dev-setup

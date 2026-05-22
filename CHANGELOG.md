@@ -4,7 +4,16 @@ All notable changes to syntactics-skills are documented here.
 
 ## [Unreleased] - 2026-05-22
 
+### Added
+- `pm-workflow`: `pm-task-orchestrator` agent v1.0.0 - replaces `sync-design-to-tasks`; orchestrates the full task-creation pipeline in two stages: Stage 1 generates backend tasks and UI design tasks independently (both read directly from FDD), Stage 2 generates frontend tasks after both Stage 1 outputs exist; includes an approval gate between stages; backend tasks now reference FDD + database schema with no dependency on frontend tasks; frontend tasks reference named backend endpoints from Stage 1 output with no TBD endpoints
+
+### Removed
+- `pm-workflow`: `sync-design-to-tasks` skill - replaced by `pm-task-orchestrator` agent
+
 ### Changed
+- `pm-workflow`: `sync-backend-task-creator` v1.1.0 -> v1.2.0 - removed `frontend-tasks.md` as input; added `database-schema.md` as required input; removed TBD endpoint resolution step (was reading from frontend tasks); updated self-review checklist to verify all FDD-implied endpoints are explicitly named; updated `source_versions` frontmatter (removed `frontend_tasks`, added `database_schema`)
+- `pm-workflow`: `sync-ui-task-creator` v1.1.0 -> v1.2.0 - updated workflow notation to reflect parallel Stage 1 structure; updated handoff message to include `backend-tasks.md` for downstream frontend task generation
+- `pm-workflow`: `sync-frontend-task-creator` v1.1.0 -> v1.2.0 - added `backend-tasks.md` as required input; updated Step 3 Depends On instruction to read named endpoint from backend task list (flag as data error if missing, never TBD); added `backend_tasks` to `source_versions` frontmatter; updated handoff message
 - `sales-workflow`: `sync-proposal-grill` v1.0.0 -> v1.1.0 - inherited three patterns from `sync-grill-with-docs`: sharpen fuzzy language rule (propose canonical terms when vague ones appear), concrete scenario stress-testing (invent failure scenarios per module), and inline document updates (update requirements doc as each item is resolved rather than batching at the end); added hard-to-reverse scope decision flagging; updated Grilling Summary to include flagged decisions
 - `sales-workflow`: `sync-client-discovery` v1.0.0 -> v1.1.0 - added sharpen fuzzy language rule with concrete examples for Interactive Mode; added concrete scenario probing rule to force precise answers on broad feature descriptions; fixed em dashes and arrow characters throughout
 - `sales-workflow`: `sync-proposal-revision` v1.0.0 -> v1.1.0 - added sharpen fuzzy language rule for parsing client feedback (propose canonical interpretation before classifying); strengthened flag-ambiguity rule to explicitly block applying any change that Sales cannot resolve; fixed em dashes and arrow characters throughout

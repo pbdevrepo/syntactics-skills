@@ -1,21 +1,22 @@
 ---
 name: sync-frontend-task-creator
-version: 1.1.0
+version: 1.2.0
 description: >
   Generates a module-by-module frontend development task list for Syntactics Inc. from the Final
-  Design Document (FDD) and the completed design task list. Trigger when a PM says
-  "generate frontend tasks", "what does the frontend developer need to build", "frontend task list",
-  "create frontend tasks", or after sync-ui-task-creator completes. Reads FDD module specs, validation rules,
-  and design tasks to produce an implementation task list. Always run after sync-ui-task-creator and before
-  sync-backend-task-creator in the pm workflow.
+  Design Document (FDD), the completed design task list, and the backend task list. Trigger when a
+  PM says "generate frontend tasks", "what does the frontend developer need to build", "frontend task
+  list", or "create frontend tasks". Reads FDD module specs, validation rules, design tasks for Figma
+  refs, and backend tasks for named endpoint references. Always run after both sync-ui-task-creator
+  and sync-backend-task-creator complete — frontend tasks reference real endpoint names, never TBD.
 ---
 
 # Frontend Task Creator
 
-Read the FDD and the completed design task list. Produce a structured frontend implementation
-task list. Tasks are component-level, assignable, and reference the FDD and Figma screens.
+Read the FDD, the completed design task list, and the backend task list. Produce a structured
+frontend implementation task list. Tasks are component-level, assignable, and reference the FDD,
+Figma screens, and named backend endpoints.
 
-Workflow: **sync-ui-task-creator → sync-frontend-task-creator → sync-backend-task-creator**
+Workflow: **Stage 1 (parallel): sync-ui-task-creator + sync-backend-task-creator → Stage 2: sync-frontend-task-creator**
 
 ---
 
@@ -25,6 +26,7 @@ Confirm inputs:
 1. FDD files: all module `.md` files from the BA workflow
 2. Sprint plan: `docs/ba/{project-name}-sprint-tasks.md`
 3. Design task list: `docs/pm/{project-name}-design-tasks.md`
+4. Backend task list: `docs/pm/{project-name}-backend-tasks.md`
 
 Sprint N design tasks must be marked complete before Sprint N frontend tasks begin. Do not wait
 for all sprints' design tasks to complete — proceed sprint by sprint.
@@ -32,7 +34,7 @@ for all sprints' design tasks to complete — proceed sprint by sprint.
 Read `references/task-output-format.md` for the exact task block structure before generating.
 
 **Version Gate** — if `{project-name}-frontend-tasks.md` already exists:
-1. Read each FDD module file's `artifact_version`, the sprint task list's `artifact_version`, and the design task list's `artifact_version`
+1. Read each FDD module file's `artifact_version`, the sprint task list's `artifact_version`, the design task list's `artifact_version`, and the backend task list's `artifact_version`
 2. Compare them to the existing frontend task list's `source_versions`
 3. If any differ: **hard stop.** Name which artifact changed and say: "Regenerate the frontend task list from the updated inputs before proceeding."
 
@@ -92,7 +94,7 @@ with the sprint number from the map built in Step 0.
 Every task must be tagged:
 - **Role:** `[FE]`
 - **Module:** module name from FDD
-- **Depends on:** which backend API endpoint it needs (flag if not yet built)
+- **Depends on:** the named backend endpoint from the backend task list — flag as data error if the endpoint is missing from that list
 - **Figma ref:** corresponding DESIGN-{N} task ID
 
 ### Step 4 — Self-Review Before Delivering
@@ -119,7 +121,7 @@ Check if a previous version exists at the output path:
 ```yaml
 ---
 artifact_version: {version}
-generated_by: sync-frontend-task-creator@1.1.0
+generated_by: sync-frontend-task-creator@1.2.0
 generated_at: {YYYY-MM-DD}
 source_versions:
   fdd_modules:
@@ -127,6 +129,7 @@ source_versions:
     (one entry per FDD module file read)
   sprint_tasks: {sprint-tasks artifact_version}
   design_tasks: {design-tasks artifact_version}
+  backend_tasks: {backend-tasks artifact_version}
 ---
 ```
 
@@ -137,8 +140,8 @@ State the file path, then say:
 ```
 Frontend tasks generated. Tasks are grouped by sprint.
 
-Next: sync-backend-task-creator — pass the FDD files, {project-name}-sprint-tasks.md,
-and {project-name}-frontend-tasks.md.
+Next: sync-dev-session — pass the FDD files, {project-name}-frontend-tasks.md,
+and {project-name}-backend-tasks.md.
 ```
 
 ---

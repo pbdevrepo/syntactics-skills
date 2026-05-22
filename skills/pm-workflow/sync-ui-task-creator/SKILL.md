@@ -1,13 +1,13 @@
 ---
 name: sync-ui-task-creator
-version: 1.1.0
+version: 1.2.0
 description: >
   Generates a module-by-module design task list for the UI/UX Designer at Syntactics Inc. from the
   Final Design Document (FDD). Trigger when a PM says "generate design tasks", "create design tasks",
-  "what does the designer need to build", "design task list", or after final-design completes and
-  the project moves to the PM phase. Reads FDD wireframe specs and validation rules to
-  produce a structured Figma task list per module. Always run first in the pm workflow —
-  before sync-frontend-task-creator and sync-backend-task-creator.
+  "what does the designer need to build", or "design task list". Reads FDD wireframe specs and
+  validation rules to produce a structured Figma task list per module. Runs in parallel with
+  sync-backend-task-creator in Stage 1 — both read directly from the FDD with no dependency on
+  each other. sync-frontend-task-creator runs after both complete.
 ---
 
 # UI Task Creator
@@ -15,7 +15,7 @@ description: >
 Read the Final Design Document (FDD). Produce a structured design task list for the UI/UX
 Designer. The designer uses this to build Figma screens - one task per screen or component.
 
-Workflow: **sync-ui-task-creator → sync-frontend-task-creator → sync-backend-task-creator**
+Workflow: **Stage 1 (parallel): sync-ui-task-creator + sync-backend-task-creator → Stage 2: sync-frontend-task-creator**
 
 ---
 
@@ -112,7 +112,7 @@ Check if a previous version exists at the output path:
 ```yaml
 ---
 artifact_version: {version}
-generated_by: sync-ui-task-creator@1.1.0
+generated_by: sync-ui-task-creator@1.2.0
 generated_at: {YYYY-MM-DD}
 source_versions:
   fdd_modules:
@@ -130,7 +130,7 @@ State the file path, then say:
 Design tasks generated. Tasks are grouped by sprint.
 
 Next: sync-frontend-task-creator — complete Sprint 1 Figma screens first, then pass the FDD files,
-{project-name}-sprint-tasks.md, and {project-name}-design-tasks.md.
+{project-name}-sprint-tasks.md, {project-name}-design-tasks.md, and {project-name}-backend-tasks.md.
 ```
 
 ---
