@@ -6,6 +6,11 @@ All notable changes to syntactics-skills are documented here.
 
 ### Changed
 - `sales-workflow`: `sync-proposal-grill` v1.0.0 -> v1.1.0 - inherited three patterns from `sync-grill-with-docs`: sharpen fuzzy language rule (propose canonical terms when vague ones appear), concrete scenario stress-testing (invent failure scenarios per module), and inline document updates (update requirements doc as each item is resolved rather than batching at the end); added hard-to-reverse scope decision flagging; updated Grilling Summary to include flagged decisions
+- `sales-workflow`: `sync-client-discovery` v1.0.0 -> v1.1.0 - added sharpen fuzzy language rule with concrete examples for Interactive Mode; added concrete scenario probing rule to force precise answers on broad feature descriptions; fixed em dashes and arrow characters throughout
+- `sales-workflow`: `sync-proposal-revision` v1.0.0 -> v1.1.0 - added sharpen fuzzy language rule for parsing client feedback (propose canonical interpretation before classifying); strengthened flag-ambiguity rule to explicitly block applying any change that Sales cannot resolve; fixed em dashes and arrow characters throughout
+- `sales-workflow`: `sync-proposal-writer` v1.2.0 -> v1.3.0 - added rule to surface hard-to-reverse scope decisions in the Assumptions section with a one-line rationale; updated self-review checklist to verify Assumptions coverage; tightened Writing Rules tone (no hedging, no implementation details); fixed em dashes and arrow characters throughout
+- `sales-workflow`: `sync-quotation` v1.0.0 -> v1.1.0 - added explicit note that ranges exist so Sales can see the spread and adjust with confidence (do not compress); added no-single-number-estimates check to self-review; tightened sub-item rules tone; fixed em dashes and arrow characters throughout
+- `sales-workflow`: `sync-requirement-analyzer` v1.0.0 -> v1.1.0 - added sharpen fuzzy terms rule in Phase 3 with concrete examples; added cross-reference note in Phase 1 to flag inconsistent terminology across the document; fixed em dashes and arrow characters throughout
 
 ## [Unreleased] - 2026-05-21
 

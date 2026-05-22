@@ -1,6 +1,6 @@
 ---
 name: sync-proposal-revision
-version: 1.0.0
+version: 1.1.0
 description: >
   Handles client feedback and revisions in the Sales workflow at Syntactics Inc. Trigger when a
   Sales team member says "client has revisions", "client sent feedback", "update the proposal",
@@ -18,7 +18,7 @@ file with a delta summary, then triggers sync-proposal-writer and sync-quotation
 Handles multiple revision rounds: always diffs client feedback against the prior version, not the
 original, so the delta is accurate for round 2, round 3, and beyond.
 
-Workflow: **client feedback → proposal-revision → proposal-writer → quotation**
+Workflow: **client feedback -> proposal-revision -> proposal-writer -> quotation**
 
 ---
 
@@ -30,32 +30,37 @@ Workflow: **client feedback → proposal-revision → proposal-writer → quotat
 2. Scan `docs/sales/` to find the latest requirements file:
    - If only `{project-name}-requirements.md` exists: this is v1, next version is v2.
    - If `{project-name}-requirements-v{N}.md` exists: find the highest N, next version is N+1.
-3. Read the latest requirements file in full — this is the baseline for the diff.
+3. Read the latest requirements file in full - this is the baseline for the diff.
 
 ---
 
 ## Revision Rules
 
 - **Diff against the prior version, not the original.** If the client is reviewing v2, apply their
-  feedback to v2 to produce v3 — do not re-compare against v1.
+  feedback to v2 to produce v3 - do not re-compare against v1.
 - **Preserve resolved grilling.** Do not reopen modules that were already resolved and accepted by
   the client. Only change what the client explicitly flagged.
 - **Classify every change.** Each delta must be labeled as one of:
-  - `Added` — new scope the client requested
-  - `Removed` — scope the client wants dropped or deferred
-  - `Updated` — existing scope the client wants modified
-- **Flag ambiguity.** If a client comment is unclear, do not infer — ask Sales to clarify before
-  writing the new requirements file.
+  - `Added` - new scope the client requested
+  - `Removed` - scope the client wants dropped or deferred
+  - `Updated` - existing scope the client wants modified
+- **Sharpen fuzzy feedback.** When the client uses a vague or overloaded term in their comments,
+  do not infer - propose a precise interpretation and confirm with Sales before applying the change.
+  Example: "Client said 'make reports better' - do they mean add filtering, add export, or change
+  the layout? Each is a different scope item."
+- **Flag ambiguity.** If a client comment is unclear and Sales cannot resolve it, mark it as an
+  Open Item and do not apply the change. Never guess scope.
 
 ---
 
 ## Workflow
 
-### Step 1 — Parse Client Feedback
+### Step 1 - Parse Client Feedback
 
 Read through all client comments or revision notes. For each item:
 - Identify which module or section it refers to.
 - Classify it as `Added`, `Removed`, or `Updated`.
+- If a term is vague, propose a canonical name and confirm with Sales before classifying.
 - If unclear which module it maps to, flag it and ask Sales before proceeding.
 
 Produce a working delta list:
@@ -63,7 +68,7 @@ Produce a working delta list:
 Delta Summary:
 - Added: [description]
 - Removed: [description]
-- Updated: [description — old value → new value]
+- Updated: [description - old value -> new value]
 ```
 
 Confirm the delta list with Sales before writing the new file. Say:
@@ -74,7 +79,7 @@ Here is what I understood from the client's feedback:
 Does this look correct? Any clarifications before I write the updated requirements?
 ```
 
-### Step 2 — Write the New Requirements File
+### Step 2 - Write the New Requirements File
 
 Once Sales confirms the delta:
 
@@ -87,20 +92,20 @@ Once Sales confirms the delta:
 
 ## Revision History
 
-### v{N} — {YYYY-MM-DD}
+### v{N} - {YYYY-MM-DD}
 
 **Delta from v{N-1}:**
 
 - Added: {description}
 - Removed: {description}
-- Updated: {description — old → new}
+- Updated: {description - old -> new}
 
 **Status:** Pending Grilling
 ```
 
 4. Write the file: `docs/sales/{project-name}-requirements-v{N}.md`
 
-### Step 3 — Check for New Ambiguities
+### Step 3 - Check for New Ambiguities
 
 Scan the updated requirements for any newly introduced modules or significantly expanded scope:
 - If a new module was added by the client, mark it `Ambiguous` and flag it for grilling before
@@ -111,7 +116,7 @@ Scan the updated requirements for any newly introduced modules or significantly 
 > If new ambiguities exist, stop here and run sync-proposal-grill on the new requirements file
 > before continuing to Step 4.
 
-### Step 4 — Hand Off
+### Step 4 - Hand Off
 
 State the new requirements file path, then say:
 
