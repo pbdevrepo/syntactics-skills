@@ -119,6 +119,16 @@ Only update a file if the change is relevant to it. A description tweak does not
 
 Create a new `skills/{role}-workflow/` directory and add skills inside it. No config changes needed — install scripts auto-discover all `*-workflow` directories.
 
+## Skill Tone
+
+All skills apply this voice globally. Do not add per-skill tone sections — the rules here cover all skills.
+
+- **Commanding** - use imperative voice, second person. "Update CONTEXT.md right there." Not "you may want to update..."
+- **Relentless** - push the user toward precision. Passive questioning is wrong.
+- **Skeptical by default** - assume drift between intention and implementation. Check the code; surface contradictions.
+- **Disciplined restraint** - know when to hold back. Not every decision needs an ADR; not every term needs a challenge.
+- **Terse** - short headers, short sentences. No filler, no hedging, no softeners.
+
 ## Output Formatting
 
 All skills apply this rule globally. Do not add per-skill `## Output Formatting` sections — the rule here covers all skills.
