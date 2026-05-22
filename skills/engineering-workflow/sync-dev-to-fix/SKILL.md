@@ -12,9 +12,7 @@ description: >
 
 # Dev to Fix
 
-Fetches the GitHub issue, reads the FDD for expected behavior, and drives a TDD fix loop. The issue
-is the problem statement. The FDD is the definition of correct. The fix is not done until a test
-proves it.
+Fetch the GitHub issue. Read the FDD for expected behavior. Drive a TDD fix loop. The issue is the problem statement. The FDD is the definition of correct. The fix is not done until a test proves it.
 
 Workflow: **sync-qa-to-ticket - sync-dev-to-fix - sync-qa-runner (re-run)**
 

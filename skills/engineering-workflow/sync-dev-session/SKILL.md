@@ -14,8 +14,8 @@ description: >
 
 # Dev Session
 
-Grills a developer on their implementation plan for a specific task or module, anchored to the FDD.
-Surfaces gaps, constraints, and risks before a single line of code is written. Saves a structured
+Grill the developer on their implementation plan for a specific task or module, anchored to the FDD.
+Surface gaps, constraints, and risks before a single line of code is written. Save a structured
 summary so decisions are traceable.
 
 Workflow: **sync-dev-session - sync-dev-tdd**
