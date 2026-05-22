@@ -5,6 +5,9 @@ All notable changes to syntactics-skills are documented here.
 ## [Unreleased] - 2026-05-22
 
 ### Added
+- `pm-workflow`: `sync-design-to-stories` v1.0.0 - analyzes design mockup images (PNG/JPG/PDF) and generates structured user stories and acceptance criteria per page with MP/US/AC IDs; standalone skill with no dependency on other pm-workflow skills; outputs `docs/pm/{project-name}-user-stories.md`
+
+### Added
 - `pm-workflow`: `pm-task-orchestrator` agent v1.0.0 - replaces `sync-design-to-tasks`; orchestrates the full task-creation pipeline in two stages: Stage 1 generates backend tasks and UI design tasks independently (both read directly from FDD), Stage 2 generates frontend tasks after both Stage 1 outputs exist; includes an approval gate between stages; backend tasks now reference FDD + database schema with no dependency on frontend tasks; frontend tasks reference named backend endpoints from Stage 1 output with no TBD endpoints
 
 ### Removed
