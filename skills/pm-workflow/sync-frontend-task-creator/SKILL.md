@@ -12,7 +12,7 @@ description: >
 
 # Frontend Task Creator
 
-Reads the FDD and the completed design task list to produce a structured frontend implementation
+Read the FDD and the completed design task list. Produce a structured frontend implementation
 task list. Tasks are component-level, assignable, and reference the FDD and Figma screens.
 
 Workflow: **sync-ui-task-creator → sync-frontend-task-creator → sync-backend-task-creator**

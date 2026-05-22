@@ -12,8 +12,8 @@ description: >
 
 # UI Task Creator
 
-Reads the Final Design Document (FDD) and produces a structured design task list for the UI/UX
-Designer. The designer uses this to build Figma screens — one task per screen or component.
+Read the Final Design Document (FDD). Produce a structured design task list for the UI/UX
+Designer. The designer uses this to build Figma screens - one task per screen or component.
 
 Workflow: **sync-ui-task-creator → sync-frontend-task-creator → sync-backend-task-creator**
 

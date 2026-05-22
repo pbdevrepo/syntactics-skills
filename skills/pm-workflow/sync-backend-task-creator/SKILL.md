@@ -13,8 +13,8 @@ description: >
 
 # Backend Task Creator
 
-Reads the FDD and the frontend task list to produce a structured backend implementation task list.
-Tasks cover API endpoints, business logic, database interactions, and integrations — ordered by
+Read the FDD and the frontend task list. Produce a structured backend implementation task list.
+Tasks cover API endpoints, business logic, database interactions, and integrations - ordered by
 dependency so migrations and models are built before endpoints.
 
 Workflow: **sync-ui-task-creator → sync-frontend-task-creator → sync-backend-task-creator**
