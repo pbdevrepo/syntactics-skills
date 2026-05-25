@@ -7,6 +7,7 @@ All notable changes to syntactics-skills are documented here.
 ### Changed
 - `scripts/install.ps1` - suppress default `Invoke-WebRequest` byte counter; add ASCII progress bar `[====  ] 67%` during skill copy loop
 - `scripts/install.sh` - add ASCII progress bar `[====  ] 67%` during skill copy loop
+- `ba-workflow`: `sync-final-design` v2.0.0 -> v2.1.0 - introduced `docs/fdd/index.md` as the single home for General Instructions, Figma link, and a linked module directory; removed General Instructions block from individual module files; index.md carries the same artifact version frontmatter as module files and is included in the Version Gate check; module list in index.md is rewritten fresh on each run
 
 ## [Unreleased] - 2026-05-22
 

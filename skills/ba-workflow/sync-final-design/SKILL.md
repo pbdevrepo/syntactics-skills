@@ -1,6 +1,6 @@
 ---
 name: sync-final-design
-version: 2.0.0
+version: 2.1.0
 description: >
   Use this skill to produce Final Design Documents (FDD) for web and mobile application projects at Syntactics Inc. Outputs one markdown file per module to docs/fdd/{module-slug}.md. Trigger whenever the user mentions "final design", "FDD", "design handoff", "design document", "spec table", "module spec", "specification table", or asks to document modules, system behavior, access validations, wireframes, or database table usage for a project. Also trigger when a user says "fill out the final design for [module]", "create the final design doc", "add a module spec", or "generate the FD template". This skill strictly enforces the v2.0 Business Applications Final Design Template format — do not improvise structure.
 ---
@@ -16,10 +16,10 @@ Produces Final Design Documents (FDD) following the **Business Applications Fina
 3. Read `references/database-standards.md` — load only at Step 2c (Tables section), not before.
 4. Ask the user for any missing inputs before generating — never assume module data.
 
-**Version Gate** — for each module being generated, check if `docs/fdd/{module-slug}.md` already exists:
+**Version Gate** — check `docs/fdd/index.md` and each `docs/fdd/{module-slug}.md` that already exists:
 1. Read the sprint task list's `artifact_version` and the schema's `artifact_version`
-2. For each existing module file, compare them to that file's `source_versions.sprint_tasks` and `source_versions.schema`
-3. If either differs: **hard stop.** Name the module and which upstream changed (e.g., "Sprint task list has been updated from v{stored} to v{current} — regenerate docs/fdd/{module-slug}.md before proceeding.")
+2. For `index.md` and each existing module file, compare them to that file's `source_versions.sprint_tasks` and `source_versions.schema`
+3. If either differs: **hard stop.** Name the file and which upstream changed (e.g., "Sprint task list has been updated from v{stored} to v{current} — regenerate docs/fdd/index.md and docs/fdd/{module-slug}.md before proceeding.")
 
 Do not warn-and-continue. Regeneration is required.
 
@@ -133,7 +133,7 @@ Check if `docs/fdd/{module-slug}.md` already exists:
 ```yaml
 ---
 artifact_version: {version}
-generated_by: sync-final-design@2.0.0
+generated_by: sync-final-design@2.1.0
 generated_at: {YYYY-MM-DD}
 source_versions:
   sprint_tasks: {sprint-tasks artifact_version}
@@ -141,7 +141,49 @@ source_versions:
 ---
 ```
 
-**Per-module file structure** (each file must be self-contained):
+**Write `docs/fdd/index.md` first** — before any module files.
+
+Check if `docs/fdd/index.md` already exists:
+- No previous version: `artifact_version: 1.0.0`
+- Previous version exists: read current `artifact_version`, then bump patch
+
+Index file structure:
+
+```
+{frontmatter}
+
+# {COMPANY NAME} - {SYSTEM NAME}{  — {PHASE} | omit if no phase}
+
+**Figma:** {figma_link}
+
+---
+
+## General Instructions
+
+The following instructions provide guidelines to ensure consistency, clarity, and alignment throughout the system design and implementation. Apply them across all modules.
+
+1. {instruction 1}
+2. {instruction 2}
+
+---
+
+## Modules
+
+- [{Module Name}](./{module-slug}.md)
+- ...
+```
+
+Print the progress line after writing:
+
+```
+[index] docs/fdd/index.md — written
+```
+
+The module list must be written fresh each run — do not append. If modules are added or removed between runs, the list reflects the current run only.
+
+---
+
+**Per-module file structure:**
 
 ```
 {frontmatter}
@@ -150,11 +192,6 @@ source_versions:
 
 **System:** {SYSTEM NAME}
 **Company:** {COMPANY NAME}
-**Figma:** {figma_link}
-
-**General Instructions**
-1. {instruction 1}
-2. {instruction 2}
 
 ---
 
@@ -169,9 +206,9 @@ Process one module at a time — write each file before moving to the next. Prin
 
 ### Step 5 — Deliver
 
-Report all output file paths to the user. Then surface the Approval Gate:
+Report all output file paths to the user — index.md first, then the module files. Then surface the Approval Gate:
 
-> "FDD is complete. {N} module files written to docs/fdd/. Review them carefully — any changes after task generation will require regenerating all three PM task lists (design, frontend, backend).
+> "FDD is complete. docs/fdd/index.md + {N} module files written to docs/fdd/. Review them carefully — any changes after task generation will require regenerating all three PM task lists (design, frontend, backend).
 >
 > When you're ready to proceed, say **'approve FDD'** to trigger `sync-design-to-tasks`."
 
