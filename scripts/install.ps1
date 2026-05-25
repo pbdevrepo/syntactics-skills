@@ -66,7 +66,7 @@ function Copy-Skills {
 
 try {
     Write-Host "Downloading latest skills..."
-    Invoke-WebRequest $ZipUrl -OutFile $TmpZip -UseBasicParsing -Headers @{'Accept-Encoding' = 'gzip'}
+    (New-Object System.Net.WebClient).DownloadFile($ZipUrl, $TmpZip)
 
     New-Item -ItemType Directory -Force -Path $TmpDir | Out-Null
     Expand-Archive -Path $TmpZip -DestinationPath $TmpDir -Force
