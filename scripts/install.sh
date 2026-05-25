@@ -129,6 +129,17 @@ else
     fi
 fi
 
+draw_bar() {
+    local current=$1 total=$2 width=30
+    [[ $total -eq 0 ]] && return
+    local pct=$(( current * 100 / total ))
+    local filled=$(( current * width / total ))
+    local bar
+    bar=$(printf '%*s' "$filled" '' | tr ' ' '=')
+    bar=$(printf '%-*s' "$width" "$bar")
+    printf "\r[%s] %3d%%" "$bar" "$pct"
+}
+
 # bash 3.2 compatible: find skill dir by name (first occurrence wins)
 find_skill_path() {
     find "$SKILLS_ROOT" -mindepth 3 -maxdepth 3 -type d -name "$1" | head -1
@@ -152,6 +163,7 @@ done
 
 mkdir -p "$SKILLS_DIR"
 COUNT=0
+TOTAL=${#ALL_SELECTED[@]}
 for skill in "${ALL_SELECTED[@]+"${ALL_SELECTED[@]}"}"; do
     src=$(find_skill_path "$skill")
     if [[ -n "$src" && -d "$src" ]]; then
@@ -160,7 +172,9 @@ for skill in "${ALL_SELECTED[@]+"${ALL_SELECTED[@]}"}"; do
         cp -r "$src" "$SKILLS_DIR/"
         COUNT=$((COUNT + 1))
     fi
+    draw_bar "$COUNT" "$TOTAL"
 done
+printf "\n"
 
 # Copy agents from each selected workflow's agents/ subdir
 AGENTS_DIR="${SKILLS_DIR%/skills}/agents"

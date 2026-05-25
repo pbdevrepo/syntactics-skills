@@ -7,6 +7,7 @@ param(
     [switch]$Local
 )
 $ErrorActionPreference = 'Stop'
+$ProgressPreference    = 'SilentlyContinue'
 
 $Repo   = "pbdevrepo/syntactics-skills"
 $ZipUrl = "https://github.com/$Repo/archive/refs/heads/main.zip"
@@ -32,9 +33,20 @@ function Build-SkillMap {
     $map
 }
 
+function Write-ProgressBar {
+    param([int]$Current, [int]$Total, [int]$Width = 30)
+    if ($Total -eq 0) { return }
+    $pct    = [int]([Math]::Round($Current * 100 / $Total))
+    $filled = [int]([Math]::Round($Width * $Current / $Total))
+    $bar    = ('=' * $filled).PadRight($Width)
+    Write-Host ("`r[{0}] {1,3}%" -f $bar, $pct) -NoNewline
+}
+
 function Copy-Skills {
     param([string[]]$Names, [hashtable]$SkillMap, [string]$Target)
-    $n = 0
+    $total    = $Names.Count
+    $n        = 0
+    $warnings = @()
     foreach ($name in $Names) {
         $src = $SkillMap[$name]
         if ($src) {
@@ -43,9 +55,12 @@ function Copy-Skills {
             Copy-Item -Path $src -Destination $dest -Recurse -Force
             $n++
         } else {
-            Write-Warning "Skill not found in package: $name"
+            $warnings += $name
         }
+        Write-ProgressBar -Current $n -Total $total
     }
+    Write-Host ""
+    foreach ($w in $warnings) { Write-Warning "Skill not found in package: $w" }
     $n
 }
 

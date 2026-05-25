@@ -2,6 +2,12 @@
 
 All notable changes to syntactics-skills are documented here.
 
+## [Unreleased] - 2026-05-25
+
+### Changed
+- `scripts/install.ps1` - suppress default `Invoke-WebRequest` byte counter; add ASCII progress bar `[====  ] 67%` during skill copy loop
+- `scripts/install.sh` - add ASCII progress bar `[====  ] 67%` during skill copy loop
+
 ## [Unreleased] - 2026-05-22
 
 ### Added
