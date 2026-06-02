@@ -184,19 +184,53 @@ Always installed regardless of workflow selection.
 
 ## Workflow Sequence
 
-```
-Salesperson: sync-deal-qualify → sync-sales-discovery
-                                          ↓
-Sales:       sync-requirement-analyzer → sync-proposal-grill → sync-proposal-writer → sync-quotation
-                                                                       ↓ (client revisions)
-                                                               sync-proposal-revision → sync-proposal-writer → sync-quotation
-                                          ↓ (client approves)
-Salesperson: sync-proposal-seller → sync-deal-followup
-                                          ↓ (deal signed)
-BA:     sync-ba-project-intake → sync-database-designer → sync-sprint-planner → sync-final-design
-                                                                                       ↓ (FDD approved)
-PM:     pm-task-orchestrator [Stage 1: sync-backend-task-creator + sync-ui-task-creator (parallel) → Stage 2: sync-frontend-task-creator]
-Eng:    sync-dev-session → sync-dev-tdd → sync-qa-planner → sync-qa-runner → sync-qa-to-ticket → sync-dev-to-fix → sync-qa-runner (re-run)
+```mermaid
+flowchart TD
+    subgraph SP1[Salesperson]
+        A[sync-deal-qualify] --> B[sync-sales-discovery]
+    end
+
+    subgraph SAL[Sales]
+        C[sync-requirement-analyzer] --> D[sync-proposal-grill]
+        D --> E[sync-proposal-writer]
+        E --> F[sync-quotation]
+        E -->|client revisions| G[sync-proposal-revision]
+        G --> E
+    end
+
+    subgraph SP2[Salesperson]
+        H[sync-proposal-seller] --> I[sync-deal-followup]
+    end
+
+    subgraph BA[BA]
+        J[sync-ba-project-intake] --> K[sync-database-designer]
+        K --> L[sync-sprint-planner]
+        L --> M[sync-final-design]
+    end
+
+    subgraph PM[PM]
+        N[pm-task-orchestrator]
+        O[sync-backend-task-creator]
+        P[sync-ui-task-creator]
+        Q[sync-frontend-task-creator]
+        N -->|Stage 1 - parallel| O & P
+        O & P -->|Stage 2| Q
+    end
+
+    subgraph ENG[Engineering]
+        R[sync-dev-session] --> S[sync-dev-tdd]
+        S --> T[sync-qa-planner]
+        T --> U[sync-qa-runner]
+        U --> V[sync-qa-to-ticket]
+        V --> W[sync-dev-to-fix]
+        W --> X[sync-qa-runner re-run]
+    end
+
+    B --> C
+    F -->|client approves| H
+    I -->|deal signed| J
+    M -->|FDD approved| N
+    Q --> R
 ```
 
 QA plan artifacts are written to `docs/qa/qa-plan/`. All other artifacts are written to `docs/{workflow-phase}/{artifact}.md`.
