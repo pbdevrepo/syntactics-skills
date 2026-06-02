@@ -51,7 +51,7 @@ Pick the workflows matching your role:
 
 | Role | Workflow(s) to select |
 |------|-----------------------|
-| Sales | `sales` |
+| Sales | `salesperson`, `sales` |
 | Business Analyst | `ba` |
 | Designer | `pm` |
 | Frontend / Backend Developer | `pm`, `engineering` |
@@ -107,7 +107,21 @@ curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/sc
 
 ## Workflows
 
+### Salesperson (`salesperson-workflow`)
+
+Commercial pipeline - runs before and after the BA scope workflow.
+
+| Skill | Description |
+|-------|-------------|
+| `sync-deal-qualify` | Gate before investing BA hours - qualifies a new lead across 5 dimensions (budget, decision-maker, timeline, competition, problem clarity) and outputs a Deal Scorecard with a go/no-go recommendation |
+| `sync-sales-discovery` | Qualification-first discovery prep - researches the domain then structures the first call around pain and qualification before scope; produces a fillable brief with a Call Agenda and a Deal Health block |
+| `sync-proposal-seller` | Adds the sales narrative layer to the BA proposal - prompts the rep for a specific outcome and differentiator, then writes a Proposal Cover (The Outcome, Why Syntactics, What Happens Next) prepended to the scope document |
+| `sync-deal-followup` | Drives the deal forward after the proposal is sent - generates a Day 2/5/10 follow-up schedule and handles price, scope, timing, and ghosted objections via a structured playbook |
+
 ### Sales (`sales-workflow`)
+
+Scope + requirements pipeline - the BA-side of pre-sales work.
+
 | Skill | Description |
 |-------|-------------|
 | `sync-client-discovery` | Research-first discovery session for clients with no brief - researches domain standards, maps competitor landscape, and produces a single fillable discovery brief the sales rep takes into the client meeting |
@@ -171,10 +185,14 @@ Always installed regardless of workflow selection.
 ## Workflow Sequence
 
 ```
-Sales:  sync-client-discovery → sync-requirement-analyzer → sync-proposal-grill → sync-proposal-writer → sync-quotation
-                                                                                       ↓ (client revisions)
-                                                                               sync-proposal-revision → sync-proposal-writer → sync-quotation
-                                                                                       ↓ (client approves)
+Salesperson: sync-deal-qualify → sync-sales-discovery
+                                          ↓
+Sales:       sync-requirement-analyzer → sync-proposal-grill → sync-proposal-writer → sync-quotation
+                                                                       ↓ (client revisions)
+                                                               sync-proposal-revision → sync-proposal-writer → sync-quotation
+                                          ↓ (client approves)
+Salesperson: sync-proposal-seller → sync-deal-followup
+                                          ↓ (deal signed)
 BA:     sync-ba-project-intake → sync-database-designer → sync-sprint-planner → sync-final-design
                                                                                        ↓ (FDD approved)
 PM:     pm-task-orchestrator [Stage 1: sync-backend-task-creator + sync-ui-task-creator (parallel) → Stage 2: sync-frontend-task-creator]
