@@ -1,6 +1,6 @@
 ---
 name: sync-client-discovery
-version: 2.1.0
+version: 2.2.0
 description: >
   Research-first client discovery skill for the Sales workflow at Syntactics Inc. Behaves like a
   senior sales consultant who studies the domain, maps industry process flows, and runs competitor
@@ -125,9 +125,23 @@ File: `docs/sales/{project-name}-discovery.md`
 
 Follow `references/output-format.md` for the exact structure.
 
+### Question Generation Rules
+
+**Floor - always include, no research required:**
+- Business Context and Pain: 4 core questions
+- Scope Boundaries: 2 core questions (in-scope modules, explicitly out-of-scope)
+- Constraints: 4 core questions (deadline, budget, tech restrictions, post-launch ownership)
+
+**Research-driven - no ceiling:**
+- Per-flow questions: derive entirely from research findings for that flow. Write one question per distinct role, handoff, or exception case identified in research. Do not fall back to the generic 4-question template.
+- Hypothesis probes: for each hypothesis in the intel brief, write one targeted question placed in the most relevant flow or scope section - not in a standalone block.
+- Compliance trigger: for each named compliance requirement found in Step 2A (HIPAA, GDPR, ISO 27001, etc.), add a dedicated compliance block with 2-3 questions specific to that requirement. The generic scope compliance question is not a substitute.
+- Integration trigger: for each high-risk integration watch point flagged in Step 2D, add one targeted question in the Integrations section beyond the floor questions.
+- Competitor probe: if research surfaced a competitor gap directly relevant to what this client is building, add one probe question in the Scope Boundaries section.
+
 The file has two parts:
 - **Pre-Meeting Intel** (pre-filled from research) - competitive landscape, process flows, hypotheses, watch points
-- **Discovery Questions** (process-flow-anchored with answer spaces) - rep fills these in during or after the client meeting
+- **Discovery Questions** (floor questions always present + research-driven questions with no ceiling) - rep fills these in during or after the client meeting
 
 After writing, state the file path and say:
 

@@ -69,21 +69,21 @@ Answer spaces ( _______________ ) are filled in by the sales rep during or after
 ## Discovery Questions
 
 > Fill in answer spaces during or after the meeting.
-> Conditional sub-questions — answer only the one that applies.
+> [FLOOR] sections are always included. [RESEARCH-GENERATED] sections scale with research depth - no ceiling.
 
 ---
 
-### Business Context and Pain
+### Business Context and Pain [FLOOR]
 
-**Q: {Hypothesis-led opening — reference a pain point from research.}**
+**Q: {Hypothesis-led opening - reference a specific pain point from research.}**
 *Why: confirms the root cause and sizes the urgency before discussing features*
 Answer: _______________
 
-**Q: What are they currently using to handle this — manual process, spreadsheet, or an existing system?**
+**Q: What are they currently using to handle this - manual process, spreadsheet, or an existing system?**
 *Why: establishes the baseline and surfaces what must be replaced or preserved*
 Answer: _______________
 
-**Q: What is the cost of not solving this — operational, financial, or reputational?**
+**Q: What is the cost of not solving this - operational, financial, or reputational?**
 *Why: determines priority and budget justification*
 Answer: _______________
 
@@ -93,77 +93,44 @@ Answer: _______________
 
 ---
 
-### {Process Flow 1 Name}
+### {Process Flow Name} [RESEARCH-GENERATED]
 
 > {Trigger} -> {Steps} -> {Output} | Exception: {failure case}
 
-**Q: Walk me through how {flow} works today, from {start trigger} to {end output}.**
-*Why: maps the current state and surfaces every manual step and handoff*
-Answer: _______________
+<!-- Generate one question per distinct role, handoff, or exception case identified in research for this flow.
+     For each hypothesis anchored to this flow, add one targeted hypothesis probe question.
+     If research found compliance requirements specific to this flow, add those questions here.
+     No generic fallback template - questions derive entirely from research findings. -->
 
-**Q: Who is involved at each step, and what triggers the next step?**
-*Why: identifies user roles and approval logic*
-Answer: _______________
-
-**Q: Where does this process break down or cause the most frustration?**
-*Why: pinpoints the highest-value module features*
-Answer: _______________
-
-**Q: What happens when this goes wrong?**
-*Why: surfaces exceptions that become edge case requirements*
-Answer: _______________
-
-> Conditional - answer only the relevant sub-question:
-
-- If manual today: Who owns the coordination? How long does it take end-to-end? What is the most common error?
-  Answer: _______________
-
-- If using an existing tool: What does it do well that you want to keep? What does it fail at that is driving this?
-  Answer: _______________
-
-- If not done yet: Is this Phase 1 or Phase 2? Who will own this process once the system is live?
-  Answer: _______________
+{research-derived questions with Answer: _______________ spaces}
 
 ---
 
-### {Process Flow 2 Name}
-
-> {Trigger} -> {Steps} -> {Output} | Exception: {failure case}
-
-**Q: Walk me through how {flow} works today.**
-*Why: maps current state and identifies integration dependencies*
-Answer: _______________
-
-**Q: Who triggers this process and who closes it out?**
-*Why: defines role boundaries*
-Answer: _______________
-
-**Q: What happens when this goes wrong?**
-*Why: surfaces edge cases*
-Answer: _______________
-
-> Conditional - answer only the relevant sub-question:
-
-- If manual today: Who owns it? How long does it take? What is the most common error?
-  Answer: _______________
-
-- If using an existing tool: What works? What fails?
-  Answer: _______________
-
-- If not done yet: Phase 1 or Phase 2? Who owns it post-launch?
-  Answer: _______________
+> Repeat the above block for each flow identified in Step 2C research.
 
 ---
 
-### {Process Flow 3 Name}
+### Compliance: {Requirement Name} [RESEARCH-TRIGGERED]
 
-> Repeat the same pattern as above for each additional flow identified in research.
+<!-- Include one block per named compliance requirement found in Step 2A research (HIPAA, GDPR, ISO 27001, etc.)
+     Omit entirely if no named compliance requirements were found.
+     Do not substitute this with the generic scope compliance question. -->
+
+**Q: {Specific question derived from this compliance requirement - e.g. data residency, audit trail, access control}**
+*Why: {specific compliance rationale}*
+Answer: _______________
+
+**Q: {Follow-up on enforcement, reporting obligation, or audit trail requirement}**
+*Why: compliance gaps are the most expensive to fix post-launch*
+Answer: _______________
+
+> Add a third question if the requirement has a third distinct dimension (e.g. retention policy, breach notification).
 
 ---
 
-### Scope Boundaries
+### Scope Boundaries [FLOOR + RESEARCH-ENRICHED]
 
-**Q: Of the standard modules for this type of system — {list from research} — which are in scope for Phase 1?**
+**Q: Of the standard modules for this type of system - {list from research} - which are in scope for Phase 1?**
 *Why: locks the build scope before proposals are written*
 Answer: _______________
 
@@ -171,19 +138,16 @@ Answer: _______________
 *Why: prevents scope creep from undocumented assumptions*
 Answer: _______________
 
-**Q: Are there compliance or regulatory requirements that affect the build — {requirements from research}?**
-*Why: compliance gaps are the most expensive to fix post-launch*
-Answer: _______________
+<!-- If research surfaced a competitor gap directly relevant to what this client is building, add one probe question here. -->
 
-> If a competitor product is named during this section:
-- What specifically made you choose not to go with them — price, features, or fit?
-  Answer: _______________
+<!-- If compliance requirements were not covered in a dedicated compliance block above, add the compliance question here:
+     "Are there compliance or regulatory requirements that affect the build - {requirements from research}?" -->
 
 ---
 
-### Integrations and Existing Systems
+### Integrations and Existing Systems [FLOOR + RESEARCH-ENRICHED]
 
-**Q: Of the common integration points for this type of system — {list from research} — which apply here?**
+**Q: Of the common integration points for this type of system - {list from research} - which apply here?**
 *Why: integration complexity is often underestimated at scoping*
 Answer: _______________
 
@@ -191,13 +155,15 @@ Answer: _______________
 *Why: identifies data migration scope and third-party dependencies*
 Answer: _______________
 
-**Q: What does the data flow look like — live sync, batch export, or manual transfer?**
+**Q: What does the data flow look like - live sync, batch export, or manual transfer?**
 *Why: determines integration architecture and timeline impact*
 Answer: _______________
 
+<!-- For each high-risk integration watch point flagged in Step 2D research, add one targeted question here beyond the three floor questions above. -->
+
 ---
 
-### Constraints
+### Constraints [FLOOR]
 
 **Q: Is there a hard deadline or preferred launch window?**
 Answer: _______________
@@ -205,10 +171,10 @@ Answer: _______________
 **Q: What is the budget range for this project?**
 Answer: _______________
 
-**Q: Are there technology requirements or restrictions — specific stack, hosting, or vendor?**
+**Q: Are there technology requirements or restrictions - specific stack, hosting, or vendor?**
 Answer: _______________
 
-**Q: Who maintains this system after launch — the client's team or ongoing support from Syntactics?**
+**Q: Who maintains this system after launch - the client's team or ongoing support from Syntactics?**
 Answer: _______________
 
 ---
