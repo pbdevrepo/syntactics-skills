@@ -1,6 +1,6 @@
 ---
 name: sync-qa-runner
-version: 1.5.0
+version: 1.6.0
 description: >
   Executes the QA test plan for Syntactics Inc. using the project's detected test framework for
   both UI/E2E and API tests. Detects the active framework from package.json, composer.json,
@@ -67,9 +67,9 @@ Confirm the base URL for this run. All browser navigation and API requests use t
 
 Log the environment at the top of the Test Run Log in `qa-plan/index.md`.
 
-### Step 1b — Detect Test Framework
+### Step 1b — Detect Test Framework and Execution Mode
 
-Read the following files in the project root to identify what testing packages are in use:
+**Read project config files** to identify what testing packages are installed:
 
 | File | Packages to look for |
 |---|---|
@@ -82,7 +82,7 @@ Also check for framework config files as confirmation: `playwright.config.ts`, `
 
 Resolve to one primary framework per test type:
 
-| Test Type | Detected Framework | Runner Command |
+| Test Type | Detected Framework | CLI Runner Command |
 |---|---|---|
 | UI / E2E | Playwright | `npx playwright test` |
 | UI / E2E | Cypress | `npx cypress run` |
@@ -95,7 +95,23 @@ Resolve to one primary framework per test type:
 
 If no framework is detected, default to Playwright for UI/E2E and note the assumption.
 
-Log the detected frameworks at the top of the Test Run Log alongside the environment.
+**Determine Playwright/Cypress execution mode** (applies only when Playwright or Cypress is the detected UI/E2E framework):
+
+Read `docs/agents/tools.md` if it exists. Check the MCP Servers table for any entry with capability tier `testing:e2e`.
+
+- If a `testing:e2e` MCP is registered → set **execution mode: MCP**
+- If no `testing:e2e` MCP is registered, or `docs/agents/tools.md` does not exist → set **execution mode: CLI**
+
+| Execution Mode | How tests run | Spec files |
+|----------------|--------------|------------|
+| **MCP** | Direct MCP browser tool calls per test step | Not generated — qa-plan.md is the sole record |
+| **CLI** | Spec files generated, then `npx playwright test` / `npx cypress run` | Generated per module |
+
+Log at the top of the Test Run Log:
+```
+Framework: {detected framework}
+Execution mode: {MCP | CLI} {(MCP server: {name}) if MCP mode}
+```
 
 ### Step 2 — Execute Tests
 
@@ -103,12 +119,30 @@ Process test cases in priority order: P1-critical first, then P2, P3, P4.
 
 **For UI and E2E test cases (Type: UI, Functional, Access Control, Integration):**
 
-Use the framework detected in Step 1b. If Playwright or Cypress is detected, drive the browser via the MCP tool. Otherwise execute via the runner command. For each test case:
-1. Navigate to the target URL
-2. Execute each step in the test case
-3. Assert the expected result
+Branch on execution mode set in Step 1b.
+
+**MCP mode:**
+Drive each test case step-by-step using MCP browser tool calls. No spec files are written.
+
+For each test case:
+1. `browser_navigate` — navigate to the target URL
+2. Per step: `browser_click`, `browser_fill_form`, `browser_type`, `browser_select_option`, `browser_press_key` as needed
+3. After the final step: `browser_snapshot` or `browser_evaluate` to assert the expected DOM state
+4. On assertion failure: `browser_take_screenshot` to capture evidence; note observed vs expected in the Bug Ref field
+5. Mark the test case `Pass` or `Fail` inline in qa-plan.md
+6. Set `Spec File:` to `"Executed via MCP — no spec file"` in the qa-plan module file
+
+Pause for `Manual` test cases (email delivery, OAuth redirects, or any step that cannot be driven by browser tools) — prompt the QA tester and wait for their result before continuing.
+
+**CLI mode:**
+Execute via the detected CLI runner. Steps 3a-3b (spec file discovery and generation) apply.
+
+For each test case:
+1. Check for existing spec coverage (Step 3a)
+2. If coverage exists: run it and report results
+3. If no coverage: generate a spec file (Step 3b), then run it
 4. Mark the test case `Pass` or `Fail` inline in qa-plan.md
-5. If `Fail`: capture the observed behavior and note it in the Bug Ref field
+5. If `Fail`: capture the error output and note it in the Bug Ref field
 
 **For API test cases (Type: API):**
 
@@ -124,6 +158,10 @@ Flag cases that cannot be automated (e.g. email delivery, third-party OAuth) as 
 Pause and prompt the QA tester to execute and report the result before continuing.
 
 ### Step 3 — Discover and Handle Test Files
+
+**If execution mode = MCP: skip Steps 3a and 3b entirely.** Spec files are not generated or run in MCP mode. The qa-plan.md is the sole artifact of the test run.
+
+**If execution mode = CLI: proceed with Steps 3a and 3b below.**
 
 #### Step 3a — Discover existing tests
 
@@ -180,14 +218,18 @@ After all modules are complete, append one row to the Test Run Log in `qa-plan/i
 
 ### Step 5 — Deliver
 
-State the updated index path and spec file paths, then say:
+State the updated index path and spec file paths (or MCP mode note), then say:
 
 **If failures exist (first run):**
 ```
 Test run complete. {N} test cases failed across {M} modules.
 {If module filter was active: "Targeted run: {list slugs}"}
+Execution mode: {MCP | CLI}
 
+{If CLI mode:}
 Spec files: {list each spec file path, or "existing tests used" per module}
+{If MCP mode:}
+Tests executed via Playwright MCP — no spec files generated. Results recorded in qa-plan.md.
 
 Next: sync-qa-to-ticket - pass docs/qa/qa-plan/index.md for issue creation.
 ```
@@ -195,12 +237,16 @@ Next: sync-qa-to-ticket - pass docs/qa/qa-plan/index.md for issue creation.
 **If failures exist (re-run — turnover detected):**
 ```
 Test run complete. {N} test cases failed across {M} modules.
+Execution mode: {MCP | CLI}
 
 Turnover updates applied:
 {For each turned-over ticket:}
 - {issue URL} - now turnover:{N}, moved back to ready-for-dev
 
+{If CLI mode:}
 Spec files: {list each spec file path, or "existing tests used" per module}
+{If MCP mode:}
+Tests executed via Playwright MCP — no spec files generated. Results recorded in qa-plan.md.
 
 Next: sync-dev-to-fix - developers pick up issues labeled ready-for-dev.
 ```
@@ -208,8 +254,12 @@ Next: sync-dev-to-fix - developers pick up issues labeled ready-for-dev.
 **If all tests pass:**
 ```
 Test run complete. All {N} test cases passed across {M} modules.
+Execution mode: {MCP | CLI}
 
+{If CLI mode:}
 Spec files: {list each spec file path, or "existing tests used" per module}
+{If MCP mode:}
+Tests executed via Playwright MCP — no spec files generated. Results recorded in qa-plan.md.
 
 QA phase is complete for this run. Issues can be closed by QA.
 ```

@@ -1,6 +1,6 @@
 ---
 name: sync-dev-tdd
-version: 1.1.0
+version: 1.2.0
 description: >
   TDD implementation skill for Syntactics Inc. Executes a red-green-refactor loop for a specific
   task or module, anchored to the FDD. Auto-detects a prior dev session summary and loads it as the
@@ -94,6 +94,33 @@ re-litigate them. Open Questions flagged in the summary must be resolved before 
 **Standalone mode** (no summary found): Read the task row from the task file and the relevant
 FDD module section to build context. Proceed directly to Planning (Step 1). Note in the TDD
 output that no prior dev session was found.
+
+**Tool Discovery:**
+
+Read `docs/agents/tools.md` if it exists. If the file is absent, skip this step — setup has not
+been run for this repo.
+
+From `docs/agents/tools.md`, extract:
+- **Framework MCPs** (capability tier `framework:*`) — Laravel Boost, shadcn, WordPress, etc.
+- **Local project skills** (`.claude/skills/` entries) — skills installed for this project specifically
+- **Docs lookup MCPs** (capability tier `docs:lookup`) — context7 or similar
+
+Log the discovered tools at the top of the TDD session header:
+```
+Tools available: {comma-separated list of MCP names and local skills, or "none detected"}
+```
+
+Enforce the following during this session:
+
+| Discovered tool | Enforce during this session |
+|-----------------|-----------------------------|
+| `framework:laravel` | Follow Laravel conventions: Eloquent models, Form Requests, Resource classes, service-layer pattern. Do not implement raw SQL or ad-hoc validation outside Request classes. |
+| `framework:shadcn` | Use shadcn/ui components for all UI elements. Do not implement custom base components (Button, Input, Dialog, etc.) that shadcn already provides. Invoke the `/shadcn` skill if component generation is needed. |
+| `framework:wordpress` | Follow WordPress coding standards: hooks/filters over direct overrides, WP_Query over raw SQL, capability checks before any privileged action. |
+| `docs:lookup` (context7) | Before implementing a call to any third-party library, use the context7 MCP to pull current docs for that library. Do not rely on training-data knowledge for library APIs. |
+| Local project skills | Surface relevant skill names to the developer at the start of Planning so they can invoke them. Example: "This project has `/laravel-boost` and `/sync-backend-developer` available — consider invoking them during implementation." |
+
+If no tools are discovered, proceed with default behavior.
 
 ### 1. Planning
 

@@ -151,9 +151,9 @@ Scope + requirements pipeline - the BA-side of pre-sales work.
 ### Engineering (`engineering-workflow`)
 | Skill | Description |
 |-------|-------------|
-| `sync-dev-setup` | One-time per-repo setup - scaffolds `## Agent skills` block and `docs/agents/` files so engineering skills know the issue tracker, triage labels, and domain doc layout |
+| `sync-dev-setup` | One-time per-repo setup - scaffolds `## Agent skills` block and `docs/agents/` files so engineering skills know the issue tracker, triage labels, domain doc layout, and available MCPs/local skills; re-run when MCPs change |
 | `sync-dev-session` | Task-level grilling session anchored to FDD - invoked as `/sync-dev-session BE-0001 users-module @tasks.md @fdd.md`; session type auto-derived |
-| `sync-dev-tdd` | TDD red-green-refactor loop per task or module; auto-loads prior session summary if found; standalone mode reads task list + FDD directly |
+| `sync-dev-tdd` | TDD red-green-refactor loop per task or module; reads `docs/agents/tools.md` to enforce framework MCP conventions (Laravel, shadcn, WordPress) and surface local project skills during planning |
 | `sync-dev-to-fix` | TDD-driven bug fix loop from a GitHub issue - fetches, fixes, posts result |
 | `sync-dev-diagnose` | Disciplined diagnosis loop for hard bugs and performance regressions - reproduce, minimise, hypothesise, instrument, fix, regression-test |
 | `sync-improve-codebase-architecture` | Find deepening opportunities in a codebase informed by CONTEXT.md and ADRs - refactoring, module consolidation, testability improvements |
@@ -163,7 +163,7 @@ Scope + requirements pipeline - the BA-side of pre-sales work.
 | Skill | Description |
 |-------|-------------|
 | `sync-qa-planner` | Generate structured QA test plan from split FDD module files (`docs/fdd/{module-slug}.md`), one module at a time. Accepts optional module filter: `/sync-qa-planner user-management invoicing` |
-| `sync-qa-runner` | Execute test plan live via Playwright MCP and HTTP - marks PASS/FAIL, generates regression specs |
+| `sync-qa-runner` | Execute test plan live - detects Playwright MCP mode (direct tool calls, no spec files) vs CLI mode (generates + runs spec files); marks PASS/FAIL inline |
 | `sync-qa-to-ticket` | Convert QA failures into GitHub issues with labels and FDD references |
 
 ### Must-Have (`must-have-workflow`)
