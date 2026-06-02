@@ -62,3 +62,16 @@ Always ask in context of a specific module or item in the requirements doc.
 - Who has permission to approve/reject in [workflow module]?
 - Is there a Super Admin role with unrestricted access, or is everything role-scoped?
 - Can permissions be customized per user, or are they fixed per role?
+
+---
+
+## Deployment Constraints
+
+- Does the client already have a hosting provider or cloud account they want to use (AWS, GCP, Azure, DigitalOcean, etc.)?
+- Are there any regulatory or compliance requirements that affect where data is stored? (HIPAA, GDPR, local data residency laws, government contracts)
+- How many users are expected at launch - and what is peak concurrent usage? (e.g., 50 staff internally vs. 10,000 public users)
+- Is data volume a concern - will the system store large files, media, or high-frequency records?
+- Does the client have a technical team to manage servers and deployments, or will Syntactics handle infrastructure operations?
+- Is there an uptime or SLA requirement (e.g., 99.9% availability, disaster recovery)?
+- Are there any existing systems the deployment must sit alongside or integrate with at the infrastructure level?
+- What is the client's rough hosting budget - are they expecting a shared/starter tier, or is a dedicated managed environment in scope?

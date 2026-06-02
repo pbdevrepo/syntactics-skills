@@ -1,6 +1,6 @@
 ---
 name: sync-proposal-grill
-version: 1.1.0
+version: 1.2.0
 description: >
   Stress-tests a client requirements document for the Sales workflow at Syntactics Inc. before a
   proposal is written. Trigger when a Sales team member says "grill the requirements", "stress-test
@@ -96,6 +96,23 @@ See `references/question-bank.md` - Business Rules section.
 - Are permissions (view, edit, approve, delete) defined per role per module?
 - Is there a Super Admin or system owner role?
 
+### Deployment Constraints
+See `references/question-bank.md` - Deployment Constraints section.
+- Does the client have an existing hosting contract or cloud provider preference?
+- Are there data residency, compliance, or regulatory requirements (HIPAA, GDPR, local data laws)?
+- What is the expected user load - roughly how many concurrent users at peak?
+- Does the client have an in-house technical team to manage infrastructure, or will Syntactics handle it?
+- Are there budget signals that indicate a preference for cost-optimized vs. managed/premium hosting?
+
+When answers are captured, add a `## Deployment Constraints` block to the requirements doc under Section 10 (Open Items) or append as Section 11. Record:
+- Client hosting preference (if any)
+- Compliance requirements (if any)
+- Expected scale (user count, concurrent load, data volume)
+- Infrastructure ownership (client-managed vs. Syntactics-managed)
+- Budget tier signal (startup/SMB/mid-market/enterprise)
+
+If the client has no stated preference on any of these, record "No constraints stated - standard recommendation applies."
+
 ---
 
 ## After Grilling
@@ -122,6 +139,7 @@ Confirm all inline updates were applied:
 **Scope clarified:** {list ambiguous items now resolved}
 **Integrations confirmed:** {list integrations now named}
 **Hard-to-reverse decisions flagged:** {list any flagged scope decisions, or "None"}
+**Deployment constraints captured:** {list hosting preference, compliance requirements, scale signals, or "No constraints stated - standard recommendation applies"}
 **Open items remaining:** {list anything still unresolved, or "None"}
 
 Requirements doc updated and marked Grilled.
