@@ -1,6 +1,6 @@
 ---
 name: sync-client-discovery
-version: 2.2.0
+version: 2.4.0
 description: >
   Research-first client discovery skill for the Sales workflow at Syntactics Inc. Behaves like a
   senior sales consultant who studies the domain, maps industry process flows, and runs competitor
@@ -133,7 +133,7 @@ Follow `references/output-format.md` for the exact structure.
 - Constraints: 4 core questions (deadline, budget, tech restrictions, post-launch ownership)
 
 **Research-driven - no ceiling:**
-- Per-flow questions: derive entirely from research findings for that flow. Write one question per distinct role, handoff, or exception case identified in research. Do not fall back to the generic 4-question template.
+- Per-flow questions: every flow starts with the 4 core questions (walk me through, who is involved, where does it break down, what happens when wrong). After those, think like a salesperson who has read the research. Generate follow-up questions and conditional probes specific to how this flow operates in this domain - scenarios, edge cases, failure modes, role structures, compliance touchpoints, approval chains, data handoffs. Do not use generic manual/tool/not-done-yet buckets. Do not cap the count. Follow every thread that research opened.
 - Hypothesis probes: for each hypothesis in the intel brief, write one targeted question placed in the most relevant flow or scope section - not in a standalone block.
 - Compliance trigger: for each named compliance requirement found in Step 2A (HIPAA, GDPR, ISO 27001, etc.), add a dedicated compliance block with 2-3 questions specific to that requirement. The generic scope compliance question is not a substitute.
 - Integration trigger: for each high-risk integration watch point flagged in Step 2D, add one targeted question in the Integrations section beyond the floor questions.

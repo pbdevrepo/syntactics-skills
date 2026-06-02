@@ -93,16 +93,42 @@ Answer: _______________
 
 ---
 
-### {Process Flow Name} [RESEARCH-GENERATED]
+### {Process Flow Name} [RESEARCH-DRIVEN]
 
 > {Trigger} -> {Steps} -> {Output} | Exception: {failure case}
 
-<!-- Generate one question per distinct role, handoff, or exception case identified in research for this flow.
-     For each hypothesis anchored to this flow, add one targeted hypothesis probe question.
-     If research found compliance requirements specific to this flow, add those questions here.
-     No generic fallback template - questions derive entirely from research findings. -->
+**Q: Walk me through how {flow} works today, from {start trigger} to {end output}.**
+*Why: maps the current state and surfaces every manual step and handoff*
+Answer: _______________
 
-{research-derived questions with Answer: _______________ spaces}
+**Q: Who is involved at each step, and what triggers the next step?**
+*Why: identifies user roles and approval logic*
+Answer: _______________
+
+**Q: Where does this process break down or cause the most frustration?**
+*Why: pinpoints the highest-value module features*
+Answer: _______________
+
+**Q: What happens when this goes wrong?**
+*Why: surfaces exceptions that become edge case requirements*
+Answer: _______________
+
+<!-- Open follow-ups - research and salesperson reasoning drive these entirely.
+     After the 4 core questions above, generate follow-up questions and conditional probes based on:
+     - How this specific flow typically operates in this domain and industry
+     - Scenarios, edge cases, and failure modes research surfaced for this flow
+     - Role structures, approval chains, data handoffs specific to this flow
+     - Compliance or regulatory constraints that touch this flow
+     - Anything a senior salesperson would pursue to get full clarity on scope
+     No fixed conditions. No count limit. Follow the thread.
+     Example for a healthcare patient scheduling flow:
+       - If appointments are still phone/paper-based: What is the no-show rate, and how is it tracked today?
+       - If using an EMR scheduling module: Which EMR? Does it enforce scheduling rules, or is it purely calendar-based?
+       - If insurance verification is part of this step: When does eligibility checking happen - at booking, at reminder, or at check-in?
+       - Edge case: What happens when a patient needs a specialist referral before the appointment can proceed?
+-->
+
+{research and salesperson-driven follow-up questions with Answer: _______________ spaces}
 
 ---
 
