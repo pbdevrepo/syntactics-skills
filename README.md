@@ -110,7 +110,7 @@ curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/sc
 ### Sales (`sales-workflow`)
 | Skill | Description |
 |-------|-------------|
-| `sync-client-discovery` | Generate structured discovery questions for clients with no brief or clear direction |
+| `sync-client-discovery` | Research-first discovery session for clients with no brief - researches domain standards, maps competitor landscape, and produces a single fillable discovery brief the sales rep takes into the client meeting |
 | `sync-requirement-analyzer` | Extract and structure client requirements from PDF or free-form text |
 | `sync-proposal-grill` | Stress-test requirements for missed modules and ambiguous scope |
 | `sync-proposal-writer` | Write a client-facing project proposal with automatic version numbering |

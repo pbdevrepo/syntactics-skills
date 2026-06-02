@@ -1,109 +1,144 @@
 ---
 name: sync-client-discovery
-version: 1.1.0
+version: 2.1.0
 description: >
-  Pre-requirement discovery skill for the Sales workflow at Syntactics Inc. Generates structured
-  discovery questions for clients who have no brief, document, or clear direction. Trigger when a
-  Sales team member says "client has no idea what they want", "no requirements yet", "start discovery",
-  "client discovery", "discovery questions", or when a new client has not yet provided any brief or RFP.
+  Research-first client discovery skill for the Sales workflow at Syntactics Inc. Behaves like a
+  senior sales consultant who studies the domain, maps industry process flows, and runs competitor
+  analysis before generating contextual, process-driven questions. Produces a single fillable
+  discovery brief: research pre-filled at the top, process-flow-anchored questions with answer
+  spaces below for the rep to complete during the client meeting. Trigger when a Sales team member
+  says "client has no idea what they want", "no requirements yet", "start discovery", "client
+  discovery", "discovery questions", or when a new client has not yet provided any brief or RFP.
   Always run before sync-requirement-analyzer when client input is absent or extremely vague.
 ---
 
-# Client Discovery
+# Client Discovery - Senior Consultant Mode
 
-Generate a structured discovery conversation for clients who have not provided a brief or RFP.
-Produce a discovery summary `.md` that feeds directly into `sync-requirement-analyzer`.
+Research first. Study ahead. Write a brief the sales rep takes into the meeting.
+One output. No modes.
 
 Workflow: **client-discovery -> requirement-analyzer -> proposal-grill -> proposal-writer -> quotation**
 
 ---
 
-## Before You Start
+## Step 1 - Project Setup
 
-Ask: **"What is the project name?"** - kebab-case, lowercase (e.g., `client-portal`).
+Ask three questions before doing anything else:
 
-Then ask: **"How would you like to run the discovery?"**
-- **Interactive** - Claude asks questions one group at a time; sales rep answers on behalf of the client
-- **Document** - Claude generates a full questionnaire the sales rep can print or share with the client directly
+1. **"What is the project name?"** - kebab-case, lowercase (e.g., `inventory-system`)
+2. **"Give me a one-liner: what does the client want to build?"** - e.g., "a patient booking system for a private clinic" or "an inventory platform for a retail chain"
+3. **"What industry or sector is the client in?"** - e.g., Healthcare, Retail, Manufacturing, Financial Services, Education
 
----
-
-## Interactive Mode
-
-Work through each group below in order. Ask all questions in the group, wait for answers, then move on.
-
-End each group with: `Got it. Moving on to [next group].`
-
-See `references/question-bank.md` for the full question pool.
-
-**Group 1 - Business Goals and Pain Points** (`## Business Goals`)
-**Group 2 - Project Type and Features** (`## Project Type and Features`)
-**Group 3 - Budget and Timeline** (`## Budget and Timeline`)
-**Group 4 - Tech and Design Preferences** (`## Tech and Design Preferences`)
-
-### Sharpen vague answers immediately
-
-When a client answer uses an overloaded or unclear term, do not accept it and move on. Propose a
-precise interpretation and confirm it before marking the question closed.
-
-Examples:
-- Client says "something like Facebook" - ask: "Do you mean a social feed where users post updates,
-  or a profile-and-connections system? Those are different in scope."
-- Client says "basic reporting" - ask: "Do you mean a live dashboard the user filters, or a
-  generated export (PDF, CSV)? Those are different modules."
-- Client says "admin panel" - ask: "Do you mean internal staff only, or does the client's own admin
-  users also need access? That changes the role model."
-
-Resolve the term before moving to the next question.
-
-### Probe vague scope with concrete scenarios
-
-When a client describes a feature broadly, invent a specific scenario to test its boundaries:
-- "You mentioned approval workflows - if a Manager rejects a request that a Director already
-  approved, who wins? Is there an escalation path?"
-- "You said users can 'manage their profile' - can they change their email address, or is that
-  locked to an admin?"
-
-A precise scenario forces a precise answer. A general description leaves scope gaps for BA to discover too late.
+Do not proceed until you have all three answers.
 
 ---
 
-## Document Mode
+## Step 2 - Pre-Discovery Research
 
-Write the questionnaire directly to file - do not output it in chat.
+**This step is mandatory. Do not skip it.**
 
-File: `docs/sales/{project-name}-discovery.md`
+Run four research tracks using web search. Prioritize credible, authoritative sources:
+- Industry analyst reports: Gartner, Forrester, IDC, McKinsey
+- Process frameworks: APQC Process Classification Framework, industry standards bodies
+- Industry associations: SHRM (HR), HIMSS/HL7 (Healthcare), ACFE (Finance), NRF (Retail), etc.
+- Academic journals, ISO standards, Wikipedia for standard process definitions
 
-Use all questions from `references/question-bank.md`, grouped and numbered, formatted for a
-client to fill in. Add a blank answer line after each question.
+### 2A - Domain Intelligence
 
-After writing, state the file path and say:
+Search: `{domain} {industry} standard modules industry requirements compliance`
+
+Identify:
+- What category of system is this? (HRIS, LMS, Inventory, Booking, CRM, ERP, etc.)
+- What standard modules does this type of system typically include?
+- What are the most common pain points that lead companies to build or buy this?
+- What compliance or regulatory requirements apply to this domain and industry?
+
+### 2B - Competitive Landscape
+
+Search: `{domain} top software vendors comparison {current year}`
+Search: `{domain} {industry} Gartner Magic Quadrant OR market leaders`
+
+Identify:
+- Top 3-5 existing solutions in this space
+- What users love and hate about those systems
+- What gaps or differentiators custom-built systems typically offer
+
+### 2C - Process Flow Mapping
+
+Search: `{domain} {industry} end-to-end process workflow standard`
+
+Identify 3-5 core end-to-end process flows typical to this domain.
+Format each as: `Trigger -> Steps -> Output | Exception: {failure case}`
+
+These process flows are the backbone of the discovery questions. Each question must confirm,
+deny, or clarify whether a flow applies and how the client handles it today.
+
+### 2D - Integration Points
+
+Search: `{domain} {industry} common system integrations third-party data exchange`
+
+Identify:
+- What systems does this type of software commonly connect to?
+- What data is typically imported or exported?
+- What integration patterns are standard (live sync, batch export, webhook)?
+
+---
+
+## Step 3 - Discovery Intelligence Brief
+
+After completing research, output a compact block in chat prefixed `[PRE-DISCOVERY INTEL]`.
+Do not write this to file. This primes the sales rep before the file is generated.
 
 ```
-Discovery questionnaire saved. Share {project-name}-discovery.md with the client.
-Once answered, pass it to sync-requirement-analyzer as the client input.
+[PRE-DISCOVERY INTEL]
+Domain: {domain}
+Industry / Sector: {industry}
+Standards & Frameworks: {relevant named standards - e.g., ISO 9001, HIPAA, APQC PCF}
+Standard Modules: {list}
+Common Pain Points: {list}
+Key Competitors:
+  - {Vendor 1} - {market segment} - Strength: {X} / Gap: {Y}
+  - {Vendor 2} - {market segment} - Strength: {X} / Gap: {Y}
+  - {Vendor 3} - {market segment} - Strength: {X} / Gap: {Y}
+Process Flows to Probe:
+  - {Flow 1}: {Trigger} -> {Steps} -> {Output} | Exception: {failure case}
+  - {Flow 2}: {Trigger} -> {Steps} -> {Output} | Exception: {failure case}
+  - {Flow 3}: {Trigger} -> {Steps} -> {Output} | Exception: {failure case}
+Integration Watch Points: {list}
+Hypotheses to Confirm: {2-3 specific assumptions about what this client probably needs}
+Sources reviewed: {list of credible sources consulted}
 ```
+
+Then ask: **"Anything to add or correct before I write the brief?"**
+
+**Fallback:** If web search returns thin or irrelevant results, state:
+*"Research returned limited results for this domain. Writing the brief with what was found -
+share any additional domain context you have so I can enrich the questions."*
 
 ---
 
-## After Groups - Discovery Summary (Interactive Mode Only)
+## Step 4 - Write the Discovery Brief
 
-After all groups are answered, write the summary directly to file - do not output it in chat.
+Write the file - do not output it in chat.
 
 File: `docs/sales/{project-name}-discovery.md`
 
 Follow `references/output-format.md` for the exact structure.
 
-Then state the file path and say:
+The file has two parts:
+- **Pre-Meeting Intel** (pre-filled from research) - competitive landscape, process flows, hypotheses, watch points
+- **Discovery Questions** (process-flow-anchored with answer spaces) - rep fills these in during or after the client meeting
+
+After writing, state the file path and say:
 
 ```
-Discovery captured. Next: sync-requirement-analyzer - pass {project-name}-discovery.md as
-the client input to extract modules and generate a requirements document.
+Discovery brief ready. Before the meeting: read the Pre-Meeting Intel section.
+During the meeting: fill in the answer spaces under each question.
+After the meeting: pass {project-name}-discovery.md to sync-requirement-analyzer.
 ```
 
 ---
 
 ## Reference Files
 
-- `references/question-bank.md` - Discovery questions by category
-- `references/output-format.md` - Discovery summary structure
+- `references/output-format.md` - Discovery brief structure

@@ -2,6 +2,15 @@
 
 All notable changes to syntactics-skills are documented here.
 
+## [Unreleased] - 2026-06-02
+
+### Changed
+- `sales-workflow`: `sync-client-discovery` v1.1.0 -> v2.1.0 - full rewrite to research-first, single-path discovery; removed Interactive/Document mode split entirely; skill now produces one fillable discovery brief per session (Pre-Meeting Intel pre-filled from research, answer spaces for rep to complete during the client meeting); added mandatory pre-discovery research phase across four tracks (domain intelligence, competitive landscape, process flow mapping, integration points) targeting credible sources (Gartner, Forrester, APQC, industry associations, ISO standards); replaced static question bank with process-flow-anchored questions generated dynamically from research; added `[PRE-DISCOVERY INTEL]` brief shown to sales rep before file is written; added conditional sub-questions per answer type (manual / existing tool / not done yet / competitor named) embedded in the output file; industry/sector is now a required input to drive compliance and standards research
+- `sales-workflow`: `sync-client-discovery` `references/output-format.md` - full rewrite to fillable discovery brief template; Pre-Meeting Intel section (pre-filled: competitive landscape table, process flows table, hypotheses, watch points); Discovery Questions section (process-flow-anchored with WHY annotations and answer spaces; conditional sub-questions inline); Post-Meeting Summary section (rep fills after meeting: root cause, success definition, confirmed modules, hypotheses confirmed/denied); single file feeds directly to sync-requirement-analyzer
+
+### Removed
+- `sales-workflow`: `sync-client-discovery` `references/question-bank.md` - removed entirely; replaced by research-driven dynamic question generation in SKILL.md
+
 ## [Unreleased] - 2026-05-25
 
 ### Changed
