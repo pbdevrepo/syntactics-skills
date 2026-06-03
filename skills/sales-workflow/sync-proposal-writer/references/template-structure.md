@@ -54,14 +54,28 @@ The following modules are included in this engagement:
 
 ### 4.1 {Module Name}
 
-{2–4 sentence plain-language description of what this module does and who uses it.}
-
-**Key Features:**
-- {Feature 1}
-- {Feature 2}
-- {Feature 3}
+{1-3 sentence plain-language description of what this module does and who uses it.}
 
 **User Roles:** {which roles interact with this module}
+
+#### {Sub-feature Name}
+
+{1-2 sentence description of what this sub-feature, screen, or flow does.}
+
+**{Form or Screen Name}** *(omit this bold header if the sub-feature has only one form — list fields directly)*
+- {UI element — e.g., "Email field"}
+- {UI element — e.g., "Password field"}
+- {UI element — e.g., "Login button"}
+- {UI element — e.g., "Forgot Password link"}
+
+#### {Next Sub-feature Name}
+
+{1-2 sentence description.}
+
+- {UI element}
+- {UI element}
+
+*repeat H4 sub-section for each distinct screen, flow, or feature within the module*
 
 ---
 
