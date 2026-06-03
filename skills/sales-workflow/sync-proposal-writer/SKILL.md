@@ -1,6 +1,6 @@
 ---
 name: sync-proposal-writer
-version: 1.3.0
+version: 1.5.0
 description: >
   Writes a client-facing project proposal for the Sales workflow at Syntactics Inc. from a grilled
   requirements document. Trigger when a Sales team member says "write the proposal", "generate the
@@ -38,7 +38,7 @@ Revision workflow: **proposal-revision -> proposal-writer -> quotation**
 
 - **Client-facing language.** No technical jargon unless the client is explicitly technical. Use business terms throughout.
 - **Confident scope.** State what is included. State what is excluded. No hedging.
-- **Module-by-module.** Each module gets its own section with a plain-language description the client can understand without a technical background.
+- **Module-by-module.** Each module gets its own section (H3) with a 1-3 sentence description and a User Roles line. Within each module, every distinct screen, flow, or feature gets its own sub-section (H4) with a 1-2 sentence description. Under each sub-feature, list UI elements (fields, buttons, links) as plain-noun bullets. If a sub-feature contains multiple named forms or screens, bold the form name before its element list. Keep language plain — no technical jargon unless the client is explicitly technical.
 - **No estimates in the proposal.** Hour estimates belong in the quotation - keep them out of this document entirely.
 - **No implementation details.** The proposal covers what will be built, not how. Architecture, tech stack, and framework choices do not belong here unless the client specified them.
 - **Revision context.** When writing a revision, include a brief "Revision Summary" section immediately after the cover noting what changed from the prior version, sourced from the delta in the requirements file.
@@ -74,6 +74,10 @@ Structure:
 ### Step 3 - Self-Review Before Delivering
 
 - [ ] Every module from the requirements doc is represented in Scope of Work
+- [ ] Each module contains H4 sub-feature sections for every distinct screen or flow
+- [ ] Each sub-feature lists its UI elements as bullets
+- [ ] Recommended Deployment Stack section is present and derives from the grilled constraints (or states the assumption used if no constraints were given)
+- [ ] Deployment stack rationale is in business terms - no framework names, no code-level details
 - [ ] Out of Scope section explicitly names deferred or excluded items
 - [ ] No hour estimates appear anywhere in the document
 - [ ] No implementation technology names unless client-specified
