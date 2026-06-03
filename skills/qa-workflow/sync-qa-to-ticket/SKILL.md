@@ -1,31 +1,44 @@
 ---
 name: sync-qa-to-ticket
-version: 1.2.0
+version: 1.3.0
 description: >
   Converts QA test failures and manual findings into structured GitHub issues for Syntactics Inc.
   Trigger when a QA tester says "create tickets", "generate issues", "qa to ticket", "log bugs",
-  or after sync-qa-runner marks test cases as failed. Creates GitHub issues via GitHub MCP with FDD
-  references and out-of-scope flags. Auto-bootstraps required labels if they do not exist. Never
-  provides fix suggestions. Always run after sync-qa-runner and before sync-dev-to-fix in the
-  QA workflow.
+  or after sync-qa-runner marks test cases as failed. Supports Direct mode (GitHub issue URL +
+  run log) and Legacy mode (qa-plan index). Creates child bug issues via GitHub MCP with FDD
+  references, parent issue link, and out-of-scope flags. Never provides fix suggestions.
+  Always run after sync-qa-runner and before sync-dev-to-fix in the QA workflow.
 ---
 
 # QA to Ticket
 
-Read the failed test cases from the QA plan and any manual QA findings. Create structured
-GitHub issues via GitHub MCP. Each issue is anchored to the FDD. No fixes - only clear, scoped
-problem statements.
+Read the failed test cases from the QA run and any manual QA findings. Create structured
+child bug issues via GitHub MCP. Each issue is anchored to the FDD and linked to the parent
+QA tracking issue. No fixes - only clear, scoped problem statements.
 
-Workflow: **sync-qa-runner - sync-qa-to-ticket - sync-dev-to-fix**
+Direct workflow: **sync-qa-runner (Direct mode) - sync-qa-to-ticket - sync-dev-to-fix**
+
+Legacy workflow: **sync-qa-runner - sync-qa-to-ticket - sync-dev-to-fix**
 
 ---
 
 ## Before You Start
 
-Confirm inputs:
-1. Updated QA plan index with failures marked: `docs/qa/qa-plan/index.md`
-2. GitHub repository (org/repo format)
-3. Manual QA findings — ask:
+### Detect mode
+
+**If a GitHub issue URL is passed as the first argument:**
+- Set mode: **Direct**
+- Capture the parent issue URL (the `ready-for-qa` tracking issue)
+- Read failures from the QA run log: `docs/qa/qa-runs/{Task-ID}-*.md` (most recent file)
+
+**If no URL is passed:**
+- Set mode: **Legacy**
+- Read failures from: `docs/qa/qa-plan/index.md`
+
+### Confirm remaining inputs
+
+1. GitHub repository (org/repo format)
+2. Manual QA findings — ask:
 
 ```
 Do you have any additional bugs or issues found outside the automated test run?
@@ -53,8 +66,9 @@ Do not create labels here. Label setup is owned by sync-dev-setup.
 
 ### Step 2 — Process Failed Test Cases
 
-Read `index.md` to get the module list. For each module, read `{module-slug}.md` and collect
-all test cases where `Status: Fail`.
+**Direct mode:** Read `docs/qa/qa-runs/{Task-ID}-*.md`. Collect all test case blocks where `**Status:** Fail`.
+
+**Legacy mode:** Read `index.md` to get the module list. For each module, read `{module-slug}.md` and collect all test cases where `Status: Fail`.
 
 For each failed test case:
 
@@ -107,6 +121,10 @@ Via GitHub MCP, create one issue per failure. Use this structure:
 
 **Body:**
 ```
+## Parent Issue
+{Direct mode: GitHub issue URL - Task-ID: task description}
+{Legacy mode: omit this section}
+
 ## Observed Behavior
 {what actually happens - specific and reproducible}
 
@@ -140,18 +158,26 @@ File: {fdd file path}
 
 **Never include fix suggestions in any issue body.**
 
-### Step 6 — Update QA Plan with Issue Links
+### Step 6 — Update Run Record with Issue Links
 
-In each `qa-plan/{module-slug}.md`, update the Bug Ref field of each failed test case with the
-GitHub issue URL.
+**Direct mode:** In `docs/qa/qa-runs/{Task-ID}-*.md`, update the `**Bug Ref:**` field of each
+failed test case with the GitHub child issue URL.
+
+**Legacy mode:** In each `qa-plan/{module-slug}.md`, update the Bug Ref field of each failed
+test case with the GitHub issue URL.
 
 ### Step 7 — Deliver
 
 State the issue count, then say:
 
 ```
-{N} GitHub issues created.
+{N} child bug issues created.
 
+{Direct mode:}
+Run log updated: docs/qa/qa-runs/{Task-ID}-{date}.md
+Parent issue: {parent issue URL}
+
+{Legacy mode:}
 QA plan updated with issue links: docs/qa/qa-plan/
 
 Next: sync-dev-to-fix - developers pick up issues labeled `ready-for-dev` and invoke

@@ -3,9 +3,10 @@ name: dev-orchestrator
 description: >
   Orchestrates the full Syntactics engineering workflow for a single task: runs the dev session
   grilling phase (sync-dev-session), pauses for approval, then runs the TDD implementation phase
-  (sync-dev-tdd), pauses for approval, and hands off to QA. Trigger when a developer says
-  "run dev workflow", "orchestrate task", "automate dev session", or provides a Task ID with
-  "run full workflow" (e.g. "run full workflow BE-0001 users-module @backend-tasks.md @fdd.md").
+  (sync-dev-tdd), pauses for approval, then runs the FDD compliance gate and creates a GitHub
+  issue labeled ready-for-qa. Trigger when a developer says "run dev workflow", "orchestrate task",
+  "automate dev session", or provides a Task ID with "run full workflow"
+  (e.g. "run full workflow BE-0001 users-module @backend-tasks.md @fdd.md").
 model: sonnet
 tools:
   - Read
@@ -55,6 +56,11 @@ Parse inputs from the invocation:
     artifact changed and say: "The session summary was generated from older inputs. Delete it and
     re-run the orchestrator to regenerate from current sources."
 - If not found: proceed to Phase 1.
+
+**Check for GitHub MCP:**
+Read `docs/agents/tools.md` if it exists. Look for an entry with capability tier `issues:github`
+or a server named `github`. Store the MCP name if found. If `docs/agents/tools.md` does not exist
+or no GitHub MCP is registered, set flag: `github_mcp: false` - Phase 3c will use `gh` CLI instead.
 
 After setup, print a brief confirmation:
 
@@ -149,7 +155,7 @@ Once approved, write the session summary file using this exact structure:
 
 ```markdown
 ---
-generated_by: dev-orchestrator@1.0.0
+generated_by: dev-orchestrator@2.0.0
 generated_at: {YYYY-MM-DD}
 source_versions:
   task_list: {artifact_version from task file}
@@ -312,24 +318,144 @@ Wait for explicit "approve".
 
 ---
 
-## Phase 3 — QA Handoff
+## Phase 3 — FDD Compliance Gate + QA Issue Creation
 
-Once Phase 2 is approved, deliver the handoff:
+### 3a. FDD Compliance Scan
+
+Read the FDD file (already loaded in Phase 0). Extract all named requirements:
+
+- **Business rules** - numbered items or `BR-` IDs under any `## Business Rules` section
+- **Validation rules** - field constraint tables or `VAL-` IDs under `## Validation` sections
+- **RBAC rules** - role-permission tables under `## Access Control` or `## Roles` sections
+- **Workflow transitions** - status transition tables or workflow step lists
+
+For each extracted requirement, use Grep to scan test files written in Phase 2
+(`*.spec.*`, `*Test.*`, `*_test.*`, `*_spec.*`, `*Spec.*`). Search for:
+- The rule ID (e.g. `BR-03`, `VAL-07`) in test names or `describe`/`it`/`test` blocks
+- A 3-5 word key phrase from the rule description in test names
+
+Classify each item:
+- **Green** - rule ID or key phrase found in a test name
+- **Yellow** - found only in comments or implementation code, not a test name
+- **Red** - nothing found in any test file
+
+Build a compliance table:
+```
+| Rule                     | Type       | Coverage Found        | Rating |
+|--------------------------|------------|-----------------------|--------|
+| {rule text (short)}      | Business   | {test name or "none"} | Green  |
+| {rule text (short)}      | Validation | {file, line}          | Yellow |
+| {rule text (short)}      | RBAC       | none                  | Red    |
+```
+
+### 3b. Gate Evaluation
+
+**If any Red items exist:**
 
 ```
---- WORKFLOW COMPLETE ---
+--- PHASE 3 BLOCKED: FDD COVERAGE GAPS ---
 
-Session summary:  docs/sessions/{type}/{Task-ID}-{date}.md
-Swagger:          docs/api/{module}/{feature}_api.yaml (backend/full-stack only)
+The following FDD requirements have no test coverage.
+GitHub issue creation is blocked until these are covered.
 
-Next: sync-qa-planner
+Red items:
+- {rule text}: {type}
 
-Pass these inputs to generate the QA test plan:
-  @projects/{project-name}/pm/{project-name}-frontend-tasks.md
-  @projects/{project-name}/pm/{project-name}-backend-tasks.md
-  @{all fdd module files for this project}
+Return to Phase 2 and add tests for these items.
+Reply "resume" after adding tests to re-run the compliance check.
+```
 
-Run: /sync-qa-planner
+Wait for "resume". Re-run Step 3a. Loop until no Red items remain.
+
+**If Yellow items exist (no Reds):**
+
+```
+--- PHASE 3: CONFIRM PARTIAL COVERAGE ---
+
+The following FDD requirements have indirect or partial test coverage:
+
+Yellow items:
+- {rule text}: {type} - coverage found at: {location}
+
+These will be logged in the QA issue. If they surface as bugs in QA,
+the audit trail is in the issue body.
+
+Reply "confirm" to proceed to issue creation.
+Reply "fix {rule description}" to return to Phase 2 and add direct coverage first.
+```
+
+Wait for "confirm" or "fix" response. Store confirmed yellow items for the issue body.
+
+**If all Green (or yellow confirmed):** proceed to Phase 3c.
+
+### 3c. Create GitHub Issue
+
+Create a GitHub issue using `gh` CLI (via Bash) or GitHub MCP if registered in `docs/agents/tools.md`.
+
+**Title:** `[QA] {Task-ID}: {task description from task file}`
+
+**Labels to apply:**
+- `ready-for-qa`
+- `area:be` / `area:fe` / `area:fs` (match session type: Backend → `area:be`, Frontend → `area:fe`, Full-Stack → `area:fs`)
+- Priority from the task row (`P1-critical` / `P2-high` / `P3-medium` / `P4-low`)
+
+**Issue body:**
+
+```markdown
+## Task Reference
+- **Task ID:** {Task-ID}
+- **Module:** {module name}
+- **Session Type:** {Backend | Frontend | Full-Stack}
+- **Task File:** {task file path}
+- **FDD:** {fdd file path}
+
+## Artifacts
+- **Session Summary:** docs/sessions/{type}/{Task-ID}-{date}.md
+- **Swagger:** docs/api/{module}/{feature}_api.yaml *(backend/full-stack only — omit for FE)*
+
+## FDD Coverage - Compliance Check Result
+| Rule | Type | Coverage Found | Rating |
+|------|------|----------------|--------|
+{one row per extracted FDD requirement}
+
+## Compliance Notes
+{If yellow items were confirmed: list each with "confirmed by developer on {date}"}
+{If no yellow items: omit this section}
+
+## QA Instructions
+Run: /sync-qa-runner {this issue URL} @{fdd file path}
+
+FDD is the source of truth for expected behavior.
+Test P1 and P2 cases first. Use Swagger for API test definitions (BE/FS).
+
+## Definition of Done
+- [ ] All P1-critical test cases pass
+- [ ] All P2-high test cases pass
+- [ ] P3/P4 failures documented as child issues if found
+- [ ] Issue labeled `verified` by sync-qa-runner
+```
+
+**Using `gh` CLI:**
+```bash
+gh issue create \
+  --title "[QA] {Task-ID}: {task description}" \
+  --body "{issue body}" \
+  --label "ready-for-qa,area:{be|fe|fs},{priority label}"
+```
+
+After creation, print:
+
+```
+--- PHASE 3 COMPLETE ---
+
+GitHub issue: {issue URL}
+Labels:       ready-for-qa, area:{type}, {priority}
+
+Artifacts:
+  Session summary:  docs/sessions/{type}/{Task-ID}-{date}.md
+  Swagger:          docs/api/{module}/{feature}_api.yaml (backend/full-stack only)
+
+Next: QA runs /sync-qa-runner {issue URL} @{fdd file path}
 ```
 
 ---

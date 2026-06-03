@@ -136,6 +136,34 @@ _Avoid_: spec, design doc, requirements doc (the FDD is the definitive downstrea
 
 ### Engineering and QA Workflow Terms
 
+**FDD Compliance Check**:
+The automated structural audit run at the end of `sync-dev-tdd` (informational) and as the gate
+in `dev-orchestrator` Phase 3 (blocking). Scans test files for coverage of each FDD business rule,
+validation rule, RBAC rule, and workflow transition. Categorizes gaps as red (zero coverage, hard
+block), yellow (partial/indirect coverage, requires confirmation), or green (covered). Blocks GitHub
+issue creation when red items exist.
+_Avoid_: test coverage report, coverage gate, compliance scan
+
+**Ready-for-QA Issue**:
+The GitHub issue created by `dev-orchestrator` Phase 3 after the FDD compliance check passes.
+Tracks a single task through QA. Parent to all child bug issues created by `sync-qa-to-ticket`.
+Labeled `ready-for-qa` on creation, `verified` on a full-pass QA run, or has child issues labeled
+`ready-for-dev` on failure.
+_Avoid_: QA ticket, tracking issue, QA parent
+
+**Direct Mode (sync-qa-runner)**:
+The invocation mode where `sync-qa-runner` receives a GitHub issue URL and FDD file, derives test
+cases inline from the FDD without a pre-generated qa-plan file, and manages issue labels
+(`ready-for-qa` to `verified` on all pass). Preferred for all new work. Distinguished from Legacy
+Mode, which reads an existing `docs/qa/qa-plan/index.md`.
+_Avoid_: new mode, issue-based mode
+
+**QA Run Log**:
+The artifact written by `sync-qa-runner` in Direct mode at `docs/qa/qa-runs/{Task-ID}-{date}.md`.
+Records derived test cases, execution results, and Bug Ref URLs for any failures. Written after the
+run (not before). Replaces the qa-plan file in the new workflow. Used by the turnover mechanism.
+_Avoid_: test report, run results, qa-plan (the qa-plan artifact is legacy-only)
+
 **Turnover**:
 A failed re-run of a QA test case on a ticket that was previously marked `ready-for-qa` after a dev fix. Indicates the fix did not resolve the issue. The ticket is automatically moved back to `ready-for-dev`.
 _Avoid_: bounce, re-open, regression (regression is a separate label type for previously passing tests)
@@ -189,8 +217,9 @@ whether its input has changed since the consuming artifact was last generated.
 _Avoid_: dependency version, input version
 
 **Version Chain**:
-The ordered sequence of artifacts whose versions are checked at each handoff:
-Intake Document → Schema → Sprint Task List → FDD → PM Task Lists → QA Plan → Dev Session.
+The ordered sequence of artifacts whose versions are checked at each handoff.
+New path: Intake Document → Schema → Sprint Task List → FDD → PM Task Lists → Dev Session → QA Run Log.
+Legacy path: Intake Document → Schema → Sprint Task List → FDD → PM Task Lists → QA Plan → Dev Session.
 Each link checks its immediate upstream only — not the full ancestry.
 _Avoid_: version graph, dependency tree, audit trail
 
@@ -239,9 +268,12 @@ BA:          sync-ba-project-intake → sync-database-designer → sync-sprint-p
 PM:         task-orchestrator [Stage 1: backend tasks + UI design tasks (parallel, both from FDD) → Stage 2: frontend tasks]
             (auto-triggered after FDD approval; detects FDD drift and reruns automatically; Stage 1 approval gate before Stage 2; no TBD endpoints)
                                                                                            ↓
-QA:         sync-qa-planner → sync-qa-runner → sync-qa-to-ticket
 Engineering (one-time setup): sync-dev-setup
-Engineering (per-task loop):  sync-dev-session → sync-dev-tdd → sync-dev-to-fix → sync-qa-runner (re-run)
+Engineering (per-task loop):  sync-dev-session → sync-dev-tdd [FDD compliance summary]
+            dev-orchestrator Phase 3 [FDD compliance gate → GitHub issue: ready-for-qa]
+            sync-qa-runner {issue URL} @{fdd}.md [derive from FDD, run, apply verified label]
+            → failures: sync-qa-to-ticket (child bug issues) → sync-dev-to-fix → sync-qa-runner (re-run)
+            → all pass: issue labeled verified
 ```
 
 ### Version Chain
@@ -251,8 +283,12 @@ Intake Doc (v) → Schema (v, checks intake_v)
               → Sprint Task List (v, checks schema_v)
                 → FDD (v, checks sprint_tasks_v + schema_v)
                   → PM Task Lists (v, checks fdd_v + sprint_tasks_v)
-                    → QA Plan (v, checks fdd_v + frontend_tasks_v + backend_tasks_v)
-                      → Dev Session (checks task_v + fdd_v)
+                    → Dev Session (checks task_v + fdd_v)
+                      → GitHub Issue: ready-for-qa (compliance check against FDD)
+                        → QA Run Log (docs/qa/qa-runs/{Task-ID}-{date}.md)
+
+Legacy path (existing qa-plan files):
+                  → PM Task Lists → QA Plan (v, checks fdd_v + frontend_tasks_v + backend_tasks_v)
 ```
 
 Each skill checks its immediate upstream only. A mismatch triggers a Version Gate — hard block, no warn-and-continue.

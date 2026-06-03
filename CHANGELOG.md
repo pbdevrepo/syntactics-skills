@@ -2,6 +2,20 @@
 
 All notable changes to syntactics-skills are documented here.
 
+## [Unreleased] - 2026-06-03 (engineering-qa-merge)
+
+### Added
+- `engineering-workflow`: `sync-dev-tdd` v1.2.0 -> v1.3.0 - added FDD Compliance Summary step after Swagger generation; scans test files for business rule, validation rule, RBAC rule, and workflow transition coverage; outputs green/yellow/red table; informational in standalone mode (gate is in dev-orchestrator Phase 3)
+- `agents`: `dev-orchestrator` v1.0.0 -> v2.0.0 (breaking) - Phase 3 fully rewritten: replaces passive handoff message with FDD compliance gate (3a scan, 3b gate evaluation with red block + yellow confirm, 3c GitHub issue creation via `gh` CLI); red items hard-block issue creation; yellow items require "confirm" and are logged in issue body; creates `[QA] {Task-ID}` GitHub issue with `ready-for-qa` label, compliance table, and literal QA invocation command
+- `qa-workflow`: `sync-qa-runner` v1.6.0 -> v2.0.0 (breaking) - added Direct mode; accepts GitHub issue URL + FDD file; Step 0b derives test cases inline from FDD (business rules, validation, RBAC, workflow transitions); Step 4 writes QA run log to `docs/qa/qa-runs/{Task-ID}-{date}.md`; Step 5 applies `verified` label + comment on all-pass; Legacy mode (no URL arg) unchanged for backward compatibility
+- `qa-workflow`: `sync-qa-to-ticket` v1.2.0 -> v1.3.0 - added Direct mode detection (GitHub issue URL as first arg); reads failures from QA run log instead of qa-plan; adds `## Parent Issue` field in child bug issue body linking back to the ready-for-qa tracking issue; updated run record update step for both modes
+
+### Removed
+- `qa-workflow`: `sync-qa-planner` - removed entirely; `sync-qa-runner` Direct mode absorbs all test case derivation logic; Legacy mode of `sync-qa-runner` still handles existing qa-plan files for backward compatibility
+
+### Changed
+- `CONTEXT.md` - updated Workflow Sequence (engineering/QA section); updated Version Chain (new path drops QA Plan; legacy path retained); added four new Engineering and QA terms: FDD Compliance Check, Ready-for-QA Issue, Direct Mode (sync-qa-runner), QA Run Log; updated Version Chain term definition
+
 ## [Unreleased] - 2026-06-03
 
 ### Added

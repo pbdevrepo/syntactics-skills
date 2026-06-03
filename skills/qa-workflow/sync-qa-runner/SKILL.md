@@ -1,26 +1,27 @@
 ---
 name: sync-qa-runner
-version: 1.6.0
+version: 2.0.0
 description: >
-  Executes the QA test plan for Syntactics Inc. using the project's detected test framework for
-  both UI/E2E and API tests. Detects the active framework from package.json, composer.json,
-  go.mod, or Gemfile first. For UI tests: uses detected framework, falls back to Playwright. For
-  API tests: runs existing framework tests if found, falls back to HTTP requests against Swagger
-  YAML if no tests exist, flags Manual if neither exists. Generates new specs in the detected
-  framework's format only when no coverage exists. Trigger when a QA tester says "run tests",
-  "execute test plan", "qa runner", "start qa run", or after sync-qa-planner completes. Supports
-  local, staging, and custom URL environments. Accepts an optional module filter:
-  /sync-qa-runner user-management activity-logs. Always run after sync-qa-planner and before
-  sync-qa-to-ticket in the QA workflow. Also used for re-runs after sync-dev-to-fix applies a fix.
+  Executes QA verification for Syntactics Inc. Supports two modes: Direct mode (preferred) accepts
+  a GitHub issue URL and FDD file, derives test cases inline from the FDD, runs them, and applies
+  the `verified` label when all pass. Legacy mode reads an existing qa-plan index for backward
+  compatibility with pre-existing qa-plan files. Detects the active test framework from package.json,
+  composer.json, go.mod, or Gemfile. Trigger when a QA tester says "run tests", "verify issue",
+  "qa runner", "start qa run", or after dev-orchestrator Phase 3 creates a ready-for-qa issue.
+  Direct mode: /sync-qa-runner {GitHub issue URL} @{fdd-file}.md
+  Legacy mode: /sync-qa-runner [module-slug ...]
+  Also used for re-runs after sync-dev-to-fix applies a fix.
 ---
 
 # QA Runner
 
-Executes the QA test plan live — detects the project's test framework once up front, then runs UI
-and API tests using that framework. Falls back to Swagger YAML HTTP requests for API cases with no
-existing coverage. Marks each test case inline and generates regression spec files as a side artifact.
+Verifies implemented features against the FDD. In Direct mode, derives test cases from the GitHub
+issue and FDD directly - no pre-generated qa-plan file needed. In Legacy mode, reads an existing
+qa-plan index. Detects the project's test framework and runs UI and API tests.
 
-Workflow: **sync-qa-planner - sync-qa-runner - sync-qa-to-ticket**
+Direct workflow: **dev-orchestrator Phase 3 - sync-qa-runner - sync-qa-to-ticket**
+
+Legacy workflow: **sync-qa-runner - sync-qa-to-ticket**
 
 Re-run workflow: **sync-dev-to-fix - sync-qa-runner (targeted re-run)**
 
@@ -28,15 +29,23 @@ Re-run workflow: **sync-dev-to-fix - sync-qa-runner (targeted re-run)**
 
 ## Before You Start
 
-### Check invocation arguments
+### Detect invocation mode
 
-If module slugs were passed as arguments (e.g. `/sync-qa-runner user-management activity-logs`),
-capture them as the **module filter**. If no arguments were passed, the run targets all modules.
+**If a GitHub issue URL is passed as the first argument** (starts with `https://github.com/`):
+- Set mode: **Direct**
+- Capture the issue URL
+- Require an FDD file passed with `@` — halt if not provided: "Direct mode requires an FDD file: /sync-qa-runner {issue URL} @{fdd}.md"
+- Skip Step 0 (no qa-plan index). Proceed to Step 0b.
 
-### Confirm inputs
+**If no URL is passed:**
+- Set mode: **Legacy**
+- Capture any module slugs as the **module filter** (e.g. `/sync-qa-runner user-management activity-logs`)
+- Require `docs/qa/qa-plan/index.md` to exist — halt if not found: "No qa-plan index found. Use Direct mode: /sync-qa-runner {issue URL} @{fdd}.md"
+- Proceed to Step 0 (existing behavior).
 
-1. QA test plan index: `docs/qa/qa-plan/index.md`
-2. Environment target — ask if not specified:
+### Confirm environment
+
+Ask if not specified:
 
 ```
 Which environment should tests run against?
@@ -45,13 +54,64 @@ Which environment should tests run against?
 - Custom URL
 ```
 
-3. Swagger YAML files for API tests: `docs/api/{module}/{feature}_api.yaml`
-
 ---
 
 ## Workflow
 
-### Step 0 — Load Module List
+### Step 0b — Derive Test Cases from Issue + FDD (Direct mode only)
+
+Fetch the GitHub issue via GitHub MCP or `gh issue view {number} --json labels,body,title`.
+
+**Guard:** Check that the issue has the `ready-for-qa` label. If not, halt:
+"Issue {URL} does not have the `ready-for-qa` label. Direct mode expects a QA tracking issue
+created by dev-orchestrator Phase 3. Check the URL and retry."
+
+Extract from the issue body:
+- Task ID (from `## Task Reference`)
+- Module name
+- Session Type (Backend / Frontend / Full-Stack)
+- FDD file path (as a cross-check against the `@` argument)
+- Swagger file path (from `## Artifacts`, if present)
+- Compliance Notes (from `## Compliance Notes`, if present - yellow items to scrutinise)
+
+**Module/FDD mismatch check:** If the module in the issue body does not match the FDD file passed,
+warn: "Issue references module '{X}' but FDD file appears to be for '{Y}'. Confirm before proceeding."
+Wait for confirmation.
+
+Read the FDD file. Derive test cases from:
+
+| FDD Source | Test Case Type | Example |
+|---|---|---|
+| Validation rules - required fields | Negative: submit without required field | VAL-01: login fails without email |
+| Validation rules - format constraints | Negative: submit with invalid format | VAL-02: login fails with non-email format |
+| Business rules | Functional: happy path through rule | BR-03: approved order advances to shipping |
+| Business rules - conditionals | Functional: each branch | BR-04: discount only applies above threshold |
+| RBAC rules - allowed | Access control: allowed role can act | RBAC-01: admin can delete users |
+| RBAC rules - denied | Access control: denied role is blocked | RBAC-02: viewer cannot delete users |
+| Workflow transitions - forward | Flow: valid transition succeeds | WF-01: draft advances to submitted |
+| Workflow transitions - reverse | Flow: invalid reversal is blocked | WF-02: shipped cannot revert to draft |
+
+Assign each derived test case:
+- A sequential ID: `QA-{NNNN}` (continue from last used ID, or start at QA-0001)
+- Priority: P1 for RBAC + core business rules, P2 for validation + workflow, P3/P4 for edge cases
+- Flag any test case corresponding to a yellow item in Compliance Notes for extra scrutiny
+
+Print a summary and ask to proceed:
+
+```
+Module: {module name}
+Task:   {Task-ID}
+Test cases derived: {N} (P1: {n}, P2: {n}, P3: {n}, P4: {n})
+
+Yellow-flagged items from compliance notes: {list, or "none"}
+
+Reply "yes" to execute all tests.
+Reply "filter {type}" to restrict (e.g. "filter P1" or "filter RBAC").
+```
+
+Wait for confirmation.
+
+### Step 0 — Load Module List (Legacy mode only)
 
 Read `qa-plan/index.md`. Extract the list of module files from the Module Index table.
 
@@ -193,9 +253,13 @@ Search for test files matching the detected framework's conventions:
 
 ### Step 3c — Handle Re-run Failures (Turnover)
 
-After all test cases are executed, check if this is a targeted re-run (i.e. the run was triggered after `sync-dev-to-fix`). A re-run is detected when a failing test case has a GitHub issue URL in its Bug Ref field.
+After all test cases are executed, check if this is a targeted re-run triggered after `sync-dev-to-fix`.
 
-For each failing test case with a Bug Ref URL, via GitHub MCP:
+**Direct mode:** A re-run is detected when child bug issues (from a prior `sync-qa-to-ticket` run) have a Bug Ref URL in the QA run log at `docs/qa/qa-runs/{Task-ID}-*.md`.
+
+**Legacy mode:** A re-run is detected when a failing test case has a GitHub issue URL in its Bug Ref field in the qa-plan module file.
+
+For each failing test case with a Bug Ref URL, via GitHub MCP or `gh issue edit`:
 
 1. Read the current labels on the issue
 2. Find any existing `turnover:N` label (e.g. `turnover:1`, `turnover:2`)
@@ -208,9 +272,43 @@ For each failing test case with a Bug Ref URL, via GitHub MCP:
 
 Skip this step entirely on a first-run (no Bug Ref URLs present in any failing test case).
 
-### Step 4 — Update the Test Run Log
+### Step 4 — Write Run Record
 
-After all modules are complete, append one row to the Test Run Log in `qa-plan/index.md`:
+**Direct mode:** Write a QA run log to `docs/qa/qa-runs/{Task-ID}-{YYYY-MM-DD}.md`:
+
+```markdown
+---
+generated_by: sync-qa-runner@2.0.0
+generated_at: {YYYY-MM-DD}
+source_issue: {GitHub issue URL}
+source_fdd: {fdd file path}
+task_id: {Task-ID}
+---
+
+# QA Run: {Task-ID} - {YYYY-MM-DD}
+
+**Issue:** {GitHub issue URL}
+**FDD:** {fdd file path}
+**Environment:** {local | staging | url}
+**Framework:** {detected framework}
+**Execution Mode:** {MCP | CLI}
+
+## Test Cases
+
+### {QA-NNNN} - {Test Case Name}
+**Type:** {type}
+**Priority:** {priority}
+**FDD Ref:** {section or rule ID}
+**Status:** Pass / Fail
+**Bug Ref:** {child issue URL or "-"}
+
+---
+
+## Summary
+Pass: {N} | Fail: {N} | Manual: {N}
+```
+
+**Legacy mode:** Append one row to the Test Run Log in `qa-plan/index.md`:
 
 ```
 | {run #} | {date} | {environment} | {tester} | {total pass} | {total fail} | {notes} |
@@ -218,9 +316,49 @@ After all modules are complete, append one row to the Test Run Log in `qa-plan/i
 
 ### Step 5 — Deliver
 
-State the updated index path and spec file paths (or MCP mode note), then say:
+**Direct mode — all tests pass:**
 
-**If failures exist (first run):**
+Via GitHub MCP or `gh issue edit`:
+1. Remove label `ready-for-qa`
+2. Apply label `verified`
+3. Post comment: "QA run complete. All {N} test cases passed. Issue verified."
+
+```
+All {N} test cases passed.
+Issue {URL} labeled `verified`.
+Run log: docs/qa/qa-runs/{Task-ID}-{date}.md
+
+QA complete. No further action required.
+```
+
+**Direct mode — failures exist (first run):**
+
+```
+Test run complete. {N} test cases failed.
+Execution mode: {MCP | CLI}
+
+Run log: docs/qa/qa-runs/{Task-ID}-{date}.md
+Parent issue: {issue URL}
+
+Next: sync-qa-to-ticket - pass {issue URL} and the run log path for child issue creation.
+```
+
+**Direct mode — failures exist (re-run, turnover detected):**
+
+```
+Test run complete. {N} test cases failed.
+Execution mode: {MCP | CLI}
+
+Turnover updates applied:
+{For each turned-over ticket:}
+- {issue URL} - now turnover:{N}, moved back to ready-for-dev
+
+Run log updated: docs/qa/qa-runs/{Task-ID}-{date}.md
+
+Next: sync-dev-to-fix - developers pick up issues labeled ready-for-dev.
+```
+
+**Legacy mode — failures exist (first run):**
 ```
 Test run complete. {N} test cases failed across {M} modules.
 {If module filter was active: "Targeted run: {list slugs}"}
@@ -234,7 +372,7 @@ Tests executed via Playwright MCP — no spec files generated. Results recorded 
 Next: sync-qa-to-ticket - pass docs/qa/qa-plan/index.md for issue creation.
 ```
 
-**If failures exist (re-run — turnover detected):**
+**Legacy mode — failures exist (re-run — turnover detected):**
 ```
 Test run complete. {N} test cases failed across {M} modules.
 Execution mode: {MCP | CLI}
@@ -251,7 +389,7 @@ Tests executed via Playwright MCP — no spec files generated. Results recorded 
 Next: sync-dev-to-fix - developers pick up issues labeled ready-for-dev.
 ```
 
-**If all tests pass:**
+**Legacy mode — all tests pass:**
 ```
 Test run complete. All {N} test cases passed across {M} modules.
 Execution mode: {MCP | CLI}

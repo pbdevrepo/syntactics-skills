@@ -159,9 +159,8 @@ Scope + requirements pipeline - the BA-side of pre-sales work.
 ### QA (`qa-workflow`)
 | Skill | Description |
 |-------|-------------|
-| `sync-qa-planner` | Generate structured QA test plan from split FDD module files (`docs/fdd/{module-slug}.md`), one module at a time. Accepts optional module filter: `/sync-qa-planner user-management invoicing` |
-| `sync-qa-runner` | Execute test plan live - detects Playwright MCP mode (direct tool calls, no spec files) vs CLI mode (generates + runs spec files); marks PASS/FAIL inline |
-| `sync-qa-to-ticket` | Convert QA failures into GitHub issues with labels and FDD references |
+| `sync-qa-runner` | Verify a feature against the FDD. Direct mode: `/sync-qa-runner {issue URL} @{fdd}.md` - derives test cases from FDD inline, runs them, applies `verified` label on all pass. Legacy mode: `/sync-qa-runner [module-slug]` - reads existing qa-plan index |
+| `sync-qa-to-ticket` | Convert QA failures into child GitHub issues with FDD references and parent issue link. Supports Direct mode (pass issue URL) and Legacy mode (pass qa-plan index) |
 
 ### Must-Have (`must-have-workflow`)
 
@@ -216,9 +215,12 @@ flowchart TD
 
     subgraph ENG[Engineering]
         R[sync-dev-session] --> S[sync-dev-tdd]
-        S --> T[sync-qa-planner]
-        T --> U[sync-qa-runner]
-        U --> V[sync-qa-to-ticket]
+        S --> S2[FDD Compliance Check]
+        S2 -->|red: blocked| S2
+        S2 -->|green/yellow confirmed| T[GitHub Issue: ready-for-qa]
+        T --> U[sync-qa-runner Direct Mode]
+        U -->|all pass| Y[verified label]
+        U -->|failures| V[sync-qa-to-ticket]
         V --> W[sync-dev-to-fix]
         W --> X[sync-qa-runner re-run]
     end
