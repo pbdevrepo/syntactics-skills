@@ -4,6 +4,26 @@ All notable changes to syntactics-skills are documented here.
 
 ## [Unreleased] - 2026-06-03
 
+### Added
+- `backend-task-writer` agent v1.0.0 at `.claude/agents/` - Haiku-powered Stage 1a agent; writes backend task file from FDD and database schema; spawned in parallel by `task-orchestrator`; restricted to Read/Write/Glob/Grep tools
+- `design-task-writer` agent v1.0.0 at `.claude/agents/` - Haiku-powered Stage 1b agent; writes design task file from FDD; spawned in parallel with `backend-task-writer` by `task-orchestrator`; restricted to Read/Write/Glob/Grep tools
+- `task-orchestrator` agent v1.1.0 at `.claude/agents/` - replaces `pm-task-orchestrator`; auto-triggered by `sync-final-design` after FDD approval; detects FDD version drift and reruns the full pipeline automatically; no PM manual step required
+- `.claude/agents/references/task-output-format.md` - consolidated backend, design, and frontend task output formats into a single reference consumed by `task-orchestrator`
+
+### Changed
+- `task-orchestrator` v1.1.0 -> v1.2.0 - Stage 1 now spawns `backend-task-writer` and `design-task-writer` in parallel via Agent tool instead of generating both inline; added `Agent` to tools list; description updated to reflect parallel spawn architecture
+- `ba-workflow`: `sync-final-design` v2.1.0 -> v2.2.0 - Step 5 Deliver now invokes `task-orchestrator` via Agent tool when user says "approve FDD"; removed "Do not auto-trigger" instruction; updated Handoff Chain downstream entry from `sync-ui-task-creator` to `task-orchestrator`
+- `scripts/install.ps1` - agents now copied from `.claude/agents/` in the package root instead of `skills/*/agents/`; always installed regardless of workflow selection; includes `references/` subdirectory
+- `scripts/install.sh` - same agent copy change as install.ps1
+- `CLAUDE.md` - Architecture section updated: `.claude/agents/` is now the canonical agent location; removed `agents/` from workflow directory structure
+
+### Removed
+- `pm-workflow`: `pm-task-orchestrator` agent - renamed to `task-orchestrator` and moved to `.claude/agents/`
+- `pm-workflow`: `sync-backend-task-creator` - logic lives in `task-orchestrator`; standalone skill removed
+- `pm-workflow`: `sync-ui-task-creator` - logic lives in `task-orchestrator`; standalone skill removed
+- `pm-workflow`: `sync-frontend-task-creator` - logic lives in `task-orchestrator`; standalone skill removed
+- `skills/pm-workflow/agents/` and `skills/engineering-workflow/agents/` subdirectories
+
 ### Changed
 - `sales-workflow`: `sync-proposal-writer` v1.4.0 -> v1.5.0 - replaced flat Key Features bullet list in Scope of Work with a 3-level hierarchy: module (H3) → sub-feature/screen/flow (H4) with 1-2 sentence description → UI elements as plain-noun bullets; when a sub-feature contains multiple named forms, bold form name precedes its element list; User Roles line stays at module level; updated Module-by-module Writing Rule to describe the new hierarchy; added two self-review checklist items (H4 sub-feature sections present, UI elements listed per sub-feature)
 - `sales-workflow`: `sync-proposal-writer` `references/template-structure.md` - replaced Section 4 module template with hierarchical H3/H4 structure showing module description + User Roles, H4 sub-feature sections with descriptions, optional bold form-name header before element lists, and plain-noun UI element bullets; removed Key Features block
