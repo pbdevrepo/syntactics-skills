@@ -142,11 +142,8 @@ Scope + requirements pipeline - the BA-side of pre-sales work.
 ### PM (`pm-workflow`)
 | Skill / Agent | Description |
 |---------------|-------------|
-| `pm-task-orchestrator` (agent) | Orchestrates full task pipeline from FDD - Stage 1 generates backend tasks and UI design tasks in parallel (both from FDD directly), Stage 2 generates frontend tasks from both Stage 1 outputs; no TBD endpoints |
+| `task-orchestrator` (agent) | Auto-triggered by sync-final-design after FDD approval. Detects FDD version drift and reruns automatically. Stage 1 generates backend tasks and UI design tasks in parallel (both from FDD directly); Stage 2 generates frontend tasks from both Stage 1 outputs; no TBD endpoints |
 | `sync-design-to-stories` | Analyzes design mockup images (PNG/JPG/PDF) and generates structured user stories and acceptance criteria per page with MP/US/AC IDs - standalone, no workflow dependencies |
-| `sync-ui-task-creator` | Generates sprint-aware Figma design task list from FDD + sprint plan (Stage 1 - parallel with backend) |
-| `sync-frontend-task-creator` | Generates sprint-aware frontend task list from FDD + design tasks + backend tasks + sprint plan (Stage 2 - all endpoints named) |
-| `sync-backend-task-creator` | Generates sprint-aware backend task list from FDD + database schema + sprint plan (Stage 1 - parallel with UI design) |
 
 ### Engineering (`engineering-workflow`)
 | Skill | Description |
@@ -209,10 +206,10 @@ flowchart TD
     end
 
     subgraph PM[PM]
-        N[pm-task-orchestrator]
-        O[sync-backend-task-creator]
-        P[sync-ui-task-creator]
-        Q[sync-frontend-task-creator]
+        N[task-orchestrator]
+        O[Stage 1a - Backend Tasks]
+        P[Stage 1b - UI Design Tasks]
+        Q[Stage 2 - Frontend Tasks]
         N -->|Stage 1 - parallel| O & P
         O & P -->|Stage 2| Q
     end

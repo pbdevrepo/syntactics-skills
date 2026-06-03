@@ -70,13 +70,14 @@ skills/{workflow}/sync-{skill}/SKILL.md
 
 **Directory structure:**
 ```
+.claude/agents/
+  {agent-name}.md        # all Claude Code subagents; installed to user's .claude/agents/ for every install
+  references/*.md        # shared references consumed by agents
 skills/
   {role}-workflow/
     sync-{skill-name}/
       SKILL.md           # required: YAML frontmatter + ## sections
       references/*.md    # optional: templates, question banks, output formats
-    agents/              # optional: Claude Code subagents bundled with this workflow
-      {agent-name}.md    # installed to .claude/agents/ alongside the workflow's skills
 projects/
   {project-name}/
     sales/               # artifacts from sales-workflow

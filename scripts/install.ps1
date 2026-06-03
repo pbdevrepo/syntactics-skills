@@ -103,12 +103,10 @@ try {
 
     $wfDirs = @($allWfDirs | Where-Object { $_.Name -ne 'must-have-workflow' } | Sort-Object Name)
 
-    $selected       = @()
-    $selectedWfDirs = @()   # workflow dirs whose agents should also be copied
+    $selected = @()
 
     if ($Skill.Count -gt 0) {
         $selected = $Skill | ForEach-Object { if ($_ -notmatch '^sync-') { "sync-$_" } else { $_ } }
-        # skill-specific installs: no agent copying
 
     } elseif ($Workflow.Count -gt 0) {
         foreach ($wf in $Workflow) {
@@ -119,7 +117,6 @@ try {
                 Write-Warning "Workflow not found: $($wf -replace '-workflow$', '')  (available: $avail)"
             } else {
                 $selected += @(Get-WorkflowSkills -WfDir $wfDir.FullName)
-                $selectedWfDirs += $wfDir
             }
         }
 
@@ -142,14 +139,12 @@ try {
         if ([string]::IsNullOrWhiteSpace($answer) -or $answer.Trim() -eq "$allNum") {
             foreach ($wfDir in $wfDirs) {
                 $selected += $wfSkillCache[$wfDir.Name]
-                $selectedWfDirs += $wfDir
             }
         } else {
             foreach ($part in ($answer -split ',')) {
                 $idx = [int]$part.Trim() - 1
                 if ($idx -ge 0 -and $idx -lt $wfDirs.Count) {
                     $selected += $wfSkillCache[$wfDirs[$idx].Name]
-                    $selectedWfDirs += $wfDirs[$idx]
                 }
             }
         }
@@ -160,16 +155,23 @@ try {
     New-Item -ItemType Directory -Force -Path $SkillDir | Out-Null
     $count = Copy-Skills -Names $all -SkillMap $SkillMap -Target $SkillDir
 
-    # Copy agents from each selected workflow's agents/ subdir
-    $AgentDir    = $SkillDir -replace '\\skills$', '\agents'
-    $agentCount  = 0
-    foreach ($wfDir in $selectedWfDirs) {
-        $agentsSrc = Join-Path $wfDir.FullName "agents"
-        if (Test-Path $agentsSrc) {
-            New-Item -ItemType Directory -Force -Path $AgentDir | Out-Null
-            Get-ChildItem -Path $agentsSrc -Filter "*.md" | ForEach-Object {
-                Copy-Item -Path $_.FullName -Destination (Join-Path $AgentDir $_.Name) -Force
-                $agentCount++
+    # Copy agents from .claude/agents/ in the package root
+    $AgentDir   = $SkillDir -replace '\\skills$', '\agents'
+    $agentsSrc  = Join-Path $TmpDir "syntactics-skills-main\.claude\agents"
+    $agentCount = 0
+    if (Test-Path $agentsSrc) {
+        New-Item -ItemType Directory -Force -Path $AgentDir | Out-Null
+        Get-ChildItem -Path $agentsSrc -Filter "*.md" | ForEach-Object {
+            Copy-Item -Path $_.FullName -Destination (Join-Path $AgentDir $_.Name) -Force
+            $agentCount++
+        }
+        # Copy references/ subdirectory if present
+        $agentsRefSrc = Join-Path $agentsSrc "references"
+        if (Test-Path $agentsRefSrc) {
+            $agentsRefDest = Join-Path $AgentDir "references"
+            New-Item -ItemType Directory -Force -Path $agentsRefDest | Out-Null
+            Get-ChildItem -Path $agentsRefSrc -Filter "*.md" | ForEach-Object {
+                Copy-Item -Path $_.FullName -Destination (Join-Path $agentsRefDest $_.Name) -Force
             }
         }
     }

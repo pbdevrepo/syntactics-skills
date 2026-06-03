@@ -67,14 +67,12 @@ while IFS= read -r dir; do
 done < <(find "$SKILLS_ROOT" -mindepth 1 -maxdepth 1 -type d -name '*-workflow' | grep -v 'must-have-workflow' | sort)
 
 SELECTED=()
-SELECTED_WF_DIRS=()   # workflow dirs whose agents/ subdir should also be copied
 
 if [[ ${#SKILLS[@]} -gt 0 ]]; then
     for skill in "${SKILLS[@]}"; do
         [[ $skill != sync-* ]] && skill="sync-$skill"
         SELECTED+=("$skill")
     done
-    # skill-specific installs: no agent copying
 
 elif [[ ${#WORKFLOWS[@]} -gt 0 ]]; then
     for wf in "${WORKFLOWS[@]}"; do
@@ -87,7 +85,6 @@ elif [[ ${#WORKFLOWS[@]} -gt 0 ]]; then
             while IFS= read -r skill; do
                 [[ -n "$skill" ]] && SELECTED+=("$skill")
             done < <(get_wf_skills "$wf_path")
-            SELECTED_WF_DIRS+=("$wf_path")
         fi
     done
 
@@ -113,7 +110,6 @@ else
             while IFS= read -r skill; do
                 [[ -n "$skill" ]] && SELECTED+=("$skill")
             done < <(get_wf_skills "$wf_dir")
-            SELECTED_WF_DIRS+=("$wf_dir")
         done
     else
         IFS=',' read -ra PICKS <<< "$ANSWER"
@@ -123,7 +119,6 @@ else
                 while IFS= read -r skill; do
                     [[ -n "$skill" ]] && SELECTED+=("$skill")
                 done < <(get_wf_skills "${WF_DIRS[$idx]}")
-                SELECTED_WF_DIRS+=("${WF_DIRS[$idx]}")
             fi
         done
     fi
@@ -176,20 +171,26 @@ for skill in "${ALL_SELECTED[@]+"${ALL_SELECTED[@]}"}"; do
 done
 printf "\n"
 
-# Copy agents from each selected workflow's agents/ subdir
+# Copy agents from .claude/agents/ in the package root
 AGENTS_DIR="${SKILLS_DIR%/skills}/agents"
+AGENTS_SRC="$TMP_DIR/syntactics-skills-main/.claude/agents"
 AGENT_COUNT=0
-for wf_dir in "${SELECTED_WF_DIRS[@]+"${SELECTED_WF_DIRS[@]}"}"; do
-    agents_src="$wf_dir/agents"
-    if [[ -d "$agents_src" ]]; then
-        mkdir -p "$AGENTS_DIR"
-        for agent_file in "$agents_src"/*.md; do
-            [[ -f "$agent_file" ]] || continue
-            cp "$agent_file" "$AGENTS_DIR/"
-            AGENT_COUNT=$((AGENT_COUNT + 1))
+if [[ -d "$AGENTS_SRC" ]]; then
+    mkdir -p "$AGENTS_DIR"
+    for agent_file in "$AGENTS_SRC"/*.md; do
+        [[ -f "$agent_file" ]] || continue
+        cp "$agent_file" "$AGENTS_DIR/"
+        AGENT_COUNT=$((AGENT_COUNT + 1))
+    done
+    # Copy references/ subdirectory if present
+    if [[ -d "$AGENTS_SRC/references" ]]; then
+        mkdir -p "$AGENTS_DIR/references"
+        for ref_file in "$AGENTS_SRC/references"/*.md; do
+            [[ -f "$ref_file" ]] || continue
+            cp "$ref_file" "$AGENTS_DIR/references/"
         done
     fi
-done
+fi
 
 echo ""
 echo "Installed $COUNT skill(s) to $SKILLS_DIR"
