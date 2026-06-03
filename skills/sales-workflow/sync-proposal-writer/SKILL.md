@@ -1,6 +1,6 @@
 ---
 name: sync-proposal-writer
-version: 1.5.0
+version: 1.6.0
 description: >
   Writes a client-facing project proposal for the Sales workflow at Syntactics Inc. from a grilled
   requirements document. Trigger when a Sales team member says "write the proposal", "generate the
@@ -71,7 +71,9 @@ Structure:
 8. Deliverables
 9. Next Steps
 
-### Step 3 - Self-Review Before Delivering
+### Step 3 - Validate and Fix Loop
+
+Run every check below against the current draft. For each item that fails, fix it in the proposal file immediately, then restart the checklist from the top. Do not proceed to Step 4 until every item is marked passing. If the same check fails twice after a fix attempt, stop - flag the specific gap to Sales before proceeding.
 
 - [ ] Every module from the requirements doc is represented in Scope of Work
 - [ ] Each module contains H4 sub-feature sections for every distinct screen or flow

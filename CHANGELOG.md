@@ -5,6 +5,7 @@ All notable changes to syntactics-skills are documented here.
 ## [Unreleased] - 2026-06-03
 
 ### Changed
+- `sales-workflow`: `sync-proposal-writer` v1.5.0 -> v1.6.0 - replaced one-pass Self-Review with a Validate and Fix Loop; writer now fixes each failing check in the proposal file immediately and restarts the checklist from the top; hard gate prevents proceeding to Step 4 until all 12 checks pass; escape hatch added - if the same check fails twice after a fix attempt, stop and flag to Sales before proceeding
 - `sales-workflow`: `sync-proposal-writer` v1.4.0 -> v1.5.0 - replaced flat Key Features bullet list in Scope of Work with a 3-level hierarchy: module (H3) → sub-feature/screen/flow (H4) with 1-2 sentence description → UI elements as plain-noun bullets; when a sub-feature contains multiple named forms, bold form name precedes its element list; User Roles line stays at module level; updated Module-by-module Writing Rule to describe the new hierarchy; added two self-review checklist items (H4 sub-feature sections present, UI elements listed per sub-feature)
 - `sales-workflow`: `sync-proposal-writer` `references/template-structure.md` - replaced Section 4 module template with hierarchical H3/H4 structure showing module description + User Roles, H4 sub-feature sections with descriptions, optional bold form-name header before element lists, and plain-noun UI element bullets; removed Key Features block
 
