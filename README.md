@@ -52,7 +52,7 @@ Pick the workflows matching your role:
 | Role | Workflow(s) to select |
 |------|-----------------------|
 | Sales | `salesperson`, `sales` |
-| Business Analyst | `ba` |
+| Business Analyst | `ba` (includes proposal skills) |
 | Designer | `pm` |
 | Frontend / Backend Developer | `pm`, `engineering` |
 | QA Tester | `qa` |
@@ -86,14 +86,14 @@ Windows:
 $url = "https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.ps1"
 & ([scriptblock]::Create((irm $url))) -Global -Workflow sales,ba   # specific workflows
 & ([scriptblock]::Create((irm $url))) -Local -Workflow ba          # local project only
-& ([scriptblock]::Create((irm $url))) -Skill sync-requirement-analyzer,sync-proposal-writer  # specific skills
+& ([scriptblock]::Create((irm $url))) -Skill sync-project-intake,sync-proposal-writer  # specific skills
 ```
 
 Mac/Linux:
 ```bash
 curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash -s -- --global --workflow sales --workflow ba
 curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash -s -- --local --workflow ba
-curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash -s -- --skill sync-requirement-analyzer --skill sync-proposal-writer
+curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash -s -- --skill sync-project-intake --skill sync-proposal-writer
 ```
 
 | Flag | Effect |
@@ -120,24 +120,26 @@ Commercial pipeline - runs before and after the BA scope workflow.
 
 ### Sales (`sales-workflow`)
 
-Scope + requirements pipeline - the BA-side of pre-sales work.
+Commercial pipeline skills - discovery, revisions, and pricing.
 
 | Skill | Description |
 |-------|-------------|
 | `sync-client-discovery` | Research-first discovery session for clients with no brief - researches domain standards, maps competitor landscape, and produces a single fillable discovery brief the sales rep takes into the client meeting |
-| `sync-requirement-analyzer` | Extract and structure client requirements from PDF or free-form text |
-| `sync-proposal-grill` | Stress-test requirements for missed modules, ambiguous scope, and deployment constraints |
-| `sync-proposal-writer` | Write a client-facing project proposal with automatic version numbering and a recommended deployment stack section |
-| `sync-proposal-revision` | Apply client feedback to produce a new versioned requirements file and revised proposal |
+| `sync-proposal-revision` | Apply client feedback to produce a new versioned intake file and revised proposal |
 | `sync-quotation` | Generate itemized module/feature list with placeholder hour ranges per role |
 
 ### Business Analysis (`ba-workflow`)
+
+Proposal and design pipeline - from first client input through Final Design Document.
+
 | Skill | Description |
 |-------|-------------|
-| `sync-ba-project-intake` | Entry point — gather and structure requirements from proposal |
+| `sync-project-intake` | Entry point for proposal and BA work - accepts client brief, RFP, meeting notes, or approved proposal; two modes: Pre-Proposal (Draft status, feeds proposal-grill) and Post-Approval (Approved status, feeds database-designer); produces `docs/ba/{project-name}-intake.md` |
+| `sync-proposal-grill` | Stress-test the intake document for missed modules, ambiguous scope, and deployment constraints before writing the proposal |
+| `sync-proposal-writer` | Write a client-facing project proposal from the grilled intake document, with automatic version numbering and a recommended deployment stack section |
 | `sync-database-designer` | ERD design, normalization, schema best practices |
 | `sync-sprint-planner` | Convert approved DB schema into development task list |
-| `sync-final-design` | Produce Final Design Documents (FDD) — outputs `docs/fdd/index.md` (General Instructions, Figma link, module directory) plus one `docs/fdd/{module-slug}.md` per module |
+| `sync-final-design` | Produce Final Design Documents (FDD) - outputs `docs/fdd/index.md` (General Instructions, Figma link, module directory) plus one `docs/fdd/{module-slug}.md` per module |
 
 ### PM (`pm-workflow`)
 | Skill / Agent | Description |
@@ -186,8 +188,8 @@ flowchart TD
         A[sync-deal-qualify] --> B[sync-sales-discovery]
     end
 
-    subgraph SAL[Sales]
-        C[sync-requirement-analyzer] --> D[sync-proposal-grill]
+    subgraph BA[BA - Proposal]
+        J[sync-project-intake] -->|Pre-Proposal| D[sync-proposal-grill]
         D --> E[sync-proposal-writer]
         E --> F[sync-quotation]
         E -->|client revisions| G[sync-proposal-revision]
@@ -198,8 +200,8 @@ flowchart TD
         H[sync-proposal-seller] --> I[sync-deal-followup]
     end
 
-    subgraph BA[BA]
-        J[sync-ba-project-intake] --> K[sync-database-designer]
+    subgraph BA2[BA - Design]
+        J2[sync-project-intake] -->|Post-Approval| K[sync-database-designer]
         K --> L[sync-sprint-planner]
         L --> M[sync-final-design]
     end
@@ -225,9 +227,9 @@ flowchart TD
         W --> X[sync-qa-runner re-run]
     end
 
-    B --> C
+    B --> J
     F -->|client approves| H
-    I -->|deal signed| J
+    I -->|deal signed| J2
     M -->|FDD approved| N
     Q --> R
 ```

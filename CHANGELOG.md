@@ -2,6 +2,22 @@
 
 All notable changes to syntactics-skills are documented here.
 
+## [Unreleased] - 2026-06-04
+
+### Added
+- `ba-workflow`: `sync-project-intake` v1.0.0 - merges `sync-requirement-analyzer` (Sales) and `sync-ba-project-intake` (BA) into one skill; two-mode behavior: Pre-Proposal (from client brief/RFP/notes - status Draft, feeds proposal-grill) and Post-Approval (from approved proposal - status Approved, feeds database-designer); produces `docs/ba/{project-name}-intake.md` with artifact_version frontmatter; single artifact replaces both `requirements.md` and `intake.md`; includes extraction-rules, question-bank, and unified output-format references
+- `ba-workflow`: `sync-proposal-grill` v1.2.0 - moved from `sales-workflow`; reads `docs/ba/{project-name}-intake.md` (was `docs/sales/{project-name}-requirements.md`); updates intake doc Status from Draft to Grilled; Deployment Constraints block appended to intake doc after Section 11; no other content changes
+- `ba-workflow`: `sync-proposal-writer` v1.5.0 - moved from `sales-workflow`; reads `docs/ba/{project-name}-intake.md` for first proposal and `docs/ba/{project-name}-intake-v{N}.md` for revisions; updates intake doc Status from Grilled to Approved; proposal output path unchanged (`docs/sales/{project-name}-proposal.md`); no other content changes
+
+### Changed
+- `sales-workflow`: `sync-proposal-revision` v1.1.0 -> v1.2.0 - updated to match new intake artifact naming; scans `docs/ba/` (was `docs/sales/`) for intake files; produces `docs/ba/{project-name}-intake-v{N}.md` (was `docs/sales/{project-name}-requirements-v{N}.md`); description updated
+
+### Removed
+- `sales-workflow`: `sync-requirement-analyzer` - replaced by `sync-project-intake` in `ba-workflow`
+- `sales-workflow`: `sync-proposal-grill` - moved to `ba-workflow`
+- `sales-workflow`: `sync-proposal-writer` - moved to `ba-workflow`
+- `ba-workflow`: `sync-ba-project-intake` - replaced by `sync-project-intake`
+
 ## [Unreleased] - 2026-06-03 (engineering-qa-merge)
 
 ### Added

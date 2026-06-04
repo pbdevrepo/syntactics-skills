@@ -2,35 +2,34 @@
 name: sync-proposal-writer
 version: 1.5.0
 description: >
-  Writes a client-facing project proposal for the Sales workflow at Syntactics Inc. from a grilled
-  requirements document. Trigger when a Sales team member says "write the proposal", "generate the
-  proposal", "create the project proposal", or after proposal-grill completes. Also handles
-  proposal revisions when triggered by sync-proposal-revision. Produces a professional,
-  client-ready proposal .md file with automatic version numbering. Always run after proposal-grill
-  and before quotation.
+  Writes a client-facing project proposal at Syntactics Inc. from a grilled intake document.
+  Trigger when a BA or Sales team member says "write the proposal", "generate the proposal",
+  "create the project proposal", or after proposal-grill completes. Also handles proposal revisions
+  when triggered by sync-proposal-revision. Produces a professional, client-ready proposal .md file
+  with automatic version numbering. Always run after proposal-grill and before quotation.
 ---
 
 # Proposal Writer
 
-Read the grilled requirements document. Write a professional, client-facing project proposal. Do not estimate hours - that belongs in the quotation. Focus on clarity, completeness, and scope the client understands.
+Read the grilled intake document. Write a professional, client-facing project proposal. Do not estimate hours - that belongs in the quotation. Focus on clarity, completeness, and scope the client understands.
 
 Detect existing proposals and write the next version automatically.
 
-Workflow: **requirement-analyzer -> proposal-grill -> proposal-writer -> quotation**
+Workflow: **project-intake -> proposal-grill -> proposal-writer -> quotation**
 Revision workflow: **proposal-revision -> proposal-writer -> quotation**
 
 ---
 
 ## Before You Start
 
-1. Determine the requirements source and proposal version:
+1. Determine the intake source and proposal version:
    - Check `docs/sales/` for existing `{project-name}-proposal.md` and any `{project-name}-proposal-v*.md` files.
-   - If no proposal exists yet: requirements source is `{project-name}-requirements.md`, output will be `{project-name}-proposal.md`, version label is `1.0`.
-   - If a proposal already exists: find the highest existing version (v2, v3, etc.), use the matching requirements file (`{project-name}-requirements-v{N}.md`) as the source, and write `{project-name}-proposal-v{N+1}.md` with version label `{N+1}.0`.
-2. Read the requirements document - scope depends on run type:
-   - **First proposal (no prior proposal exists):** Read the full requirements document.
+   - If no proposal exists yet: intake source is `docs/ba/{project-name}-intake.md`, output will be `docs/sales/{project-name}-proposal.md`, version label is `1.0`.
+   - If a proposal already exists: find the highest existing version (v2, v3, etc.), use the matching intake file (`docs/ba/{project-name}-intake-v{N}.md`) as the source, and write `docs/sales/{project-name}-proposal-v{N+1}.md` with version label `{N+1}.0`.
+2. Read the intake document - scope depends on run type:
+   - **First proposal (no prior proposal exists):** Read the full intake document.
    - **Revision (prior proposal exists):** Read only the Revision History section and the modules listed in the delta (`Added` and `Updated` entries only). Copy unchanged module sections verbatim from the prior proposal file.
-3. Do not write the proposal until all `Ambiguous` and `Inferred` modules are resolved. If any remain, stop - flag them to Sales and wait for resolution before proceeding.
+3. Do not write the proposal until all `Ambiguous` and `Inferred` modules are resolved. If any remain, stop - flag them and wait for resolution before proceeding.
 
 ---
 
@@ -38,10 +37,10 @@ Revision workflow: **proposal-revision -> proposal-writer -> quotation**
 
 - **Client-facing language.** No technical jargon unless the client is explicitly technical. Use business terms throughout.
 - **Confident scope.** State what is included. State what is excluded. No hedging.
-- **Module-by-module.** Each module gets its own section (H3) with a 1-3 sentence description and a User Roles line. Within each module, every distinct screen, flow, or feature gets its own sub-section (H4) with a 1-2 sentence description. Under each sub-feature, list UI elements (fields, buttons, links) as plain-noun bullets. If a sub-feature contains multiple named forms or screens, bold the form name before its element list. Keep language plain — no technical jargon unless the client is explicitly technical.
+- **Module-by-module.** Each module gets its own section (H3) with a 1-3 sentence description and a User Roles line. Within each module, every distinct screen, flow, or feature gets its own sub-section (H4) with a 1-2 sentence description. Under each sub-feature, list UI elements (fields, buttons, links) as plain-noun bullets. If a sub-feature contains multiple named forms or screens, bold the form name before its element list. Keep language plain - no technical jargon unless the client is explicitly technical.
 - **No estimates in the proposal.** Hour estimates belong in the quotation - keep them out of this document entirely.
 - **No implementation details.** The proposal covers what will be built, not how. Framework choices, programming languages, and internal architecture do not belong here. Exception: the Recommended Deployment Stack section (Section 5) is explicitly client-facing - it describes infrastructure in business terms (hosting tier, managed services, environments), not code-level choices.
-- **Revision context.** When writing a revision, include a brief "Revision Summary" section immediately after the cover noting what changed from the prior version, sourced from the delta in the requirements file.
+- **Revision context.** When writing a revision, include a brief "Revision Summary" section immediately after the cover noting what changed from the prior version, sourced from the delta in the intake file.
 - **Surface hard-to-reverse decisions in Assumptions.** Any scope boundary that was a genuine trade-off during grilling - and that would surprise a reader who didn't attend that conversation - must appear in the Assumptions section with a one-line rationale. Do not bury these in module descriptions.
 
 ---
@@ -51,27 +50,27 @@ Revision workflow: **proposal-revision -> proposal-writer -> quotation**
 ### Step 1 - Check for Unresolved Items
 
 Before writing, scan for:
-- Any module still marked `Ambiguous` - stop and flag to Sales
-- Any Open Item in Section 10 of the requirements doc - stop and ask if it blocks the proposal
+- Any module still marked `Ambiguous` - stop and flag
+- Any Open Question in Section 10 of the intake doc - stop and ask if it blocks the proposal
 
-If all items are resolved, update the requirements doc **Status:** from `Grilled` to `Approved`, then proceed to Step 2.
+If all items are resolved, update the intake doc **Status:** from `Grilled` to `Approved`, then proceed to Step 2.
 
 ### Step 1b - Infer the Recommended Deployment Stack
 
-Before drafting, read the Deployment Constraints block from the grilled requirements doc (Section 11 or the `## Deployment Constraints` block). Derive the stack recommendation using the following logic:
+Before drafting, read the Deployment Constraints block from the grilled intake doc (appended after Section 11). Derive the stack recommendation using the following logic:
 
-**Scale signal → hosting tier:**
+**Scale signal -> hosting tier:**
 - No stated scale or < 100 concurrent users: single managed VPS (DigitalOcean, Hetzner, Linode, or AWS Lightsail)
 - 100-1,000 concurrent users: app platform or auto-scaling VPS tier (DigitalOcean App Platform, AWS Elastic Beanstalk, Railway, Render)
 - 1,000+ concurrent users or high data volume: cloud-native with load balancing (AWS, GCP, or Azure standard tier)
 
-**Compliance signal → provider constraint:**
+**Compliance signal -> provider constraint:**
 - HIPAA requirement: AWS (with BAA), Azure, or Google Cloud (all offer Business Associate Agreements); dedicated server if on-premise required
 - GDPR / EU data residency: EU-region deployment mandatory; flag provider options with EU data centers
 - Local data residency law: restrict to providers with in-country nodes; call this out explicitly as a constraint in the proposal
 - No compliance requirement: no restriction
 
-**Budget tier signal → cost posture:**
+**Budget tier signal -> cost posture:**
 - Startup / SMB: prefer cost-optimized providers (DigitalOcean, Hetzner, Render); avoid over-provisioned managed services
 - Mid-market: AWS / GCP / Azure standard tiers; managed database services (RDS, Cloud SQL)
 - Enterprise: managed cloud with SLA guarantees; dedicated support tier; disaster recovery in scope
@@ -109,7 +108,7 @@ Structure:
 
 ### Step 3 - Self-Review Before Delivering
 
-- [ ] Every module from the requirements doc is represented in Scope of Work
+- [ ] Every module from the intake doc is represented in Scope of Work
 - [ ] Each module contains H4 sub-feature sections for every distinct screen or flow
 - [ ] Each sub-feature lists its UI elements as bullets
 - [ ] Recommended Deployment Stack section is present and derives from the grilled constraints (or states the assumption used if no constraints were given)

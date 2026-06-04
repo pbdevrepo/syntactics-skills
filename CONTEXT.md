@@ -77,13 +77,8 @@ _Avoid_: cover letter, executive summary, intro section
 **Discovery Brief**:
 The artifact produced by `client-discovery`. A structured summary of a client's goals, project
 type, budget, timeline, and tech/design preferences — produced before any requirements exist.
-Feeds directly into `requirement-analyzer` as its client input.
+Feeds directly into `project-intake` as its client input.
 _Avoid_: intake notes, pre-brief, onboarding form
-
-**Requirements Document**:
-The artifact produced by `requirement-analyzer`. Contains all client modules, user roles,
-integrations, constraints, and open items extracted from raw client input.
-_Avoid_: brief, notes, client request
 
 **Proposal**:
 The client-facing artifact produced by `proposal-writer`. Describes what will be built in
@@ -97,15 +92,14 @@ sending to the client.
 _Avoid_: estimate, invoice, pricing sheet
 
 **Proposal Revision**:
-A new versioned requirements artifact produced by `proposal-revision` when the client
-provides feedback on an existing proposal. The revision diffs client comments against the
-latest requirements version (not always the original) and produces
-`{project-name}-requirements-v{N}.md` with a Revision History section. Triggers a new
-versioned proposal and quotation.
+A new versioned intake artifact produced by `proposal-revision` when the client provides
+feedback on an existing proposal. The revision diffs client comments against the latest intake
+version (not always the original) and produces `docs/ba/{project-name}-intake-v{N}.md` with
+a Revision History section. Triggers a new versioned proposal and quotation.
 _Avoid_: amendment, update, change request (when referring to a formal revision round)
 
 **Delta Summary**:
-The list of changes between two consecutive requirements versions, classified as `Added`,
+The list of changes between two consecutive intake versions, classified as `Added`,
 `Removed`, or `Updated`. Produced by `proposal-revision` and surfaced in the Revision
 Summary section of the revised proposal.
 _Avoid_: diff, changelog (when referring to the client-facing change summary)
@@ -113,9 +107,11 @@ _Avoid_: diff, changelog (when referring to the client-facing change summary)
 ### BA Workflow Terms
 
 **Intake Document**:
-The artifact produced by `ba-project-intake`. The authoritative source of project scope
-for the BA phase — all downstream BA skills read from it.
-_Avoid_: brief, requirements (the BA intake is distinct from the sales requirements doc)
+The artifact produced by `project-intake`. The single authoritative source of project scope
+from first client input through database design. Used in two modes: Pre-Proposal (Draft status,
+from client brief/RFP — feeds proposal-grill) and Post-Approval (Approved status, from approved
+proposal — feeds database-designer). Stored at `docs/ba/{project-name}-intake.md`.
+_Avoid_: brief, requirements, requirements document
 
 **Schema**:
 The artifact produced by `database-designer`. Defines all database tables, columns,
@@ -218,7 +214,7 @@ _Avoid_: dependency version, input version
 
 **Version Chain**:
 The ordered sequence of artifacts whose versions are checked at each handoff.
-New path: Intake Document → Schema → Sprint Task List → FDD → PM Task Lists → Dev Session → QA Run Log.
+New path: Intake Document (`docs/ba/`) → Schema → Sprint Task List → FDD → PM Task Lists → Dev Session → QA Run Log.
 Legacy path: Intake Document → Schema → Sprint Task List → FDD → PM Task Lists → QA Plan → Dev Session.
 Each link checks its immediate upstream only — not the full ancestry.
 _Avoid_: version graph, dependency tree, audit trail
@@ -245,11 +241,11 @@ _Avoid_: review step, human-in-the-loop, confirmation dialog
 - A **Module** appears consistently across all artifacts — module names must not drift between skills
 - A **Handoff** occurs when a skill's artifact is passed to the next skill; it is always initiated by a human
 - The **FDD** is the single source of truth for the PM workflow — all PM skills read from it
-- The **Proposal** gates entry to the BA workflow — a rejected proposal does not proceed
+- The **Proposal** gates entry to the BA design phase — a rejected proposal does not proceed
 - The **Quotation** accompanies the **Proposal** but is a separate artifact
-- The **salesperson-workflow** bookends the **sales-workflow**: `sync-deal-qualify` and `sync-sales-discovery` run before the scope pipeline; `sync-proposal-seller` and `sync-deal-followup` run after `sync-quotation` before the deal signs
+- The **salesperson-workflow** bookends the proposal pipeline: `sync-deal-qualify` and `sync-sales-discovery` run before `sync-project-intake`; `sync-proposal-seller` and `sync-deal-followup` run after `sync-quotation` before the deal signs
 - A **Proposal Cover** (from `proposal-seller`) is a separate layer prepended to the scope proposal - it does not replace the scope content
-- A **Proposal Revision** re-enters the sales loop — it produces a new versioned requirements file and a new versioned proposal without restarting from `requirement-analyzer`
+- A **Proposal Revision** re-enters the proposal loop — it produces a new versioned intake file (`docs/ba/{project-name}-intake-v{N}.md`) and a new versioned proposal without restarting from `project-intake`
 - A **Delta Summary** is always diffed against the prior version, never against v1, so revision round 3 captures only what changed from round 2
 
 ### Workflow Sequence
@@ -257,13 +253,13 @@ _Avoid_: review step, human-in-the-loop, confirmation dialog
 ```
 Salesperson: sync-deal-qualify → sync-sales-discovery
                                          ↓
-Sales:       sync-requirement-analyzer → sync-proposal-grill → sync-proposal-writer → sync-quotation
-                                                                        ↓ (client revisions)
-                                                                sync-proposal-revision → sync-proposal-writer → sync-quotation
+BA/Sales:    sync-project-intake [Pre-Proposal] → sync-proposal-grill → sync-proposal-writer → sync-quotation
+                                                                                ↓ (client revisions)
+                                                              sync-proposal-revision → sync-proposal-writer → sync-quotation
                                          ↓ (client approves)
 Salesperson: sync-proposal-seller → sync-deal-followup
                                          ↓ (deal signed)
-BA:          sync-ba-project-intake → sync-database-designer → sync-sprint-planner → sync-final-design
+BA:          sync-project-intake [Post-Approval] → sync-database-designer → sync-sprint-planner → sync-final-design
                                                                                            ↓ (FDD approved — Approval Gate)
 PM:         task-orchestrator [Stage 1: backend tasks + UI design tasks (parallel, both from FDD) → Stage 2: frontend tasks]
             (auto-triggered after FDD approval; detects FDD drift and reruns automatically; Stage 1 approval gate before Stage 2; no TBD endpoints)
@@ -279,16 +275,16 @@ Engineering (per-task loop):  sync-dev-session → sync-dev-tdd [FDD compliance 
 ### Version Chain
 
 ```
-Intake Doc (v) → Schema (v, checks intake_v)
-              → Sprint Task List (v, checks schema_v)
-                → FDD (v, checks sprint_tasks_v + schema_v)
-                  → PM Task Lists (v, checks fdd_v + sprint_tasks_v)
-                    → Dev Session (checks task_v + fdd_v)
-                      → GitHub Issue: ready-for-qa (compliance check against FDD)
-                        → QA Run Log (docs/qa/qa-runs/{Task-ID}-{date}.md)
+Intake Doc (v, docs/ba/{project-name}-intake.md) → Schema (v, checks intake_v)
+                                                 → Sprint Task List (v, checks schema_v)
+                                                   → FDD (v, checks sprint_tasks_v + schema_v)
+                                                     → PM Task Lists (v, checks fdd_v + sprint_tasks_v)
+                                                       → Dev Session (checks task_v + fdd_v)
+                                                         → GitHub Issue: ready-for-qa (compliance check against FDD)
+                                                           → QA Run Log (docs/qa/qa-runs/{Task-ID}-{date}.md)
 
 Legacy path (existing qa-plan files):
-                  → PM Task Lists → QA Plan (v, checks fdd_v + frontend_tasks_v + backend_tasks_v)
+                                                     → PM Task Lists → QA Plan (v, checks fdd_v + frontend_tasks_v + backend_tasks_v)
 ```
 
 Each skill checks its immediate upstream only. A mismatch triggers a Version Gate — hard block, no warn-and-continue.
@@ -313,8 +309,8 @@ Each skill checks its immediate upstream only. A mismatch triggers a Version Gat
 
 ## Flagged Ambiguities
 
-- "requirements" was used for both the sales `requirement-analyzer` output and the BA intake —
-  resolved: **Requirements Document** = sales artifact; **Intake Document** = BA artifact. These are distinct.
+- "requirements" was used for both the sales requirements artifact and the BA intake —
+  resolved: **Intake Document** is the single artifact for both phases. `sync-project-intake` replaces both `sync-requirement-analyzer` and `sync-ba-project-intake`. The Requirements Document artifact no longer exists.
 - "module" was sometimes used to mean a Figma page, a DB table group, or a feature area —
   resolved: **Module** always means a functional area of the system. Figma pages and DB table groups
   are organized by module but are not modules themselves.

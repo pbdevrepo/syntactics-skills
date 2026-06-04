@@ -5,7 +5,7 @@ File: `docs/sales/{project-name}-proposal.md`
 ---
 
 ```markdown
-# Project Proposal — {Project Name}
+# Project Proposal - {Project Name}
 
 **Prepared for:** {Client Name}
 **Prepared by:** Syntactics Inc.
@@ -14,13 +14,13 @@ File: `docs/sales/{project-name}-proposal.md`
 
 ---
 
-## Revision Summary *(include only for v2 and above — remove this section for the initial proposal)*
+## Revision Summary *(include only for v2 and above - remove this section for the initial proposal)*
 
 This revision incorporates the following client-requested changes from the previous version:
 
-- {Change 1 — e.g., "Added: Reporting module with export functionality"}
-- {Change 2 — e.g., "Removed: SMS notification feature (deferred to Phase 2)"}
-- {Change 3 — e.g., "Updated: User roles expanded to include Supervisor access"}
+- {Change 1 - e.g., "Added: Reporting module with export functionality"}
+- {Change 2 - e.g., "Removed: SMS notification feature (deferred to Phase 2)"}
+- {Change 3 - e.g., "Updated: User roles expanded to include Supervisor access"}
 
 ---
 
@@ -33,8 +33,8 @@ This document outlines the scope of work, deliverables, and assumptions for this
 
 ## 2. Project Overview
 
-{2–4 sentences summarizing what the system is, who it serves, and the core problem it solves.
-Write from the client's perspective — what they will have when the project is done.}
+{2-4 sentences summarizing what the system is, who it serves, and the core problem it solves.
+Write from the client's perspective - what they will have when the project is done.}
 
 ---
 
@@ -42,7 +42,7 @@ Write from the client's perspective — what they will have when the project is 
 
 The primary objectives of this project are:
 
-- {Objective 1 — e.g., "Provide clients with a self-service portal to submit and track requests"}
+- {Objective 1 - e.g., "Provide clients with a self-service portal to submit and track requests"}
 - {Objective 2}
 - {Objective 3}
 
@@ -62,11 +62,11 @@ The following modules are included in this engagement:
 
 {1-2 sentence description of what this sub-feature, screen, or flow does.}
 
-**{Form or Screen Name}** *(omit this bold header if the sub-feature has only one form — list fields directly)*
-- {UI element — e.g., "Email field"}
-- {UI element — e.g., "Password field"}
-- {UI element — e.g., "Login button"}
-- {UI element — e.g., "Forgot Password link"}
+**{Form or Screen Name}** *(omit this bold header if the sub-feature has only one form - list fields directly)*
+- {UI element - e.g., "Email field"}
+- {UI element - e.g., "Password field"}
+- {UI element - e.g., "Login button"}
+- {UI element - e.g., "Forgot Password link"}
 
 #### {Next Sub-feature Name}
 
@@ -91,10 +91,10 @@ Based on the project scope, expected scale, and infrastructure constraints, Synt
 
 | Component | Recommendation |
 |-----------|---------------|
-| **Hosting** | {Cloud provider + tier — e.g., "Managed cloud VPS (DigitalOcean / AWS / Hetzner)"} |
+| **Hosting** | {Cloud provider + tier - e.g., "Managed cloud VPS (DigitalOcean / AWS / Hetzner)"} |
 | **Architecture** | {e.g., "Single-server application with managed database" / "App platform with auto-scaling"} |
 | **Database** | {e.g., "Managed PostgreSQL" / "Managed MySQL"} |
-| **File Storage** | {e.g., "Object storage (S3 / DigitalOcean Spaces)" — or "Not applicable"} |
+| **File Storage** | {e.g., "Object storage (S3 / DigitalOcean Spaces)" - or "Not applicable"} |
 | **Environments** | Staging and Production |
 
 **Why this stack:**
@@ -114,7 +114,7 @@ Based on the project scope, expected scale, and infrastructure constraints, Synt
 
 The following items are explicitly excluded from this engagement:
 
-- {Excluded item 1 — e.g., "Mobile native applications (iOS/Android)"}
+- {Excluded item 1 - e.g., "Mobile native applications (iOS/Android)"}
 - {Excluded item 2}
 - {Deferred to Phase 2: [module name]}
 
@@ -124,9 +124,9 @@ The following items are explicitly excluded from this engagement:
 
 This proposal is based on the following assumptions:
 
-- {Assumption 1 — e.g., "Client will provide all content and copy for static pages"}
-- {Assumption 2 — e.g., "Third-party API credentials will be provided by the client"}
-- {Assumption 3 — e.g., "Design direction will be approved within 5 business days of delivery"}
+- {Assumption 1 - e.g., "Client will provide all content and copy for static pages"}
+- {Assumption 2 - e.g., "Third-party API credentials will be provided by the client"}
+- {Assumption 3 - e.g., "Design direction will be approved within 5 business days of delivery"}
 - {If deployment is Syntactics-managed: "Hosting environment will be provisioned and configured by Syntactics Inc. as part of the engagement"}
 
 ---

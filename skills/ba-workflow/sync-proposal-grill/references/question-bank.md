@@ -1,7 +1,7 @@
-# Question Bank — Proposal Grill
+# Question Bank - Proposal Grill
 
-Targeted questions for stress-testing requirements before proposal writing.
-Always ask in context of a specific module or item in the requirements doc.
+Targeted questions for stress-testing scope before proposal writing.
+Always ask in context of a specific module or item in the intake doc.
 
 ---
 
@@ -20,8 +20,8 @@ Always ask in context of a specific module or item in the requirements doc.
 
 ## Ambiguous Scope
 
-- [Module X] is marked Ambiguous — what specific actions can a user take inside it?
-- What does "manage [entity]" mean — create, read, update, and delete, or a subset?
+- [Module X] is marked Ambiguous - what specific actions can a user take inside it?
+- What does "manage [entity]" mean - create, read, update, and delete, or a subset?
 - Is [inferred module] confirmed in scope for this version, or deferred?
 - Does [module] show a list view, a detail view, or both?
 - Are there search, filter, or sort requirements for [module]?
@@ -33,7 +33,7 @@ Always ask in context of a specific module or item in the requirements doc.
 ## Integrations
 
 - Does [module] need data from any external system to function?
-- Is there a payment step anywhere in the workflow — if so, which gateway?
+- Is there a payment step anywhere in the workflow - if so, which gateway?
 - Do notifications need to go through a specific provider (SendGrid, Twilio, etc.)?
 - Does any data need to sync to or from an accounting or ERP system?
 - Are there any file storage requirements (S3, Google Drive, local server)?
@@ -56,7 +56,7 @@ Always ask in context of a specific module or item in the requirements doc.
 
 ## Role Completeness
 
-- Who owns [module] — which role is the primary actor?
+- Who owns [module] - which role is the primary actor?
 - Can [role] view [module], or only [other role]?
 - Is there a distinction between read-only and edit access within [role]?
 - Who has permission to approve/reject in [workflow module]?

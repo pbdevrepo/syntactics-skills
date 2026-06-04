@@ -2,25 +2,24 @@
 name: sync-proposal-grill
 version: 1.2.0
 description: >
-  Stress-tests a client requirements document for the Sales workflow at Syntactics Inc. before a
-  proposal is written. Trigger when a Sales team member says "grill the requirements", "stress-test
-  the scope", "review requirements before proposal", or after requirement-analyzer completes. Asks
-  targeted questions one at a time focused on missed modules, ambiguous scope, unstated integrations,
-  and edge cases that would surface in BA. Always run after requirement-analyzer and before
-  proposal-writer.
+  Stress-tests an intake document at Syntactics Inc. before a proposal is written. Trigger when a
+  BA or Sales team member says "grill the requirements", "stress-test the scope", "review before
+  proposal", or after project-intake completes. Asks targeted questions one at a time focused on
+  missed modules, ambiguous scope, unstated integrations, deployment constraints, and edge cases.
+  Always run after project-intake and before proposal-writer.
 ---
 
 # Proposal Grill
 
-Read the requirements document from `requirement-analyzer`. Interrogate it relentlessly until every branch of scope is resolved. Focus on what Sales missed - not on what the client said.
+Read the intake document from `project-intake`. Interrogate it relentlessly until every branch of scope is resolved. Focus on what was missed - not on what the client said.
 
-Workflow: **requirement-analyzer -> proposal-grill -> proposal-writer -> quotation**
+Workflow: **project-intake -> proposal-grill -> proposal-writer -> quotation**
 
 ---
 
 ## Before You Start
 
-1. Confirm the requirements doc file path: `docs/sales/{project-name}-requirements.md`
+1. Confirm the intake doc file path: `docs/ba/{project-name}-intake.md`
 2. Read the full document before asking anything.
 3. Build an internal list of every gap, assumption, and risk - then work through them one question at a time.
 
@@ -29,24 +28,24 @@ Workflow: **requirement-analyzer -> proposal-grill -> proposal-writer -> quotati
 ## Grilling Rules
 
 - **One question at a time.** Wait for the answer before asking the next.
-- **Never ask generic questions.** Every question must reference a specific module, role, or item in the requirements doc.
+- **Never ask generic questions.** Every question must reference a specific module, role, or item in the intake doc.
 - **Lead with your recommendation.** Format: question first, then "My recommendation: [answer]."
 - **Explore every branch.** For each answer, determine if it opens a new gap - if so, follow it before moving on.
-- **Sharpen fuzzy language.** When the client or Sales team uses a vague or overloaded term, propose a precise canonical name. Example: "You said 'reports' - do you mean a live dashboard the user filters, or a generated PDF export? Those are different modules." Resolve the term before moving on.
+- **Sharpen fuzzy language.** When the client or team uses a vague or overloaded term, propose a precise canonical name. Example: "You said 'reports' - do you mean a live dashboard the user filters, or a generated PDF export? Those are different modules." Resolve the term before moving on.
 - **Stress-test with concrete scenarios.** When scoping a module or role, invent a specific scenario that probes the boundary. Example: "What happens if a Supervisor approves a request that a Manager already rejected?" Force a precise answer rather than accepting a general description.
-- **Stop when satisfied.** When every module has clear scope, every role is defined, and every integration is named - declare the requirements grilled and proceed.
+- **Stop when satisfied.** When every module has clear scope, every role is defined, and every integration is named - declare the intake grilled and proceed.
 
 ---
 
 ## During the Grill
 
-### Update the requirements doc inline
+### Update the intake doc inline
 
-When a term or scope item is resolved, update `docs/sales/{project-name}-requirements.md` right there. Don't batch these up - capture them as they happen:
+When a term or scope item is resolved, update `docs/ba/{project-name}-intake.md` right there. Don't batch these up - capture them as they happen:
 
 - Resolved ambiguous module? Change `Ambiguous` to `Clear` and update its description immediately.
-- New module confirmed in scope? Add it to Section 4 and Section 5 now.
-- Integration named? Add it to Section 6 now.
+- New module confirmed in scope? Add it to Section 3 (Module Inventory) and Section 5 (Functional Requirements) now.
+- Integration named? Add it to Section 7 now.
 
 This keeps the document current and lets later questions reference already-resolved items without re-litigating them.
 
@@ -104,7 +103,7 @@ See `references/question-bank.md` - Deployment Constraints section.
 - Does the client have an in-house technical team to manage infrastructure, or will Syntactics handle it?
 - Are there budget signals that indicate a preference for cost-optimized vs. managed/premium hosting?
 
-When answers are captured, add a `## Deployment Constraints` block to the requirements doc under Section 10 (Open Items) or append as Section 11. Record:
+When answers are captured, add a `## Deployment Constraints` block to the intake doc (append after Section 11). Record:
 - Client hosting preference (if any)
 - Compliance requirements (if any)
 - Expected scale (user count, concurrent load, data volume)
@@ -119,15 +118,16 @@ If the client has no stated preference on any of these, record "No constraints s
 
 When all gaps are resolved:
 
-### Step 1 - Verify the requirements document
+### Step 1 - Verify the intake document
 
 Confirm all inline updates were applied:
 
-- All new modules added to Section 4 (Module List) and Section 5 (Module Details)
+- All new modules added to Section 3 (Module Inventory) and Section 5 (Functional Requirements)
 - All `Ambiguous` -> `Clear` changes made; descriptions updated
 - All `Inferred` modules confirmed in or removed
-- All integrations added to Section 6
-- All resolved Open Items closed in Section 10 (Status: Resolved)
+- All integrations added to Section 7
+- All resolved Open Questions closed in Section 10 (Status: Resolved)
+- Deployment Constraints block appended
 - Document **Status:** changed from `Draft` to `Grilled`
 
 ### Step 2 - Post Grilling Summary inline in chat
@@ -142,9 +142,9 @@ Confirm all inline updates were applied:
 **Deployment constraints captured:** {list hosting preference, compliance requirements, scale signals, or "No constraints stated - standard recommendation applies"}
 **Open items remaining:** {list anything still unresolved, or "None"}
 
-Requirements doc updated and marked Grilled.
+Intake doc updated and marked Grilled.
 
-Next: proposal-writer - pass {project-name}-requirements.md to write the client proposal.
+Next: proposal-writer - pass docs/ba/{project-name}-intake.md to write the client proposal.
 ```
 
 ---
