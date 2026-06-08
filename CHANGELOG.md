@@ -6,6 +6,8 @@ All notable changes to syntactics-skills are documented here.
 
 ### Changed
 - `agents/` - moved from `.claude/agents/` to repo root; `scripts/install.ps1` and `scripts/install.sh` updated to source agents from `agents/` instead of `.claude/agents/`; `CLAUDE.md` architecture diagram updated to reflect new location
+- `scripts/install.ps1` - added `-Dev` flag; skips GitHub download and reads skills/agents directly from the local repo; use for branch testing without pushing
+- `scripts/install.sh` - added `--dev` flag; skips GitHub download and reads skills/agents directly from the local repo; use for branch testing without pushing
 
 ## [Unreleased] - 2026-06-04
 

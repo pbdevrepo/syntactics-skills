@@ -8,6 +8,7 @@ TMP_DIR="/tmp/syntactics-skills-$$"
 WORKFLOWS=()
 SKILLS=()
 INSTALL_SCOPE=""
+DEV=false
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -15,6 +16,7 @@ while [[ $# -gt 0 ]]; do
         --skill)    SKILLS+=("$2");    shift 2 ;;
         --global)   INSTALL_SCOPE="global"; shift ;;
         --local)    INSTALL_SCOPE="local"; shift ;;
+        --dev)      DEV=true; shift ;;
         *)          echo "Unknown option: $1" >&2; exit 1 ;;
     esac
 done
@@ -22,12 +24,19 @@ done
 cleanup() { rm -f "$TMP_ZIP"; rm -rf "$TMP_DIR"; }
 trap cleanup EXIT
 
-echo "Downloading latest skills..."
-curl -fsSL --compressed "https://github.com/${REPO}/archive/refs/heads/main.zip" -o "$TMP_ZIP"
-mkdir -p "$TMP_DIR"
-unzip -q -o "$TMP_ZIP" -d "$TMP_DIR"
-
-SKILLS_ROOT="$TMP_DIR/syntactics-skills-main/skills"
+if [[ "$DEV" == "true" ]]; then
+    REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+    echo "Dev mode: using local repo at $REPO_ROOT"
+    SKILLS_ROOT="$REPO_ROOT/skills"
+    AGENTS_SRC="$REPO_ROOT/agents"
+else
+    echo "Downloading latest skills..."
+    curl -fsSL --compressed "https://github.com/${REPO}/archive/refs/heads/main.zip" -o "$TMP_ZIP"
+    mkdir -p "$TMP_DIR"
+    unzip -q -o "$TMP_ZIP" -d "$TMP_DIR"
+    SKILLS_ROOT="$TMP_DIR/syntactics-skills-main/skills"
+    AGENTS_SRC="$TMP_DIR/syntactics-skills-main/agents"
+fi
 
 # Determine install location
 if [[ "$INSTALL_SCOPE" == "local" ]]; then
@@ -173,7 +182,6 @@ printf "\n"
 
 # Copy agents from agents/ in the package root
 AGENTS_DIR="${SKILLS_DIR%/skills}/agents"
-AGENTS_SRC="$TMP_DIR/syntactics-skills-main/agents"
 AGENT_COUNT=0
 if [[ -d "$AGENTS_SRC" ]]; then
     mkdir -p "$AGENTS_DIR"

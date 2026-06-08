@@ -4,7 +4,8 @@ param(
     [string[]]$Workflow = @(),
     [string[]]$Skill    = @(),
     [switch]$Global,
-    [switch]$Local
+    [switch]$Local,
+    [switch]$Dev
 )
 $ErrorActionPreference = 'Stop'
 $ProgressPreference    = 'SilentlyContinue'
@@ -65,13 +66,19 @@ function Copy-Skills {
 }
 
 try {
-    Write-Host "Downloading latest skills..."
-    (New-Object System.Net.WebClient).DownloadFile($ZipUrl, $TmpZip)
-
-    New-Item -ItemType Directory -Force -Path $TmpDir | Out-Null
-    Expand-Archive -Path $TmpZip -DestinationPath $TmpDir -Force
-
-    $SkillsRoot = Join-Path $TmpDir "syntactics-skills-main\skills"
+    if ($Dev) {
+        Write-Host "Dev mode: using local repo at $PSScriptRoot\.."
+        $RepoRoot   = Split-Path $PSScriptRoot -Parent
+        $SkillsRoot = Join-Path $RepoRoot "skills"
+        $agentsSrc  = Join-Path $RepoRoot "agents"
+    } else {
+        Write-Host "Downloading latest skills..."
+        (New-Object System.Net.WebClient).DownloadFile($ZipUrl, $TmpZip)
+        New-Item -ItemType Directory -Force -Path $TmpDir | Out-Null
+        Expand-Archive -Path $TmpZip -DestinationPath $TmpDir -Force
+        $SkillsRoot = Join-Path $TmpDir "syntactics-skills-main\skills"
+        $agentsSrc  = Join-Path $TmpDir "syntactics-skills-main\agents"
+    }
     $SkillMap   = Build-SkillMap -SkillsRoot $SkillsRoot
 
     # Determine install location
@@ -157,7 +164,6 @@ try {
 
     # Copy agents from agents/ in the package root
     $AgentDir   = $SkillDir -replace '\\skills$', '\agents'
-    $agentsSrc  = Join-Path $TmpDir "syntactics-skills-main\agents"
     $agentCount = 0
     if (Test-Path $agentsSrc) {
         New-Item -ItemType Directory -Force -Path $AgentDir | Out-Null
