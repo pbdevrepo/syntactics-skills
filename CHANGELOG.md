@@ -4,6 +4,9 @@ All notable changes to syntactics-skills are documented here.
 
 ## [Unreleased] - 2026-06-08
 
+### Removed
+- `salesperson-workflow` - removed entirely; entry point is now `sync-client-discovery` in `sales-workflow`; `sync-deal-qualify`, `sync-sales-discovery`, `sync-proposal-seller`, and `sync-deal-followup` removed
+
 ### Changed
 - `agents/` - moved from `.claude/agents/` to repo root; `scripts/install.ps1` and `scripts/install.sh` updated to source agents from `agents/` instead of `.claude/agents/`; `CLAUDE.md` architecture diagram updated to reflect new location
 - `scripts/install.ps1` - added `-Dev` flag; skips GitHub download and reads skills/agents directly from the local repo; use for branch testing without pushing

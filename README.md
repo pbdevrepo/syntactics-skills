@@ -51,7 +51,7 @@ Pick the workflows matching your role:
 
 | Role | Workflow(s) to select |
 |------|-----------------------|
-| Sales | `salesperson`, `sales` |
+| Sales | `sales` |
 | Business Analyst | `ba` (includes proposal skills) |
 | Designer | `pm` |
 | Frontend / Backend Developer | `pm`, `engineering` |
@@ -106,17 +106,6 @@ curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/sc
 ---
 
 ## Workflows
-
-### Salesperson (`salesperson-workflow`)
-
-Commercial pipeline - runs before and after the BA scope workflow.
-
-| Skill | Description |
-|-------|-------------|
-| `sync-deal-qualify` | Gate before investing BA hours - qualifies a new lead across 5 dimensions (budget, decision-maker, timeline, competition, problem clarity) and outputs a Deal Scorecard with a go/no-go recommendation |
-| `sync-sales-discovery` | Qualification-first discovery prep - researches the domain then structures the first call around pain and qualification before scope; produces a fillable brief with a Call Agenda and a Deal Health block |
-| `sync-proposal-seller` | Adds the sales narrative layer to the BA proposal - prompts the rep for a specific outcome and differentiator, then writes a Proposal Cover (The Outcome, Why Syntactics, What Happens Next) prepended to the scope document |
-| `sync-deal-followup` | Drives the deal forward after the proposal is sent - generates a Day 2/5/10 follow-up schedule and handles price, scope, timing, and ghosted objections via a structured playbook |
 
 ### Sales (`sales-workflow`)
 
@@ -184,8 +173,8 @@ Always installed regardless of workflow selection.
 
 ```mermaid
 flowchart TD
-    subgraph SP1[Salesperson]
-        A[sync-deal-qualify] --> B[sync-sales-discovery]
+    subgraph Sales[Sales]
+        A[sync-client-discovery]
     end
 
     subgraph BA[BA - Proposal]
@@ -194,10 +183,6 @@ flowchart TD
         E --> F[sync-quotation]
         E -->|client revisions| G[sync-proposal-revision]
         G --> E
-    end
-
-    subgraph SP2[Salesperson]
-        H[sync-proposal-seller] --> I[sync-deal-followup]
     end
 
     subgraph BA2[BA - Design]
@@ -218,9 +203,8 @@ flowchart TD
         W --> X[sync-qa-runner]
     end
 
-    B --> J
-    F -->|client approves| H
-    I -->|deal signed| J2
+    A --> J
+    F -->|client approves| J2
     M -->|FDD approved| N
     N --> R
 ```

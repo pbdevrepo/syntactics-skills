@@ -44,34 +44,6 @@ A kebab-case lowercase identifier for a client project (e.g., `client-portal`). 
 by the first skill in each workflow and inherited by all downstream skills via the artifact.
 _Avoid_: project ID, slug, code name
 
-### Salesperson Workflow Terms
-
-**Deal Scorecard**:
-The chat-only output of `sync-deal-qualify`. A table scoring five qualification dimensions (budget,
-decision-maker, timeline, competition, problem clarity) as Green / Yellow / Red, with an overall
-go/no-go recommendation. Not written to file - it exists in chat as the qualification record.
-_Avoid_: lead score, qualification report, CRM entry
-
-**Deal Health**:
-A block inside the discovery brief produced by `sync-sales-discovery`. The rep fills this in
-during or immediately after the client meeting, recording budget signal, decision-maker status,
-timeline urgency, competitive situation, and an overall Green / Yellow / Red rating. Gates
-progression to `sync-requirement-analyzer`.
-_Avoid_: deal status, call notes, CRM update
-
-**Call Agenda**:
-The structured first-10-minutes script inside the discovery brief produced by `sync-sales-discovery`.
-Sequences the call around rapport, pain, and qualification before transitioning to scope and process
-questions. Contains targeted questions for any Yellow dimensions flagged in the Deal Scorecard.
-_Avoid_: meeting outline, call script, agenda template
-
-**Proposal Cover**:
-The sales narrative block prepended to the scope proposal by `sync-proposal-seller`. Contains three
-sections: The Outcome (business result from the client's perspective), Why Syntactics (one or more
-specific differentiators relevant to this project), and What Happens Next (concrete next action and
-Syntactics-side response). Must be written with rep-provided specifics - not AI-generated.
-_Avoid_: cover letter, executive summary, intro section
-
 ### Sales Workflow Terms
 
 **Discovery Brief**:
@@ -243,22 +215,18 @@ _Avoid_: review step, human-in-the-loop, confirmation dialog
 - The **FDD** is the single source of truth for the PM workflow — all PM skills read from it
 - The **Proposal** gates entry to the BA design phase — a rejected proposal does not proceed
 - The **Quotation** accompanies the **Proposal** but is a separate artifact
-- The **salesperson-workflow** bookends the proposal pipeline: `sync-deal-qualify` and `sync-sales-discovery` run before `sync-project-intake`; `sync-proposal-seller` and `sync-deal-followup` run after `sync-quotation` before the deal signs
-- A **Proposal Cover** (from `proposal-seller`) is a separate layer prepended to the scope proposal - it does not replace the scope content
 - A **Proposal Revision** re-enters the proposal loop — it produces a new versioned intake file (`docs/ba/{project-name}-intake-v{N}.md`) and a new versioned proposal without restarting from `project-intake`
 - A **Delta Summary** is always diffed against the prior version, never against v1, so revision round 3 captures only what changed from round 2
 
 ### Workflow Sequence
 
 ```
-Salesperson: sync-deal-qualify → sync-sales-discovery
-                                         ↓
+Sales:       sync-client-discovery
+                      ↓
 BA/Sales:    sync-project-intake [Pre-Proposal] → sync-proposal-grill → sync-proposal-writer → sync-quotation
                                                                                 ↓ (client revisions)
                                                               sync-proposal-revision → sync-proposal-writer → sync-quotation
                                          ↓ (client approves)
-Salesperson: sync-proposal-seller → sync-deal-followup
-                                         ↓ (deal signed)
 BA:          sync-project-intake [Post-Approval] → sync-database-designer → sync-sprint-planner → sync-final-design
                                                                                            ↓ (FDD approved — Approval Gate)
 PM:         task-orchestrator [Stage 1: backend tasks + UI design tasks (parallel, both from FDD) → Stage 2: frontend tasks]
