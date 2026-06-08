@@ -2,6 +2,12 @@
 
 All notable changes to syntactics-skills are documented here.
 
+## [Unreleased] - 2026-06-08
+
+### Changed
+- `pm-workflow`: `sync-backend-task-creator` v1.2.0 -> v1.3.0 - added architecture detection step (api-only vs full-stack) before deriving tasks; expanded "Always generate" table with full-stack-only backend artifacts: Job, Event, Listener, Observer, Schedule, Command, Service, FormRequest, Mailable, Broadcast; added four full-stack checklist items in Step 3; bumped `generated_by` version in frontmatter template
+- `pm-workflow`: `sync-backend-task-creator` `references/task-output-format.md` - expanded Type values to include full-stack types (Command, Event, Listener, Observer, Schedule, Service, FormRequest, Mailable, Broadcast); expanded Detail column documentation with per-type guidance; added nine full-stack table row examples (Service, FormRequest, Event, Listener, Observer, Job, Command, Schedule, Mailable)
+
 ## [Unreleased] - 2026-06-03
 
 ### Changed

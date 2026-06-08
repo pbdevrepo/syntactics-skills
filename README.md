@@ -146,7 +146,7 @@ Scope + requirements pipeline - the BA-side of pre-sales work.
 | `sync-design-to-stories` | Analyzes design mockup images (PNG/JPG/PDF) and generates structured user stories and acceptance criteria per page with MP/US/AC IDs - standalone, no workflow dependencies |
 | `sync-ui-task-creator` | Generates sprint-aware Figma design task list from FDD + sprint plan (Stage 1 - parallel with backend) |
 | `sync-frontend-task-creator` | Generates sprint-aware frontend task list from FDD + design tasks + backend tasks + sprint plan (Stage 2 - all endpoints named) |
-| `sync-backend-task-creator` | Generates sprint-aware backend task list from FDD + database schema + sprint plan (Stage 1 - parallel with UI design) |
+| `sync-backend-task-creator` | Generates sprint-aware backend task list from FDD + database schema + sprint plan; covers API endpoints and full-stack Laravel artifacts (Jobs, Commands, Events, Observers, Schedules) (Stage 1 - parallel with UI design) |
 
 ### Engineering (`engineering-workflow`)
 | Skill | Description |

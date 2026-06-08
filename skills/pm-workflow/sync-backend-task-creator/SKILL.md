@@ -1,13 +1,15 @@
 ---
 name: sync-backend-task-creator
-version: 1.2.0
+version: 1.3.0
 description: >
   Generates a module-by-module backend development task list for Syntactics Inc. from the Final
   Design Document (FDD) and the database schema. Trigger when a PM says "generate backend tasks",
   "what does the backend developer need to build", "backend task list", "create backend tasks",
   or "API tasks". Reads FDD module specs, database schema, and business rules to produce an
-  implementation task list. Runs in parallel with sync-ui-task-creator — both read directly from
-  the FDD. Frontend tasks are generated after both complete.
+  implementation task list covering API endpoints and full-framework backend artifacts (Artisan
+  commands, Jobs, Events, Listeners, Observers, Scheduled tasks, Service classes, FormRequests).
+  Runs in parallel with sync-ui-task-creator — both read directly from the FDD. Frontend tasks
+  are generated after both complete.
 ---
 
 # Backend Task Creator
@@ -28,6 +30,13 @@ Confirm inputs:
 3. Database schema: `docs/ba/{project-name}-database-schema.md`
 
 Read `references/task-output-format.md` for the exact task block structure before generating.
+
+**Architecture Detection** — before deriving tasks, identify the backend type from the FDD or project notes:
+
+- `api-only` — headless/SPA backend; generate only API endpoint tasks
+- `full-stack` — Laravel monorepo with web routes, Blade/Livewire, console commands, queued jobs, events; generate API tasks **plus** all framework-specific backend artifacts
+
+If the architecture type is not stated in the FDD, ask: "Is this an API-only project or a full Laravel monorepo with console commands, jobs, and event listeners?"
 
 **Version Gate** — if `{project-name}-backend-tasks.md` already exists:
 1. Read each FDD module file's `artifact_version`, the sprint task list's `artifact_version`, and the database schema's `artifact_version`
@@ -77,7 +86,7 @@ Priority 5 — Integrations & Third-Party
 Priority 6 — Notifications & Background Jobs
 ```
 
-**Always generate:**
+**Always generate (API-only and full-stack):**
 
 | Source | Backend Tasks Generated |
 |--------|------------------------|
@@ -95,6 +104,20 @@ Priority 6 — Notifications & Background Jobs
 | Every integration | 1x integration setup task |
 | Every export/report | 1x export endpoint |
 
+**Full-stack only — also generate:**
+
+| Source | Backend Tasks Generated |
+|--------|------------------------|
+| Every async/deferred operation | 1x Job class task (queue, payload, retry policy) |
+| Every domain event or side-effect trigger | 1x Event class + 1x Listener class per subscriber |
+| Every model with audit, cache, or cascade logic | 1x Observer task (creating/updating/deleting hooks) |
+| Every recurring automated task | 1x Schedule entry in Kernel + 1x backing Command or Job |
+| Every CLI operation (import, sync, cleanup) | 1x Artisan Command task (signature, arguments, options) |
+| Every controller action with 3+ validated fields | 1x FormRequest class task (rules, authorize method) |
+| Every module with reusable cross-cutting logic | 1x Service class task (methods, injected dependencies) |
+| Every mail notification | 1x Mailable class task (template, constructor params) |
+| Every real-time feature | 1x Broadcast event task (channel, payload, auth) |
+
 ### Step 3 — Self-Review Before Delivering
 
 - [ ] Every entity from the FDD has a migration and model task
@@ -104,6 +127,10 @@ Priority 6 — Notifications & Background Jobs
 - [ ] Priority 1 tasks have no dependencies on Priority 2+ tasks
 - [ ] Every RBAC rule from the FDD is covered by a policy task
 - [ ] No task is vague — "implement POST /api/users with validation for email uniqueness and role assignment" not "build user API"
+- [ ] *(full-stack only)* Every async operation has a Job class task with queue and retry policy
+- [ ] *(full-stack only)* Every domain event has a matching Event + Listener pair
+- [ ] *(full-stack only)* Every scheduled automation has both a Schedule entry and a Command or Job backing it
+- [ ] *(full-stack only)* Every Artisan command has its signature, arguments, and options specified
 
 ### Step 4 — Deliver
 
@@ -120,7 +147,7 @@ Check if a previous version exists at the output path:
 ```yaml
 ---
 artifact_version: {version}
-generated_by: sync-backend-task-creator@1.2.0
+generated_by: sync-backend-task-creator@1.3.0
 generated_at: {YYYY-MM-DD}
 source_versions:
   fdd_modules:

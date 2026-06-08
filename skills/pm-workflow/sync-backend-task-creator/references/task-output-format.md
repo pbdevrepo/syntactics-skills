@@ -53,10 +53,34 @@ Within each sprint, build order follows Priority 1-6 categories.
 | BE-0011 | 3 | {Module} | POST /api/{resource} | Endpoint | body: name*, category_id*, status*; unique: name | BE-0002,BE-0004 | FE-{N} |
 | BE-0012 | 3 | {Module} | PUT /api/{resource}/{id} | Endpoint | same as POST; owner check | BE-0011 | FE-{N} |
 | BE-0013 | 3 | {Module} | DELETE /api/{resource}/{id} | Endpoint | soft-delete; Admin only | BE-0002,BE-0004 | FE-{N} |
+| BE-0014 | 4 | {Module} | {Entity}Service | Service | methods: create, update, statusTransition; injects: {Entity}Repository | BE-0002 | BE-0010 |
+| BE-0015 | 3 | {Module} | Store{Entity}Request | FormRequest | validates: POST /api/{resource}; rules: name:req, category_id:exists | BE-0002 | BE-0011 |
+| BE-0016 | 4 | {Module} | {Entity}StatusChanged event | Event | dispatched on status transition; payload: entity_id, old_status, new_status | BE-0012 | BE-0017 |
+| BE-0017 | 4 | {Module} | Notify{Entity}StakeholdersListener | Listener | handles: {Entity}StatusChanged; side effect: send mail + in-app notification | BE-0016 | - |
+| BE-0018 | 4 | {Module} | {Entity}Observer | Observer | model: {Entity}; hooks: creating (uuid), updating (audit log), deleting (cascade) | BE-0002 | - |
+| BE-0019 | 6 | {Module} | Process{Entity}Job | Job | queue: default; trigger: after POST /api/{resource}; payload: entity_id; tries: 3 | BE-0011 | - |
+| BE-0020 | 6 | {Module} | import:{resource}:from-csv | Command | signature: import:{resource}:from-csv {file}; options: --dry-run; schedule: none | BE-0002 | - |
+| BE-0021 | 6 | {Module} | Scheduled: nightly {resource} cleanup | Schedule | cron: daily 02:00 UTC; backing: cleanup:{resource} command; tz: UTC | BE-0020 | - |
+| BE-0022 | 6 | {Module} | {Entity}ExpiryMail | Mailable | template: emails.{entity}.expiry; params: entity_id, expires_at; trigger: BE-0019 | BE-0019 | - |
 
 **P column:** Priority 1-6 matching the build order within a sprint
-**Type values:** Migration · Model · Auth · Policy · Endpoint · Seeder · Integration · Notification · Job
-**Detail column:** For Migrations - key columns summary. For Models - relationships. For Endpoints - method/path + key validation. For Auth/Policy - role-action mapping.
+**Type values (API-only):** Migration · Model · Auth · Policy · Endpoint · Seeder · Integration · Notification · Job
+**Type values (full-stack, additional):** Command · Event · Listener · Observer · Schedule · Service · FormRequest · Mailable · Broadcast
+**Detail column:**
+- Migration: key columns summary
+- Model: relationships
+- Endpoint: method/path + key validation
+- Auth/Policy: role-action mapping
+- Job: queue name, trigger, payload fields, retry policy
+- Command: Artisan signature, arguments/options, schedule (if any)
+- Event: dispatch trigger, payload fields
+- Listener: handles event, side effect description
+- Observer: model, hooks (creating/updating/deleting), logic summary
+- Schedule: cron expression, backing command or job, timezone
+- Service: key methods and injected dependencies
+- FormRequest: controller action it validates, key rules
+- Mailable: template name, constructor params, trigger
+- Broadcast: channel name, auth policy, payload
 **Blocks column:** FE-{N} = unblocks this frontend task; BE-{N} = unblocks this backend task
 
 ---
