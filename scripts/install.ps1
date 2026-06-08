@@ -89,8 +89,8 @@ try {
     } else {
         Write-Host ""
         Write-Host "Install location:"
-        Write-Host ("  [1] Global — available in all projects ({0}\.claude\skills) (default)" -f $HOME)
-        Write-Host "  [2] Local  — current project only (.\.claude\skills)"
+        Write-Host ("  [1] Global - available in all projects ({0}\.claude\skills) (default)" -f $HOME)
+        Write-Host "  [2] Local  - current project only (.\.claude\skills)"
         $locAnswer = Read-Host "`nEnter number [1]"
         if ($locAnswer.Trim() -eq '2') {
             $SkillDir = Join-Path (Get-Location) ".claude\skills"
