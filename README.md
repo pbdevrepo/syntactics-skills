@@ -51,8 +51,8 @@ Pick the workflows matching your role:
 
 | Role | Workflow(s) to select |
 |------|-----------------------|
-| Sales | `salesperson`, `sales` |
-| Business Analyst | `ba` |
+| Sales | `sales` |
+| Business Analyst | `ba` (includes proposal skills) |
 | Designer | `pm` |
 | Frontend / Backend Developer | `pm`, `engineering` |
 | QA Tester | `qa` |
@@ -86,14 +86,14 @@ Windows:
 $url = "https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.ps1"
 & ([scriptblock]::Create((irm $url))) -Global -Workflow sales,ba   # specific workflows
 & ([scriptblock]::Create((irm $url))) -Local -Workflow ba          # local project only
-& ([scriptblock]::Create((irm $url))) -Skill sync-requirement-analyzer,sync-proposal-writer  # specific skills
+& ([scriptblock]::Create((irm $url))) -Skill sync-project-intake,sync-proposal-writer  # specific skills
 ```
 
 Mac/Linux:
 ```bash
 curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash -s -- --global --workflow sales --workflow ba
 curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash -s -- --local --workflow ba
-curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash -s -- --skill sync-requirement-analyzer --skill sync-proposal-writer
+curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash -s -- --skill sync-project-intake --skill sync-proposal-writer
 ```
 
 | Flag | Effect |
@@ -107,53 +107,41 @@ curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/sc
 
 ## Workflows
 
-### Salesperson (`salesperson-workflow`)
-
-Commercial pipeline - runs before and after the BA scope workflow.
-
-| Skill | Description |
-|-------|-------------|
-| `sync-deal-qualify` | Gate before investing BA hours - qualifies a new lead across 5 dimensions (budget, decision-maker, timeline, competition, problem clarity) and outputs a Deal Scorecard with a go/no-go recommendation |
-| `sync-sales-discovery` | Qualification-first discovery prep - researches the domain then structures the first call around pain and qualification before scope; produces a fillable brief with a Call Agenda and a Deal Health block |
-| `sync-proposal-seller` | Adds the sales narrative layer to the BA proposal - prompts the rep for a specific outcome and differentiator, then writes a Proposal Cover (The Outcome, Why Syntactics, What Happens Next) prepended to the scope document |
-| `sync-deal-followup` | Drives the deal forward after the proposal is sent - generates a Day 2/5/10 follow-up schedule and handles price, scope, timing, and ghosted objections via a structured playbook |
-
 ### Sales (`sales-workflow`)
 
-Scope + requirements pipeline - the BA-side of pre-sales work.
+Commercial pipeline skills - discovery, revisions, and pricing.
 
 | Skill | Description |
 |-------|-------------|
 | `sync-client-discovery` | Research-first discovery session for clients with no brief - researches domain standards, maps competitor landscape, and produces a single fillable discovery brief the sales rep takes into the client meeting |
-| `sync-requirement-analyzer` | Extract and structure client requirements from PDF or free-form text |
-| `sync-proposal-grill` | Stress-test requirements for missed modules and ambiguous scope |
-| `sync-proposal-writer` | Write a client-facing project proposal with automatic version numbering |
-| `sync-proposal-revision` | Apply client feedback to produce a new versioned requirements file and revised proposal |
+| `sync-proposal-revision` | Apply client feedback to produce a new versioned intake file and revised proposal |
 | `sync-quotation` | Generate itemized module/feature list with placeholder hour ranges per role |
 
 ### Business Analysis (`ba-workflow`)
+
+Proposal and design pipeline - from first client input through Final Design Document.
+
 | Skill | Description |
 |-------|-------------|
-| `sync-ba-project-intake` | Entry point — gather and structure requirements from proposal |
+| `sync-project-intake` | Entry point for proposal and BA work - accepts client brief, RFP, meeting notes, or approved proposal; two modes: Pre-Proposal (Draft status, feeds proposal-grill) and Post-Approval (Approved status, feeds database-designer); produces `docs/ba/{project-name}-intake.md` |
+| `sync-proposal-grill` | Stress-test the intake document for missed modules, ambiguous scope, and deployment constraints before writing the proposal |
+| `sync-proposal-writer` | Write a client-facing project proposal from the grilled intake document, with automatic version numbering and a recommended deployment stack section |
 | `sync-database-designer` | ERD design, normalization, schema best practices, Laravel/Eloquent conventions, spatie/laravel-permission and spatie/laravel-activitylog integration |
 | `sync-sprint-planner` | Convert approved DB schema into development task list |
-| `sync-final-design` | Produce Final Design Documents (FDD) — outputs `docs/fdd/index.md` (General Instructions, Figma link, module directory) plus one `docs/fdd/{module-slug}.md` per module |
+| `sync-final-design` | Produce Final Design Documents (FDD) - outputs `docs/fdd/index.md` (General Instructions, Figma link, module directory) plus one `docs/fdd/{module-slug}.md` per module |
 
 ### PM (`pm-workflow`)
 | Skill / Agent | Description |
 |---------------|-------------|
-| `pm-task-orchestrator` (agent) | Orchestrates full task pipeline from FDD - Stage 1 generates backend tasks and UI design tasks in parallel (both from FDD directly), Stage 2 generates frontend tasks from both Stage 1 outputs; no TBD endpoints |
+| `task-orchestrator` (agent) | Auto-triggered by sync-final-design after FDD approval. Detects FDD version drift and reruns automatically. Stage 1 generates backend tasks and UI design tasks in parallel (both from FDD directly); Stage 2 generates frontend tasks from both Stage 1 outputs; no TBD endpoints |
 | `sync-design-to-stories` | Analyzes design mockup images (PNG/JPG/PDF) and generates structured user stories and acceptance criteria per page with MP/US/AC IDs - standalone, no workflow dependencies |
-| `sync-ui-task-creator` | Generates sprint-aware Figma design task list from FDD + sprint plan (Stage 1 - parallel with backend) |
-| `sync-frontend-task-creator` | Generates sprint-aware frontend task list from FDD + design tasks + backend tasks + sprint plan (Stage 2 - all endpoints named) |
-| `sync-backend-task-creator` | Generates sprint-aware backend task list from FDD + database schema + sprint plan; covers API endpoints and full-stack Laravel artifacts (Jobs, Commands, Events, Observers, Schedules) (Stage 1 - parallel with UI design) |
 
 ### Engineering (`engineering-workflow`)
 | Skill | Description |
 |-------|-------------|
-| `sync-dev-setup` | One-time per-repo setup - scaffolds `## Agent skills` block and `docs/agents/` files so engineering skills know the issue tracker, triage labels, and domain doc layout |
+| `sync-dev-setup` | One-time per-repo setup - scaffolds `## Agent skills` block and `docs/agents/` files so engineering skills know the issue tracker, triage labels, domain doc layout, and available MCPs/local skills; re-run when MCPs change |
 | `sync-dev-session` | Task-level grilling session anchored to FDD - invoked as `/sync-dev-session BE-0001 users-module @tasks.md @fdd.md`; session type auto-derived |
-| `sync-dev-tdd` | TDD red-green-refactor loop per task or module; auto-loads prior session summary if found; standalone mode reads task list + FDD directly |
+| `sync-dev-tdd` | TDD red-green-refactor loop per task or module; reads `docs/agents/tools.md` to enforce framework MCP conventions (Laravel, shadcn, WordPress) and surface local project skills during planning |
 | `sync-dev-to-fix` | TDD-driven bug fix loop from a GitHub issue - fetches, fixes, posts result |
 | `sync-dev-diagnose` | Disciplined diagnosis loop for hard bugs and performance regressions - reproduce, minimise, hypothesise, instrument, fix, regression-test |
 | `sync-improve-codebase-architecture` | Find deepening opportunities in a codebase informed by CONTEXT.md and ADRs - refactoring, module consolidation, testability improvements |
@@ -162,9 +150,8 @@ Scope + requirements pipeline - the BA-side of pre-sales work.
 ### QA (`qa-workflow`)
 | Skill | Description |
 |-------|-------------|
-| `sync-qa-planner` | Generate structured QA test plan from split FDD module files (`docs/fdd/{module-slug}.md`), one module at a time. Accepts optional module filter: `/sync-qa-planner user-management invoicing` |
-| `sync-qa-runner` | Execute test plan live via Playwright MCP and HTTP - marks PASS/FAIL, generates regression specs |
-| `sync-qa-to-ticket` | Convert QA failures into GitHub issues with labels and FDD references |
+| `sync-qa-runner` | Verify a feature against the FDD. Direct mode: `/sync-qa-runner {issue URL} @{fdd}.md` - derives test cases from FDD inline, runs them, applies `verified` label on all pass. Legacy mode: `/sync-qa-runner [module-slug]` - reads existing qa-plan index |
+| `sync-qa-to-ticket` | Convert QA failures into child GitHub issues with FDD references and parent issue link. Supports Direct mode (pass issue URL) and Legacy mode (pass qa-plan index) |
 
 ### Must-Have (`must-have-workflow`)
 
@@ -186,51 +173,40 @@ Always installed regardless of workflow selection.
 
 ```mermaid
 flowchart TD
-    subgraph SP1[Salesperson]
-        A[sync-deal-qualify] --> B[sync-sales-discovery]
+    subgraph Sales[Sales]
+        A[sync-client-discovery]
     end
 
-    subgraph SAL[Sales]
-        C[sync-requirement-analyzer] --> D[sync-proposal-grill]
+    subgraph BA[BA/Sales - Proposal]
+        J[sync-project-intake] -->|Pre-Proposal| D[sync-proposal-grill]
         D --> E[sync-proposal-writer]
         E --> F[sync-quotation]
         E -->|client revisions| G[sync-proposal-revision]
         G --> E
     end
 
-    subgraph SP2[Salesperson]
-        H[sync-proposal-seller] --> I[sync-deal-followup]
-    end
-
-    subgraph BA[BA]
-        J[sync-ba-project-intake] --> K[sync-database-designer]
+    subgraph BA2[BA - Design]
+        J2[sync-project-intake] -->|Post-Approval| K[sync-database-designer]
         K --> L[sync-sprint-planner]
         L --> M[sync-final-design]
     end
 
-    subgraph PM[PM]
-        N[pm-task-orchestrator]
-        O[sync-backend-task-creator]
-        P[sync-ui-task-creator]
-        Q[sync-frontend-task-creator]
-        N -->|Stage 1 - parallel| O & P
-        O & P -->|Stage 2| Q
+    subgraph Agent[Agent]
+        N[task-orchestrator]
     end
 
     subgraph ENG[Engineering]
         R[sync-dev-session] --> S[sync-dev-tdd]
-        S --> T[sync-qa-planner]
-        T --> U[sync-qa-runner]
-        U --> V[sync-qa-to-ticket]
+        S --> U[sync-qa-runner]
+        U -->|failures| V[sync-qa-to-ticket]
         V --> W[sync-dev-to-fix]
-        W --> X[sync-qa-runner re-run]
+        W --> X[sync-qa-runner]
     end
 
-    B --> C
-    F -->|client approves| H
-    I -->|deal signed| J
+    A --> J
+    F -->|client approves| J2
     M -->|FDD approved| N
-    Q --> R
+    N --> R
 ```
 
 QA plan artifacts are written to `docs/qa/qa-plan/`. All other artifacts are written to `docs/{workflow-phase}/{artifact}.md`.
@@ -243,6 +219,8 @@ To test a change:
 1. Edit skills in `skills/{workflow}/{skill}/SKILL.md`
 2. Push to `main`
 3. Run the install command above to get the latest version
+
+`project directory: & ".\scripts\install.ps1" -Dev -Global`
 
 ## Structure
 

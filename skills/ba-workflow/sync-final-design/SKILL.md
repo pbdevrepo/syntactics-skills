@@ -1,6 +1,6 @@
 ---
 name: sync-final-design
-version: 2.1.0
+version: 2.2.0
 description: >
   Use this skill to produce Final Design Documents (FDD) for web and mobile application projects at Syntactics Inc. Outputs one markdown file per module to docs/fdd/{module-slug}.md. Trigger whenever the user mentions "final design", "FDD", "design handoff", "design document", "spec table", "module spec", "specification table", or asks to document modules, system behavior, access validations, wireframes, or database table usage for a project. Also trigger when a user says "fill out the final design for [module]", "create the final design doc", "add a module spec", or "generate the FD template". This skill strictly enforces the v2.0 Business Applications Final Design Template format — do not improvise structure.
 ---
@@ -210,9 +210,10 @@ Report all output file paths to the user — index.md first, then the module fil
 
 > "FDD is complete. docs/fdd/index.md + {N} module files written to docs/fdd/. Review them carefully — any changes after task generation will require regenerating all three PM task lists (design, frontend, backend).
 >
-> When you're ready to proceed, say **'approve FDD'** to trigger `sync-design-to-tasks`."
+> When you're ready to proceed, say **'approve FDD'** to start task generation."
 
-Wait for explicit approval. Do not auto-trigger task generation.
+When the user says "approve FDD": use the Agent tool to invoke the `task-orchestrator` agent.
+Pass the project name and the FDD file paths in the invocation message.
 
 ---
 
@@ -231,6 +232,6 @@ Once the client approves the FDD, any updates must follow this protocol — remi
 | Step | Skill | Input Needed |
 |------|-------|--------------|
 | <- Upstream | `sync-sprint-planner` | Intake doc + Schema doc |
-| -> Downstream | `sync-ui-task-creator` | All FDD module files |
+| -> Downstream | `task-orchestrator` | Project name + all FDD module files |
 
-After all module FDD files are generated and approved, pass them to `sync-ui-task-creator` to begin the Design & Dev phase.
+After all module FDD files are generated and approved, `task-orchestrator` is invoked automatically to begin the task generation pipeline.

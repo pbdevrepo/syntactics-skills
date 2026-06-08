@@ -1,18 +1,17 @@
 ---
 name: sync-proposal-revision
-version: 1.1.0
+version: 1.2.0
 description: >
   Handles client feedback and revisions in the Sales workflow at Syntactics Inc. Trigger when a
   Sales team member says "client has revisions", "client sent feedback", "update the proposal",
-  "revise the requirements", or when a client provides comments on an existing proposal. Reads
-  the latest requirements file, applies client changes, produces a new versioned requirements
-  file, and hands off to sync-proposal-writer and sync-quotation. Always run after the client
-  reviews a proposal.
+  "revise the intake", or when a client provides comments on an existing proposal. Reads the
+  latest intake file, applies client changes, produces a new versioned intake file, and hands
+  off to sync-proposal-writer and sync-quotation. Always run after the client reviews a proposal.
 ---
 
 # Proposal Revision
 
-Apply client feedback to the latest requirements document. Produce a versioned requirements file with a delta summary. Trigger sync-proposal-writer and sync-quotation on the new version.
+Apply client feedback to the latest intake document. Produce a versioned intake file with a delta summary. Trigger sync-proposal-writer and sync-quotation on the new version.
 
 Handle multiple revision rounds: always diff against the prior version, not the original. The delta must be accurate for round 2, round 3, and beyond.
 
@@ -25,10 +24,10 @@ Workflow: **client feedback -> proposal-revision -> proposal-writer -> quotation
 1. Ask Sales for:
    - The project name
    - The client comments or revision notes (paste, upload, or describe them)
-2. Scan `docs/sales/` to find the latest requirements file:
-   - If only `{project-name}-requirements.md` exists: this is v1, next version is v2.
-   - If `{project-name}-requirements-v{N}.md` exists: find the highest N, next version is N+1.
-3. Read the latest requirements file in full - this is the baseline for the diff.
+2. Scan `docs/ba/` to find the latest intake file:
+   - If only `{project-name}-intake.md` exists: this is v1, next version is v2.
+   - If `{project-name}-intake-v{N}.md` exists: find the highest N, next version is N+1.
+3. Read the latest intake file in full - this is the baseline for the diff.
 
 ---
 
@@ -98,35 +97,35 @@ Once Sales confirms the delta:
 - Removed: {description}
 - Updated: {description - old -> new}
 
-**Status:** Pending Grilling
+**Status:** Pending Grilling / Approved
 ```
 
-4. Write the file: `docs/sales/{project-name}-requirements-v{N}.md`
+4. Write the file: `docs/ba/{project-name}-intake-v{N}.md`
 
 ### Step 3 - Check for New Ambiguities
 
-Scan the updated requirements for any newly introduced modules or significantly expanded scope:
+Scan the updated intake for any newly introduced modules or significantly expanded scope:
 - If a new module was added by the client, mark it `Ambiguous` and flag it for grilling before
   the proposal is written.
-- If all changes are clear and bounded, mark the new requirements **Status:** `Approved` and
+- If all changes are clear and bounded, mark the new intake **Status:** `Approved` and
   proceed.
 
-> If new ambiguities exist, stop here and run sync-proposal-grill on the new requirements file
+> If new ambiguities exist, stop here and run sync-proposal-grill on the new intake file
 > before continuing to Step 4.
 
 ### Step 4 - Hand Off
 
-State the new requirements file path, then say:
+State the new intake file path, then say:
 
 ```
-Requirements v{N} written with the following changes:
+Intake v{N} written with the following changes:
 [delta summary]
 
 Next: running sync-proposal-writer to produce proposal-v{N}.md.
 ```
 
 Trigger sync-proposal-writer. It will:
-- Detect the new requirements version automatically.
+- Detect the new intake version automatically.
 - Write `{project-name}-proposal-v{N}.md` with a Revision Summary section.
 
 After the proposal is written, trigger sync-quotation on the new proposal file.

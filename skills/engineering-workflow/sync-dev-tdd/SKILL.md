@@ -1,6 +1,6 @@
 ---
 name: sync-dev-tdd
-version: 1.1.0
+version: 1.3.0
 description: >
   TDD implementation skill for Syntactics Inc. Executes a red-green-refactor loop for a specific
   task or module, anchored to the FDD. Auto-detects a prior dev session summary and loads it as the
@@ -95,6 +95,33 @@ re-litigate them. Open Questions flagged in the summary must be resolved before 
 FDD module section to build context. Proceed directly to Planning (Step 1). Note in the TDD
 output that no prior dev session was found.
 
+**Tool Discovery:**
+
+Read `docs/agents/tools.md` if it exists. If the file is absent, skip this step — setup has not
+been run for this repo.
+
+From `docs/agents/tools.md`, extract:
+- **Framework MCPs** (capability tier `framework:*`) — Laravel Boost, shadcn, WordPress, etc.
+- **Local project skills** (`.claude/skills/` entries) — skills installed for this project specifically
+- **Docs lookup MCPs** (capability tier `docs:lookup`) — context7 or similar
+
+Log the discovered tools at the top of the TDD session header:
+```
+Tools available: {comma-separated list of MCP names and local skills, or "none detected"}
+```
+
+Enforce the following during this session:
+
+| Discovered tool | Enforce during this session |
+|-----------------|-----------------------------|
+| `framework:laravel` | Follow Laravel conventions: Eloquent models, Form Requests, Resource classes, service-layer pattern. Do not implement raw SQL or ad-hoc validation outside Request classes. |
+| `framework:shadcn` | Use shadcn/ui components for all UI elements. Do not implement custom base components (Button, Input, Dialog, etc.) that shadcn already provides. Invoke the `/shadcn` skill if component generation is needed. |
+| `framework:wordpress` | Follow WordPress coding standards: hooks/filters over direct overrides, WP_Query over raw SQL, capability checks before any privileged action. |
+| `docs:lookup` (context7) | Before implementing a call to any third-party library, use the context7 MCP to pull current docs for that library. Do not rely on training-data knowledge for library APIs. |
+| Local project skills | Surface relevant skill names to the developer at the start of Planning so they can invoke them. Example: "This project has `/laravel-boost` and `/sync-backend-developer` available — consider invoking them during implementation." |
+
+If no tools are discovered, proceed with default behavior.
+
 ### 1. Planning
 
 When exploring the codebase, use the project's domain glossary so that test names and interface vocabulary match the project's language, and respect ADRs in the area you're touching.
@@ -160,6 +187,44 @@ Output file: `docs/api/{module}/{feature}_api.yaml`
 Follow the format in [swagger-output-format.md](references/swagger-output-format.md).
 
 Skip this step for frontend-only sessions.
+
+## FDD Compliance Summary (all session types)
+
+After Swagger generation (BE/FS) or after the Refactor pass (FE), run a structural coverage audit.
+This is informational only in standalone mode - the gate lives in `dev-orchestrator` Phase 3.
+If running through the orchestrator, this step is a preview; the orchestrator re-runs it as the gate.
+
+Read the FDD file for this module. Extract all named requirements:
+- **Business rules** - numbered items or `BR-` IDs under any `## Business Rules` section
+- **Validation rules** - field constraint tables or `VAL-` IDs under `## Validation` sections
+- **RBAC rules** - role-permission tables under `## Access Control` or `## Roles` sections
+- **Workflow transitions** - status transition tables or workflow step lists
+
+For each requirement, Grep the test files written in this session. Look for the rule ID (e.g. `BR-03`) or a 3-5 word key phrase from the rule in test names and comments (`*.spec.*`, `*Test.*`, `*_test.*`, `*_spec.*`).
+
+Classify each item:
+- **Green** - rule ID or key phrase found in a test name or `describe`/`it`/`test` block
+- **Yellow** - found only in comments or implementation code, not in a test name
+- **Red** - nothing found in any test file
+
+Present the result as a compliance table:
+
+```
+| Rule                     | Type       | Coverage Found        | Rating |
+|--------------------------|------------|-----------------------|--------|
+| {rule text}              | Business   | {test name or "none"} | Green  |
+| {rule text}              | Validation | {none}                | Red    |
+```
+
+**If Red items exist:** "Red items indicate FDD requirements with no test coverage.
+These will block GitHub issue creation in the orchestrated flow.
+Recommend adding tests for: {list reds}"
+
+**If Yellow items exist:** "Yellow items will require explicit confirmation before issue creation."
+
+**If all Green:** "All FDD requirements appear covered. Handoff is unblocked."
+
+Tip: name tests with FDD rule IDs (e.g. `BR-03`, `VAL-07`) for more accurate detection.
 
 ## Checklist Per Cycle
 

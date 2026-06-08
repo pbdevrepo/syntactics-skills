@@ -44,46 +44,13 @@ A kebab-case lowercase identifier for a client project (e.g., `client-portal`). 
 by the first skill in each workflow and inherited by all downstream skills via the artifact.
 _Avoid_: project ID, slug, code name
 
-### Salesperson Workflow Terms
-
-**Deal Scorecard**:
-The chat-only output of `sync-deal-qualify`. A table scoring five qualification dimensions (budget,
-decision-maker, timeline, competition, problem clarity) as Green / Yellow / Red, with an overall
-go/no-go recommendation. Not written to file - it exists in chat as the qualification record.
-_Avoid_: lead score, qualification report, CRM entry
-
-**Deal Health**:
-A block inside the discovery brief produced by `sync-sales-discovery`. The rep fills this in
-during or immediately after the client meeting, recording budget signal, decision-maker status,
-timeline urgency, competitive situation, and an overall Green / Yellow / Red rating. Gates
-progression to `sync-requirement-analyzer`.
-_Avoid_: deal status, call notes, CRM update
-
-**Call Agenda**:
-The structured first-10-minutes script inside the discovery brief produced by `sync-sales-discovery`.
-Sequences the call around rapport, pain, and qualification before transitioning to scope and process
-questions. Contains targeted questions for any Yellow dimensions flagged in the Deal Scorecard.
-_Avoid_: meeting outline, call script, agenda template
-
-**Proposal Cover**:
-The sales narrative block prepended to the scope proposal by `sync-proposal-seller`. Contains three
-sections: The Outcome (business result from the client's perspective), Why Syntactics (one or more
-specific differentiators relevant to this project), and What Happens Next (concrete next action and
-Syntactics-side response). Must be written with rep-provided specifics - not AI-generated.
-_Avoid_: cover letter, executive summary, intro section
-
 ### Sales Workflow Terms
 
 **Discovery Brief**:
 The artifact produced by `client-discovery`. A structured summary of a client's goals, project
 type, budget, timeline, and tech/design preferences — produced before any requirements exist.
-Feeds directly into `requirement-analyzer` as its client input.
+Feeds directly into `project-intake` as its client input.
 _Avoid_: intake notes, pre-brief, onboarding form
-
-**Requirements Document**:
-The artifact produced by `requirement-analyzer`. Contains all client modules, user roles,
-integrations, constraints, and open items extracted from raw client input.
-_Avoid_: brief, notes, client request
 
 **Proposal**:
 The client-facing artifact produced by `proposal-writer`. Describes what will be built in
@@ -97,15 +64,14 @@ sending to the client.
 _Avoid_: estimate, invoice, pricing sheet
 
 **Proposal Revision**:
-A new versioned requirements artifact produced by `proposal-revision` when the client
-provides feedback on an existing proposal. The revision diffs client comments against the
-latest requirements version (not always the original) and produces
-`{project-name}-requirements-v{N}.md` with a Revision History section. Triggers a new
-versioned proposal and quotation.
+A new versioned intake artifact produced by `proposal-revision` when the client provides
+feedback on an existing proposal. The revision diffs client comments against the latest intake
+version (not always the original) and produces `docs/ba/{project-name}-intake-v{N}.md` with
+a Revision History section. Triggers a new versioned proposal and quotation.
 _Avoid_: amendment, update, change request (when referring to a formal revision round)
 
 **Delta Summary**:
-The list of changes between two consecutive requirements versions, classified as `Added`,
+The list of changes between two consecutive intake versions, classified as `Added`,
 `Removed`, or `Updated`. Produced by `proposal-revision` and surfaced in the Revision
 Summary section of the revised proposal.
 _Avoid_: diff, changelog (when referring to the client-facing change summary)
@@ -113,9 +79,11 @@ _Avoid_: diff, changelog (when referring to the client-facing change summary)
 ### BA Workflow Terms
 
 **Intake Document**:
-The artifact produced by `ba-project-intake`. The authoritative source of project scope
-for the BA phase — all downstream BA skills read from it.
-_Avoid_: brief, requirements (the BA intake is distinct from the sales requirements doc)
+The artifact produced by `project-intake`. The single authoritative source of project scope
+from first client input through database design. Used in two modes: Pre-Proposal (Draft status,
+from client brief/RFP — feeds proposal-grill) and Post-Approval (Approved status, from approved
+proposal — feeds database-designer). Stored at `docs/ba/{project-name}-intake.md`.
+_Avoid_: brief, requirements, requirements document
 
 **Schema**:
 The artifact produced by `database-designer`. Defines all database tables, columns,
@@ -136,6 +104,34 @@ _Avoid_: spec, design doc, requirements doc (the FDD is the definitive downstrea
 
 ### Engineering and QA Workflow Terms
 
+**FDD Compliance Check**:
+The automated structural audit run at the end of `sync-dev-tdd` (informational) and as the gate
+in `dev-orchestrator` Phase 3 (blocking). Scans test files for coverage of each FDD business rule,
+validation rule, RBAC rule, and workflow transition. Categorizes gaps as red (zero coverage, hard
+block), yellow (partial/indirect coverage, requires confirmation), or green (covered). Blocks GitHub
+issue creation when red items exist.
+_Avoid_: test coverage report, coverage gate, compliance scan
+
+**Ready-for-QA Issue**:
+The GitHub issue created by `dev-orchestrator` Phase 3 after the FDD compliance check passes.
+Tracks a single task through QA. Parent to all child bug issues created by `sync-qa-to-ticket`.
+Labeled `ready-for-qa` on creation, `verified` on a full-pass QA run, or has child issues labeled
+`ready-for-dev` on failure.
+_Avoid_: QA ticket, tracking issue, QA parent
+
+**Direct Mode (sync-qa-runner)**:
+The invocation mode where `sync-qa-runner` receives a GitHub issue URL and FDD file, derives test
+cases inline from the FDD without a pre-generated qa-plan file, and manages issue labels
+(`ready-for-qa` to `verified` on all pass). Preferred for all new work. Distinguished from Legacy
+Mode, which reads an existing `docs/qa/qa-plan/index.md`.
+_Avoid_: new mode, issue-based mode
+
+**QA Run Log**:
+The artifact written by `sync-qa-runner` in Direct mode at `docs/qa/qa-runs/{Task-ID}-{date}.md`.
+Records derived test cases, execution results, and Bug Ref URLs for any failures. Written after the
+run (not before). Replaces the qa-plan file in the new workflow. Used by the turnover mechanism.
+_Avoid_: test report, run results, qa-plan (the qa-plan artifact is legacy-only)
+
 **Turnover**:
 A failed re-run of a QA test case on a ticket that was previously marked `ready-for-qa` after a dev fix. Indicates the fix did not resolve the issue. The ticket is automatically moved back to `ready-for-dev`.
 _Avoid_: bounce, re-open, regression (regression is a separate label type for previously passing tests)
@@ -147,13 +143,13 @@ _Avoid_: retry count, fix attempts, cycle count
 ### PM Workflow Terms
 
 **Design Task List**:
-The artifact produced by `sync-ui-task-creator`. A screen-by-screen list of Figma design tasks
-derived from FDD wireframe specs and the BA sprint plan. Tasks are grouped by sprint —
+The artifact produced by `task-orchestrator` Stage 1b. A screen-by-screen list of Figma design
+tasks derived from FDD wireframe specs and the BA sprint plan. Tasks are grouped by sprint —
 Sprint N corresponds to Priority N in the BA sprint plan.
 _Avoid_: design brief, wireframe list
 
 **Frontend Task List**:
-The artifact produced by `sync-frontend-task-creator`. A component-level implementation task list
+The artifact produced by `task-orchestrator` Stage 2. A component-level implementation task list
 with API integration specs, validation rules, Figma references, and named backend endpoints. Tasks
 are grouped by sprint — sprint-by-sprint gate applies (Sprint N design must complete before Sprint
 N FE begins). No TBD endpoints — every API call references a named endpoint from the Backend Task
@@ -161,19 +157,19 @@ List.
 _Avoid_: FE backlog, frontend tickets
 
 **Backend Task List**:
-The artifact produced by `sync-backend-task-creator`. A sprint-grouped implementation task list
+The artifact produced by `task-orchestrator` Stage 1a. A sprint-grouped implementation task list
 covering migrations, models, endpoints, business logic, and integrations. Derived from FDD +
 database schema with no dependency on design or frontend tasks. Build order within each sprint
 follows Priority 1-6 categories. Serves as the endpoint reference for frontend task generation.
 _Avoid_: BE backlog, backend tickets
 
 **Task Pipeline**:
-The automated orchestration of all three PM task-creation skills (UI, frontend, backend) in two
-stages, triggered by `pm-task-orchestrator` agent. Stage 1 generates backend tasks and UI design
-tasks in parallel - both read directly from the FDD with no dependency on each other. Stage 2
-generates frontend tasks after both Stage 1 outputs exist — frontend references named endpoints
-from backend tasks and Figma IDs from design tasks. Replaces the sequential `sync-design-to-tasks`
-skill.
+The automated two-stage task-generation pipeline run by the `task-orchestrator` agent. Auto-triggered
+by `sync-final-design` after FDD approval — no manual PM step required. Detects FDD version drift
+on startup and reruns the full pipeline automatically. Stage 1 generates backend tasks and UI design
+tasks in parallel - both read directly from the FDD. Stage 2 generates frontend tasks after both
+Stage 1 outputs exist — frontend references named endpoints from backend tasks and Figma IDs from
+design tasks.
 _Avoid_: task batch, bulk task generation, auto-tasks
 
 **Artifact Version**:
@@ -189,8 +185,9 @@ whether its input has changed since the consuming artifact was last generated.
 _Avoid_: dependency version, input version
 
 **Version Chain**:
-The ordered sequence of artifacts whose versions are checked at each handoff:
-Intake Document → Schema → Sprint Task List → FDD → PM Task Lists → QA Plan → Dev Session.
+The ordered sequence of artifacts whose versions are checked at each handoff.
+New path: Intake Document (`docs/ba/`) → Schema → Sprint Task List → FDD → PM Task Lists → Dev Session → QA Run Log.
+Legacy path: Intake Document → Schema → Sprint Task List → FDD → PM Task Lists → QA Plan → Dev Session.
 Each link checks its immediate upstream only — not the full ancestry.
 _Avoid_: version graph, dependency tree, audit trail
 
@@ -216,43 +213,46 @@ _Avoid_: review step, human-in-the-loop, confirmation dialog
 - A **Module** appears consistently across all artifacts — module names must not drift between skills
 - A **Handoff** occurs when a skill's artifact is passed to the next skill; it is always initiated by a human
 - The **FDD** is the single source of truth for the PM workflow — all PM skills read from it
-- The **Proposal** gates entry to the BA workflow — a rejected proposal does not proceed
+- The **Proposal** gates entry to the BA design phase — a rejected proposal does not proceed
 - The **Quotation** accompanies the **Proposal** but is a separate artifact
-- The **salesperson-workflow** bookends the **sales-workflow**: `sync-deal-qualify` and `sync-sales-discovery` run before the scope pipeline; `sync-proposal-seller` and `sync-deal-followup` run after `sync-quotation` before the deal signs
-- A **Proposal Cover** (from `proposal-seller`) is a separate layer prepended to the scope proposal - it does not replace the scope content
-- A **Proposal Revision** re-enters the sales loop — it produces a new versioned requirements file and a new versioned proposal without restarting from `requirement-analyzer`
+- A **Proposal Revision** re-enters the proposal loop — it produces a new versioned intake file (`docs/ba/{project-name}-intake-v{N}.md`) and a new versioned proposal without restarting from `project-intake`
 - A **Delta Summary** is always diffed against the prior version, never against v1, so revision round 3 captures only what changed from round 2
 
 ### Workflow Sequence
 
 ```
-Salesperson: sync-deal-qualify → sync-sales-discovery
-                                         ↓
-Sales:       sync-requirement-analyzer → sync-proposal-grill → sync-proposal-writer → sync-quotation
-                                                                        ↓ (client revisions)
-                                                                sync-proposal-revision → sync-proposal-writer → sync-quotation
+Sales:       sync-client-discovery
+                      ↓
+BA/Sales:    sync-project-intake [Pre-Proposal] → sync-proposal-grill → sync-proposal-writer → sync-quotation
+                                                                                ↓ (client revisions)
+                                                              sync-proposal-revision → sync-proposal-writer → sync-quotation
                                          ↓ (client approves)
-Salesperson: sync-proposal-seller → sync-deal-followup
-                                         ↓ (deal signed)
-BA:          sync-ba-project-intake → sync-database-designer → sync-sprint-planner → sync-final-design
+BA:          sync-project-intake [Post-Approval] → sync-database-designer → sync-sprint-planner → sync-final-design
                                                                                            ↓ (FDD approved — Approval Gate)
-PM:         pm-task-orchestrator [Stage 1: sync-backend-task-creator + sync-ui-task-creator (parallel, both from FDD) → Stage 2: sync-frontend-task-creator]
-            (agent triggered after FDD approval gate; Stage 1 approval gate before Stage 2; tasks grouped by sprint; no TBD endpoints)
+PM:         task-orchestrator [Stage 1: backend tasks + UI design tasks (parallel, both from FDD) → Stage 2: frontend tasks]
+            (auto-triggered after FDD approval; detects FDD drift and reruns automatically; Stage 1 approval gate before Stage 2; no TBD endpoints)
                                                                                            ↓
-QA:         sync-qa-planner → sync-qa-runner → sync-qa-to-ticket
 Engineering (one-time setup): sync-dev-setup
-Engineering (per-task loop):  sync-dev-session → sync-dev-tdd → sync-dev-to-fix → sync-qa-runner (re-run)
+Engineering (per-task loop):  sync-dev-session → sync-dev-tdd [FDD compliance summary]
+            dev-orchestrator Phase 3 [FDD compliance gate → GitHub issue: ready-for-qa]
+            sync-qa-runner {issue URL} @{fdd}.md [derive from FDD, run, apply verified label]
+            → failures: sync-qa-to-ticket (child bug issues) → sync-dev-to-fix → sync-qa-runner (re-run)
+            → all pass: issue labeled verified
 ```
 
 ### Version Chain
 
 ```
-Intake Doc (v) → Schema (v, checks intake_v)
-              → Sprint Task List (v, checks schema_v)
-                → FDD (v, checks sprint_tasks_v + schema_v)
-                  → PM Task Lists (v, checks fdd_v + sprint_tasks_v)
-                    → QA Plan (v, checks fdd_v + frontend_tasks_v + backend_tasks_v)
-                      → Dev Session (checks task_v + fdd_v)
+Intake Doc (v, docs/ba/{project-name}-intake.md) → Schema (v, checks intake_v)
+                                                 → Sprint Task List (v, checks schema_v)
+                                                   → FDD (v, checks sprint_tasks_v + schema_v)
+                                                     → PM Task Lists (v, checks fdd_v + sprint_tasks_v)
+                                                       → Dev Session (checks task_v + fdd_v)
+                                                         → GitHub Issue: ready-for-qa (compliance check against FDD)
+                                                           → QA Run Log (docs/qa/qa-runs/{Task-ID}-{date}.md)
+
+Legacy path (existing qa-plan files):
+                                                     → PM Task Lists → QA Plan (v, checks fdd_v + frontend_tasks_v + backend_tasks_v)
 ```
 
 Each skill checks its immediate upstream only. A mismatch triggers a Version Gate — hard block, no warn-and-continue.
@@ -277,8 +277,8 @@ Each skill checks its immediate upstream only. A mismatch triggers a Version Gat
 
 ## Flagged Ambiguities
 
-- "requirements" was used for both the sales `requirement-analyzer` output and the BA intake —
-  resolved: **Requirements Document** = sales artifact; **Intake Document** = BA artifact. These are distinct.
+- "requirements" was used for both the sales requirements artifact and the BA intake —
+  resolved: **Intake Document** is the single artifact for both phases. `sync-project-intake` replaces both `sync-requirement-analyzer` and `sync-ba-project-intake`. The Requirements Document artifact no longer exists.
 - "module" was sometimes used to mean a Figma page, a DB table group, or a feature area —
   resolved: **Module** always means a functional area of the system. Figma pages and DB table groups
   are organized by module but are not modules themselves.

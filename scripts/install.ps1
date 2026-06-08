@@ -4,7 +4,8 @@ param(
     [string[]]$Workflow = @(),
     [string[]]$Skill    = @(),
     [switch]$Global,
-    [switch]$Local
+    [switch]$Local,
+    [switch]$Dev
 )
 $ErrorActionPreference = 'Stop'
 $ProgressPreference    = 'SilentlyContinue'
@@ -65,13 +66,19 @@ function Copy-Skills {
 }
 
 try {
-    Write-Host "Downloading latest skills..."
-    (New-Object System.Net.WebClient).DownloadFile($ZipUrl, $TmpZip)
-
-    New-Item -ItemType Directory -Force -Path $TmpDir | Out-Null
-    Expand-Archive -Path $TmpZip -DestinationPath $TmpDir -Force
-
-    $SkillsRoot = Join-Path $TmpDir "syntactics-skills-main\skills"
+    if ($Dev) {
+        Write-Host "Dev mode: using local repo at $PSScriptRoot\.."
+        $RepoRoot   = Split-Path $PSScriptRoot -Parent
+        $SkillsRoot = Join-Path $RepoRoot "skills"
+        $agentsSrc  = Join-Path $RepoRoot "agents"
+    } else {
+        Write-Host "Downloading latest skills..."
+        (New-Object System.Net.WebClient).DownloadFile($ZipUrl, $TmpZip)
+        New-Item -ItemType Directory -Force -Path $TmpDir | Out-Null
+        Expand-Archive -Path $TmpZip -DestinationPath $TmpDir -Force
+        $SkillsRoot = Join-Path $TmpDir "syntactics-skills-main\skills"
+        $agentsSrc  = Join-Path $TmpDir "syntactics-skills-main\agents"
+    }
     $SkillMap   = Build-SkillMap -SkillsRoot $SkillsRoot
 
     # Determine install location
@@ -82,8 +89,8 @@ try {
     } else {
         Write-Host ""
         Write-Host "Install location:"
-        Write-Host ("  [1] Global — available in all projects ({0}\.claude\skills) (default)" -f $HOME)
-        Write-Host "  [2] Local  — current project only (.\.claude\skills)"
+        Write-Host ("  [1] Global - available in all projects ({0}\.claude\skills) (default)" -f $HOME)
+        Write-Host "  [2] Local  - current project only (.\.claude\skills)"
         $locAnswer = Read-Host "`nEnter number [1]"
         if ($locAnswer.Trim() -eq '2') {
             $SkillDir = Join-Path (Get-Location) ".claude\skills"
@@ -103,12 +110,10 @@ try {
 
     $wfDirs = @($allWfDirs | Where-Object { $_.Name -ne 'must-have-workflow' } | Sort-Object Name)
 
-    $selected       = @()
-    $selectedWfDirs = @()   # workflow dirs whose agents should also be copied
+    $selected = @()
 
     if ($Skill.Count -gt 0) {
         $selected = $Skill | ForEach-Object { if ($_ -notmatch '^sync-') { "sync-$_" } else { $_ } }
-        # skill-specific installs: no agent copying
 
     } elseif ($Workflow.Count -gt 0) {
         foreach ($wf in $Workflow) {
@@ -119,7 +124,6 @@ try {
                 Write-Warning "Workflow not found: $($wf -replace '-workflow$', '')  (available: $avail)"
             } else {
                 $selected += @(Get-WorkflowSkills -WfDir $wfDir.FullName)
-                $selectedWfDirs += $wfDir
             }
         }
 
@@ -142,14 +146,12 @@ try {
         if ([string]::IsNullOrWhiteSpace($answer) -or $answer.Trim() -eq "$allNum") {
             foreach ($wfDir in $wfDirs) {
                 $selected += $wfSkillCache[$wfDir.Name]
-                $selectedWfDirs += $wfDir
             }
         } else {
             foreach ($part in ($answer -split ',')) {
                 $idx = [int]$part.Trim() - 1
                 if ($idx -ge 0 -and $idx -lt $wfDirs.Count) {
                     $selected += $wfSkillCache[$wfDirs[$idx].Name]
-                    $selectedWfDirs += $wfDirs[$idx]
                 }
             }
         }
@@ -160,16 +162,22 @@ try {
     New-Item -ItemType Directory -Force -Path $SkillDir | Out-Null
     $count = Copy-Skills -Names $all -SkillMap $SkillMap -Target $SkillDir
 
-    # Copy agents from each selected workflow's agents/ subdir
-    $AgentDir    = $SkillDir -replace '\\skills$', '\agents'
-    $agentCount  = 0
-    foreach ($wfDir in $selectedWfDirs) {
-        $agentsSrc = Join-Path $wfDir.FullName "agents"
-        if (Test-Path $agentsSrc) {
-            New-Item -ItemType Directory -Force -Path $AgentDir | Out-Null
-            Get-ChildItem -Path $agentsSrc -Filter "*.md" | ForEach-Object {
-                Copy-Item -Path $_.FullName -Destination (Join-Path $AgentDir $_.Name) -Force
-                $agentCount++
+    # Copy agents from agents/ in the package root
+    $AgentDir   = $SkillDir -replace '\\skills$', '\agents'
+    $agentCount = 0
+    if (Test-Path $agentsSrc) {
+        New-Item -ItemType Directory -Force -Path $AgentDir | Out-Null
+        Get-ChildItem -Path $agentsSrc -Filter "*.md" | ForEach-Object {
+            Copy-Item -Path $_.FullName -Destination (Join-Path $AgentDir $_.Name) -Force
+            $agentCount++
+        }
+        # Copy references/ subdirectory if present
+        $agentsRefSrc = Join-Path $agentsSrc "references"
+        if (Test-Path $agentsRefSrc) {
+            $agentsRefDest = Join-Path $AgentDir "references"
+            New-Item -ItemType Directory -Force -Path $agentsRefDest | Out-Null
+            Get-ChildItem -Path $agentsRefSrc -Filter "*.md" | ForEach-Object {
+                Copy-Item -Path $_.FullName -Destination (Join-Path $agentsRefDest $_.Name) -Force
             }
         }
     }

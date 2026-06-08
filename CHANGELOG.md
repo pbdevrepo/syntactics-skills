@@ -5,24 +5,89 @@ All notable changes to syntactics-skills are documented here.
 ## [Unreleased] - 2026-06-08
 
 ### Added
+- `web/` - React + Vite internal reference site; single-page app covering all 25 skills across 7 workflows; includes how-it-works pipeline, tabbed skills browser, install guide with copy-to-clipboard, and Vercel deploy config (`vercel.json`)
+
+### Removed
+- `salesperson-workflow` - removed entirely; entry point is now `sync-client-discovery` in `sales-workflow`; `sync-deal-qualify`, `sync-sales-discovery`, `sync-proposal-seller`, and `sync-deal-followup` removed
+
+### Changed
+- `agents/` - moved from `.claude/agents/` to repo root; `scripts/install.ps1` and `scripts/install.sh` updated to source agents from `agents/` instead of `.claude/agents/`; `CLAUDE.md` architecture diagram updated to reflect new location
+- `scripts/install.ps1` - added `-Dev` flag; skips GitHub download and reads skills/agents directly from the local repo; use for branch testing without pushing
+- `scripts/install.sh` - added `--dev` flag; skips GitHub download and reads skills/agents directly from the local repo; use for branch testing without pushing
+
+## [Unreleased] - 2026-06-04
+
+### Added
+- `ba-workflow`: `sync-project-intake` v1.0.0 - merges `sync-requirement-analyzer` (Sales) and `sync-ba-project-intake` (BA) into one skill; two-mode behavior: Pre-Proposal (from client brief/RFP/notes - status Draft, feeds proposal-grill) and Post-Approval (from approved proposal - status Approved, feeds database-designer); produces `docs/ba/{project-name}-intake.md` with artifact_version frontmatter; single artifact replaces both `requirements.md` and `intake.md`; includes extraction-rules, question-bank, and unified output-format references
+- `ba-workflow`: `sync-proposal-grill` v1.2.0 - moved from `sales-workflow`; reads `docs/ba/{project-name}-intake.md` (was `docs/sales/{project-name}-requirements.md`); updates intake doc Status from Draft to Grilled; Deployment Constraints block appended to intake doc after Section 11; no other content changes
+- `ba-workflow`: `sync-proposal-writer` v1.5.0 - moved from `sales-workflow`; reads `docs/ba/{project-name}-intake.md` for first proposal and `docs/ba/{project-name}-intake-v{N}.md` for revisions; updates intake doc Status from Grilled to Approved; proposal output path unchanged (`docs/sales/{project-name}-proposal.md`); no other content changes
+
+### Added
 - `ba-workflow`: `sync-database-designer` `references/laravel-packages.md` - new reference covering spatie/laravel-permission (never recreate Spatie tables, permission seed design, morph map, multi-tenancy consideration) and spatie/laravel-activitylog (activity_log table reference, decision matrix for activitylog vs custom history table, log name strategy, properties column query examples, combined-package usage)
 
 ### Changed
+- `sales-workflow`: `sync-proposal-revision` v1.1.0 -> v1.2.0 - updated to match new intake artifact naming; scans `docs/ba/` (was `docs/sales/`) for intake files; produces `docs/ba/{project-name}-intake-v{N}.md` (was `docs/sales/{project-name}-requirements-v{N}.md`); description updated
 - `ba-workflow`: `sync-database-designer` v1.3.0 -> v1.4.0 - added Spatie Packages subsection to ORM Compatibility with schema impact rules for spatie/laravel-permission and spatie/laravel-activitylog; updated Step 6 to check for activitylog before designing audit tables; added laravel-packages.md to Reference Files table
 - `ba-workflow`: `sync-database-designer` `references/triggers.md` - added row to "Avoid Triggers For" table: audit logging on Eloquent models when spatie/laravel-activitylog is installed should use LogsActivity trait instead of DB triggers
 - `ba-workflow`: `sync-database-designer` `references/schema-output-format.md` - added Packages field to document header; added third-party managed tables, models using activitylog, and permission-gated models rows to Design Overview table; split Audit / Log Tables section into Pattern A (spatie/laravel-activitylog - document audit trail inline on the parent table using a standard annotation block, no custom table) and Pattern B (custom history table for non-Eloquent writes, financial ledgers, or structured status-transition queries)
 
-- `pm-workflow`: `sync-backend-task-creator` v1.2.0 -> v1.3.0 - added architecture detection step (api-only vs full-stack) before deriving tasks; expanded "Always generate" table with full-stack-only backend artifacts: Job, Event, Listener, Observer, Schedule, Command, Service, FormRequest, Mailable, Broadcast; added four full-stack checklist items in Step 3; bumped `generated_by` version in frontmatter template
-- `pm-workflow`: `sync-backend-task-creator` `references/task-output-format.md` - expanded Type values to include full-stack types (Command, Event, Listener, Observer, Schedule, Service, FormRequest, Mailable, Broadcast); expanded Detail column documentation with per-type guidance; added nine full-stack table row examples (Service, FormRequest, Event, Listener, Observer, Job, Command, Schedule, Mailable)
+### Removed
+- `sales-workflow`: `sync-requirement-analyzer` - replaced by `sync-project-intake` in `ba-workflow`
+- `sales-workflow`: `sync-proposal-grill` - moved to `ba-workflow`
+- `sales-workflow`: `sync-proposal-writer` - moved to `ba-workflow`
+- `ba-workflow`: `sync-ba-project-intake` - replaced by `sync-project-intake`
+
+## [Unreleased] - 2026-06-03 (engineering-qa-merge)
+
+### Added
+- `engineering-workflow`: `sync-dev-tdd` v1.2.0 -> v1.3.0 - added FDD Compliance Summary step after Swagger generation; scans test files for business rule, validation rule, RBAC rule, and workflow transition coverage; outputs green/yellow/red table; informational in standalone mode (gate is in dev-orchestrator Phase 3)
+- `agents`: `dev-orchestrator` v1.0.0 -> v2.0.0 (breaking) - Phase 3 fully rewritten: replaces passive handoff message with FDD compliance gate (3a scan, 3b gate evaluation with red block + yellow confirm, 3c GitHub issue creation via `gh` CLI); red items hard-block issue creation; yellow items require "confirm" and are logged in issue body; creates `[QA] {Task-ID}` GitHub issue with `ready-for-qa` label, compliance table, and literal QA invocation command
+- `qa-workflow`: `sync-qa-runner` v1.6.0 -> v2.0.0 (breaking) - added Direct mode; accepts GitHub issue URL + FDD file; Step 0b derives test cases inline from FDD (business rules, validation, RBAC, workflow transitions); Step 4 writes QA run log to `docs/qa/qa-runs/{Task-ID}-{date}.md`; Step 5 applies `verified` label + comment on all-pass; Legacy mode (no URL arg) unchanged for backward compatibility
+- `qa-workflow`: `sync-qa-to-ticket` v1.2.0 -> v1.3.0 - added Direct mode detection (GitHub issue URL as first arg); reads failures from QA run log instead of qa-plan; adds `## Parent Issue` field in child bug issue body linking back to the ready-for-qa tracking issue; updated run record update step for both modes
+
+### Removed
+- `qa-workflow`: `sync-qa-planner` - removed entirely; `sync-qa-runner` Direct mode absorbs all test case derivation logic; Legacy mode of `sync-qa-runner` still handles existing qa-plan files for backward compatibility
+
+### Changed
+- `CONTEXT.md` - updated Workflow Sequence (engineering/QA section); updated Version Chain (new path drops QA Plan; legacy path retained); added four new Engineering and QA terms: FDD Compliance Check, Ready-for-QA Issue, Direct Mode (sync-qa-runner), QA Run Log; updated Version Chain term definition
 
 ## [Unreleased] - 2026-06-03
 
+### Added
+- `backend-task-writer` agent v1.0.0 at `.claude/agents/` - Haiku-powered Stage 1a agent; writes backend task file from FDD and database schema; spawned in parallel by `task-orchestrator`; restricted to Read/Write/Glob/Grep tools
+- `design-task-writer` agent v1.0.0 at `.claude/agents/` - Haiku-powered Stage 1b agent; writes design task file from FDD; spawned in parallel with `backend-task-writer` by `task-orchestrator`; restricted to Read/Write/Glob/Grep tools
+- `task-orchestrator` agent v1.1.0 at `.claude/agents/` - replaces `pm-task-orchestrator`; auto-triggered by `sync-final-design` after FDD approval; detects FDD version drift and reruns the full pipeline automatically; no PM manual step required
+- `.claude/agents/references/task-output-format.md` - consolidated backend, design, and frontend task output formats into a single reference consumed by `task-orchestrator`
+
 ### Changed
-- `sales-workflow`: `sync-proposal-writer` v1.5.0 -> v1.6.0 - replaced one-pass Self-Review with a Validate and Fix Loop; writer now fixes each failing check in the proposal file immediately and restarts the checklist from the top; hard gate prevents proceeding to Step 4 until all 12 checks pass; escape hatch added - if the same check fails twice after a fix attempt, stop and flag to Sales before proceeding
+- `task-orchestrator` v1.1.0 -> v1.2.0 - Stage 1 now spawns `backend-task-writer` and `design-task-writer` in parallel via Agent tool instead of generating both inline; added `Agent` to tools list; description updated to reflect parallel spawn architecture
+- `ba-workflow`: `sync-final-design` v2.1.0 -> v2.2.0 - Step 5 Deliver now invokes `task-orchestrator` via Agent tool when user says "approve FDD"; removed "Do not auto-trigger" instruction; updated Handoff Chain downstream entry from `sync-ui-task-creator` to `task-orchestrator`
+- `scripts/install.ps1` - agents now copied from `.claude/agents/` in the package root instead of `skills/*/agents/`; always installed regardless of workflow selection; includes `references/` subdirectory
+- `scripts/install.sh` - same agent copy change as install.ps1
+- `CLAUDE.md` - Architecture section updated: `.claude/agents/` is now the canonical agent location; removed `agents/` from workflow directory structure
+
+### Removed
+- `pm-workflow`: `pm-task-orchestrator` agent - renamed to `task-orchestrator` and moved to `.claude/agents/`
+- `pm-workflow`: `sync-backend-task-creator` - logic lives in `task-orchestrator`; standalone skill removed
+- `pm-workflow`: `sync-ui-task-creator` - logic lives in `task-orchestrator`; standalone skill removed
+- `pm-workflow`: `sync-frontend-task-creator` - logic lives in `task-orchestrator`; standalone skill removed
+- `skills/pm-workflow/agents/` and `skills/engineering-workflow/agents/` subdirectories
+
+### Changed
 - `sales-workflow`: `sync-proposal-writer` v1.4.0 -> v1.5.0 - replaced flat Key Features bullet list in Scope of Work with a 3-level hierarchy: module (H3) → sub-feature/screen/flow (H4) with 1-2 sentence description → UI elements as plain-noun bullets; when a sub-feature contains multiple named forms, bold form name precedes its element list; User Roles line stays at module level; updated Module-by-module Writing Rule to describe the new hierarchy; added two self-review checklist items (H4 sub-feature sections present, UI elements listed per sub-feature)
 - `sales-workflow`: `sync-proposal-writer` `references/template-structure.md` - replaced Section 4 module template with hierarchical H3/H4 structure showing module description + User Roles, H4 sub-feature sections with descriptions, optional bold form-name header before element lists, and plain-noun UI element bullets; removed Key Features block
 
 ## [Unreleased] - 2026-06-02
+
+### Changed
+- `engineering-workflow`: `sync-dev-setup` v1.0.0 -> v1.1.0 - added Section 3 (Tool & Skill Discovery): reads `.claude/settings.json` (project + user) to extract MCP server names and capability tiers, lists `.claude/skills/` for local project skills, writes `docs/agents/tools.md` from new seed template; added `### Available tools` entry to the `## Agent skills` block template; added `tools.md` to the list of written output files; updated Done section to note re-run triggers (new MCPs, issue tracker switch)
+- `engineering-workflow`: `sync-dev-setup` `tools.md` seed template - new file; defines MCP Servers table (name, capability tier, key tools), Local Project Skills table, Tool Usage Rules section, and Engineering Skill Behavior notes explaining how sync-dev-tdd and sync-qa-runner consume the file
+- `engineering-workflow`: `sync-dev-tdd` v1.1.0 -> v1.2.0 - added Tool Discovery block to Step 0: reads `docs/agents/tools.md`, logs available tools in session header, and enforces framework-specific conventions when MCPs are present (Laravel: Eloquent/Request/Resource pattern; shadcn: no custom base components; WordPress: hooks/filters/capability checks; context7: pull live docs before any third-party library call); surfaces local project skill names to developer at start of Planning
+- `qa-workflow`: `sync-qa-runner` v1.5.0 -> v1.6.0 - extended Step 1b to detect Playwright/Cypress execution mode: reads `docs/agents/tools.md` and checks for `testing:e2e` MCP; sets MCP mode (direct browser tool calls) vs CLI mode (spec file generation + CLI runner); in MCP mode, Step 2 drives each test case via browser_navigate/browser_click/browser_fill_form/browser_snapshot/browser_take_screenshot tool calls with no spec files generated; added MCP mode skip gate to Step 3 (spec file discovery/generation); updated Step 5 deliver messages to report execution mode and omit spec file line in MCP mode
+- `sales-workflow`: `sync-proposal-grill` v1.1.0 -> v1.2.0 - added Deployment Constraints category to the Grilling Checklist; probes for hosting preferences, compliance requirements (HIPAA, GDPR, data residency), expected scale, infrastructure ownership, and budget tier; captures answers as a Deployment Constraints block in the requirements doc; added "Deployment constraints captured" line to Grilling Summary output
+- `sales-workflow`: `sync-proposal-grill` `references/question-bank.md` - added Deployment Constraints section with eight targeted questions covering provider preference, compliance, scale, data volume, DevOps ownership, SLA, infrastructure adjacency, and hosting budget
+- `sales-workflow`: `sync-proposal-writer` v1.3.0 -> v1.4.0 - added Step 1b (Infer the Recommended Deployment Stack) with decision logic across four signals: scale (user count to hosting tier), compliance (HIPAA/GDPR/data residency to provider constraint), budget tier (startup/SMB/mid-market/enterprise to cost posture), client infrastructure preference, and file storage presence; added Section 6 (Recommended Deployment Stack) to proposal structure between Scope of Work and Out of Scope; updated Writing Rules to allow deployment stack as the one permitted infrastructure exception; updated self-review checklist to verify stack section presence and business-language tone
+- `sales-workflow`: `sync-proposal-writer` `references/template-structure.md` - added Section 5 Recommended Deployment Stack with hosting, architecture, database, file storage, and environments table plus rationale and scalability path; renumbered Out of Scope through Next Steps as Sections 6-9; updated Deliverables to reference Section 5
 
 ### Added
 - `salesperson-workflow`: `sync-deal-qualify` v1.0.0 - qualifies new leads before investing BA hours; asks five questions one at a time (budget, decision-maker, timeline, competition, problem clarity), scores each Green/Yellow/Red using scoring-guide.md, and outputs a Deal Scorecard with a go/no-go recommendation to chat; Red budget or 3+ Red dimensions triggers a hold recommendation with explicit risk statement

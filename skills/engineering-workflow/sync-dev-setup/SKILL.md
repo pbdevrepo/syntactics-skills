@@ -1,6 +1,6 @@
 ---
 name: sync-dev-setup
-version: 1.0.0
+version: 1.1.0
 description: Sets up an `## Agent skills` block in AGENTS.md/CLAUDE.md and `docs/agents/` so the engineering skills know this repo's issue tracker (GitHub or local markdown), triage label vocabulary, and domain doc layout. Run once per repo before first use of `sync-dev-session`, `sync-dev-tdd`, `sync-qa-runner`, or `sync-dev-to-fix` — or if those skills appear to be missing context about the issue tracker, triage labels, or domain docs.
 disable-model-invocation: true
 ---
@@ -93,7 +93,39 @@ Confirm the layout:
 - **Single-context** — one `CONTEXT.md` + `docs/adr/` at the repo root. Most repos are this.
 - **Multi-context** — `CONTEXT-MAP.md` at the root pointing to per-context `CONTEXT.md` files (typically a monorepo).
 
-### 3. Confirm and edit
+### 3. Discover available tools (automatic — no user questions)
+
+Before confirming and writing, discover what tools are available in this project.
+
+**Read the following (read-only, no user decision needed):**
+
+1. `.claude/settings.json` (project-level) — extract `mcpServers` object keys and their `command` or `url` fields
+2. `~/.claude/settings.json` (user-level) — same extraction
+3. `.claude/skills/` directory — list subdirectory names (each is an available local skill)
+4. `CLAUDE.md` or `AGENTS.md` — scan for any existing tool usage instructions
+
+**Classify each discovered MCP by capability tier:**
+
+| If MCP name or command contains... | Classify as |
+|------------------------------------|-------------|
+| `playwright` | `testing:e2e` - Playwright browser automation via MCP tools |
+| `cypress` | `testing:e2e` - Cypress browser automation via MCP tools |
+| `laravel`, `laravel-boost` | `framework:laravel` - Laravel/Eloquent patterns and conventions |
+| `shadcn`, `shadcn-ui` | `framework:shadcn` - shadcn/ui component generation |
+| `wordpress`, `wp-vibe` | `framework:wordpress` - WordPress/WooCommerce patterns |
+| `context7` | `docs:lookup` - Live library documentation lookup |
+| `github`, `gitlab` | `vcs:issues` - Issue tracker integration |
+| Any other MCP | `other` - record name and command as-is |
+
+**Write `docs/agents/tools.md`** using the seed template at `tools.md` in this skill folder. Populate it from the discovery results above.
+
+**Add `### Available tools` to the `## Agent skills` block** (see Section 4 for the full block format).
+
+If no MCPs are found and no `.claude/skills/` directory exists, still write `docs/agents/tools.md` with an empty table and a note — the file's presence signals that discovery has run.
+
+Re-run this setup whenever new MCPs are added to the project. `sync-dev-tdd` and `sync-qa-runner` both read `docs/agents/tools.md` at startup.
+
+### 4. Confirm and edit
 
 Show the user a draft of:
 
@@ -130,18 +162,28 @@ The block:
 ### Domain docs
 
 [one-line summary of layout — "single-context" or "multi-context"]. See `docs/agents/domain.md`.
+
+### Available tools
+
+[N MCPs registered; list capability tiers, e.g. "testing:e2e (Playwright MCP), framework:laravel (Laravel Boost)"]. [N local skills in .claude/skills/]. See `docs/agents/tools.md`.
 ```
 
-Then write the three docs files using the seed templates in this skill folder as a starting point:
+Then write the four docs files using the seed templates in this skill folder as a starting point:
 
 - [issue-tracker-github.md](./issue-tracker-github.md) — GitHub issue tracker
 - [issue-tracker-gitlab.md](./issue-tracker-gitlab.md) — GitLab issue tracker
 - [issue-tracker-local.md](./issue-tracker-local.md) — local-markdown issue tracker
 - [triage-labels.md](./triage-labels.md) — label mapping
 - [domain.md](./domain.md) — domain doc consumer rules + layout
+- [tools.md](./tools.md) — available MCPs and local skills (populated from Section 3 discovery)
 
 For "other" issue trackers, write `docs/agents/issue-tracker.md` from scratch using the user's description.
 
 ### 5. Done
 
-Tell the user the setup is complete and which engineering skills will now read from these files. Mention they can edit `docs/agents/*.md` directly later — re-running this skill is only necessary if they want to switch issue trackers or restart from scratch.
+Tell the user the setup is complete and which engineering skills will now read from these files. Mention they can edit `docs/agents/*.md` directly later.
+
+Re-run this skill when:
+- Switching issue trackers
+- Adding new MCP servers to `.claude/settings.json` (re-runs Section 3 to update `docs/agents/tools.md`)
+- Restarting from scratch
