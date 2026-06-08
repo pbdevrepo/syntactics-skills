@@ -177,7 +177,7 @@ flowchart TD
         A[sync-client-discovery]
     end
 
-    subgraph BA[BA - Proposal]
+    subgraph BA[BA/Sales - Proposal]
         J[sync-project-intake] -->|Pre-Proposal| D[sync-proposal-grill]
         D --> E[sync-proposal-writer]
         E --> F[sync-quotation]
