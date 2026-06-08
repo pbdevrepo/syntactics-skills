@@ -208,30 +208,21 @@ flowchart TD
 
     subgraph Agent[Agent]
         N[task-orchestrator]
-        O[Stage 1a - Backend Tasks]
-        P[Stage 1b - UI Design Tasks]
-        Q[Stage 2 - Frontend Tasks]
-        N -->|Stage 1 - parallel| O & P
-        O & P -->|Stage 2| Q
     end
 
     subgraph ENG[Engineering]
         R[sync-dev-session] --> S[sync-dev-tdd]
-        S --> S2[FDD Compliance Check]
-        S2 -->|red: blocked| S2
-        S2 -->|green/yellow confirmed| T[GitHub Issue: ready-for-qa]
-        T --> U[sync-qa-runner Direct Mode]
-        U -->|all pass| Y[verified label]
+        S --> U[sync-qa-runner]
         U -->|failures| V[sync-qa-to-ticket]
         V --> W[sync-dev-to-fix]
-        W --> X[sync-qa-runner re-run]
+        W --> X[sync-qa-runner]
     end
 
     B --> J
     F -->|client approves| H
     I -->|deal signed| J2
     M -->|FDD approved| N
-    Q --> R
+    N --> R
 ```
 
 QA plan artifacts are written to `docs/qa/qa-plan/`. All other artifacts are written to `docs/{workflow-phase}/{artifact}.md`.
@@ -245,7 +236,7 @@ To test a change:
 2. Push to `main`
 3. Run the install command above to get the latest version
 
-project directory: & ".\scripts\install.ps1" -Dev -Global
+`project directory: & ".\scripts\install.ps1" -Dev -Global`
 
 ## Structure
 
