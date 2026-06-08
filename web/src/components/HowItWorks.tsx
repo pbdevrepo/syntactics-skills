@@ -1,11 +1,21 @@
-import { pipeline } from '../data/skills.js'
+import { pipeline } from '../data/skills.ts'
+import type { WorkflowColor } from '../data/skills.ts'
 
-const colorMap = {
+type ColorStyles = {
+  bg: string
+  border: string
+  dot: string
+  text: string
+  badge: string
+}
+
+const colorMap: Record<WorkflowColor, ColorStyles> = {
   blue: { bg: 'bg-blue-50', border: 'border-blue-100', dot: 'bg-blue-500', text: 'text-blue-700', badge: 'bg-blue-100 text-blue-700' },
   violet: { bg: 'bg-violet-50', border: 'border-violet-100', dot: 'bg-violet-500', text: 'text-violet-700', badge: 'bg-violet-100 text-violet-700' },
   amber: { bg: 'bg-amber-50', border: 'border-amber-100', dot: 'bg-amber-500', text: 'text-amber-700', badge: 'bg-amber-100 text-amber-700' },
   emerald: { bg: 'bg-emerald-50', border: 'border-emerald-100', dot: 'bg-emerald-500', text: 'text-emerald-700', badge: 'bg-emerald-100 text-emerald-700' },
   rose: { bg: 'bg-rose-50', border: 'border-rose-100', dot: 'bg-rose-500', text: 'text-rose-700', badge: 'bg-rose-100 text-rose-700' },
+  slate: { bg: 'bg-slate-50', border: 'border-slate-100', dot: 'bg-slate-500', text: 'text-slate-700', badge: 'bg-slate-100 text-slate-700' },
   orange: { bg: 'bg-orange-50', border: 'border-orange-100', dot: 'bg-orange-500', text: 'text-orange-700', badge: 'bg-orange-100 text-orange-700' },
 }
 

@@ -1,4 +1,34 @@
-export const workflows = [
+export type WorkflowColor = 'blue' | 'violet' | 'amber' | 'emerald' | 'rose' | 'slate' | 'orange'
+export type SkillType = 'skill' | 'agent'
+
+export interface Workflow {
+  id: string
+  label: string
+  color: WorkflowColor
+}
+
+export interface Skill {
+  name: string
+  version: string
+  workflow: string
+  type: SkillType
+  description: string
+}
+
+export interface PipelineStage {
+  id: string
+  role: string
+  color: WorkflowColor
+  artifacts: string[]
+  skills: string[]
+}
+
+export interface RoleMapping {
+  role: string
+  workflows: string[]
+}
+
+export const workflows: Workflow[] = [
   { id: 'sales', label: 'Sales', color: 'blue' },
   { id: 'ba', label: 'BA', color: 'violet' },
   { id: 'pm', label: 'PM', color: 'amber' },
@@ -8,7 +38,7 @@ export const workflows = [
   { id: 'content', label: 'Content', color: 'orange' },
 ]
 
-export const skills = [
+export const skills: Skill[] = [
   // Sales
   {
     name: 'sync-client-discovery',
@@ -224,7 +254,7 @@ export const skills = [
   },
 ]
 
-export const pipeline = [
+export const pipeline: PipelineStage[] = [
   {
     id: 'sales',
     role: 'Sales',
@@ -269,7 +299,7 @@ export const pipeline = [
   },
 ]
 
-export const roleMapping = [
+export const roleMapping: RoleMapping[] = [
   { role: 'Sales Rep', workflows: ['sales'] },
   { role: 'Business Analyst', workflows: ['ba'] },
   { role: 'Designer / PM', workflows: ['pm'] },

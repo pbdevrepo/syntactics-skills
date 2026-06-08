@@ -1,7 +1,14 @@
 import { useState } from 'react'
-import { skills, workflows } from '../data/skills.js'
+import { skills, workflows } from '../data/skills.ts'
+import type { WorkflowColor } from '../data/skills.ts'
 
-const colorMap = {
+type ColorStyles = {
+  tab: string
+  badge: string
+  dot: string
+}
+
+const colorMap: Record<WorkflowColor, ColorStyles> = {
   blue: { tab: 'bg-blue-50 text-blue-700 border-blue-200', badge: 'bg-blue-100 text-blue-700', dot: 'bg-blue-500' },
   violet: { tab: 'bg-violet-50 text-violet-700 border-violet-200', badge: 'bg-violet-100 text-violet-700', dot: 'bg-violet-500' },
   amber: { tab: 'bg-amber-50 text-amber-700 border-amber-200', badge: 'bg-amber-100 text-amber-700', dot: 'bg-amber-500' },
@@ -14,7 +21,7 @@ const colorMap = {
 export default function SkillsGrid() {
   const [active, setActive] = useState('sales')
 
-  const activeWorkflow = workflows.find((w) => w.id === active)
+  const activeWorkflow = workflows.find((w) => w.id === active)!
   const c = colorMap[activeWorkflow.color]
   const filtered = skills.filter((s) => s.workflow === active)
 

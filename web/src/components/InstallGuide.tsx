@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { roleMapping } from '../data/skills.js'
+import { roleMapping } from '../data/skills.ts'
 
 const winCommand = `irm https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.ps1 | iex`
 const macCommand = `curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash`
@@ -9,7 +9,7 @@ const winSpecific = `$url = "https://raw.githubusercontent.com/pbdevrepo/syntact
 
 const macSpecific = `curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash -s -- --workflow sales --workflow ba`
 
-function CopyButton({ text }) {
+function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false)
 
   const copy = async () => {
@@ -28,7 +28,7 @@ function CopyButton({ text }) {
   )
 }
 
-function CodeBlock({ code, label }) {
+function CodeBlock({ code, label }: { code: string; label?: string }) {
   return (
     <div className="rounded-lg bg-slate-900 overflow-hidden">
       {label && (
@@ -46,7 +46,7 @@ function CodeBlock({ code, label }) {
 }
 
 export default function InstallGuide() {
-  const [platform, setPlatform] = useState('windows')
+  const [platform, setPlatform] = useState<'windows' | 'mac'>('windows')
 
   return (
     <section id="install" className="py-16 px-6 bg-gray-50">
@@ -101,7 +101,7 @@ export default function InstallGuide() {
 
           {/* Platform toggle */}
           <div className="flex gap-1 mb-4 p-1 bg-gray-100 rounded-lg w-fit">
-            {['windows', 'mac'].map((p) => (
+            {(['windows', 'mac'] as const).map((p) => (
               <button
                 key={p}
                 onClick={() => setPlatform(p)}
