@@ -171,9 +171,9 @@ for skill in "${ALL_SELECTED[@]+"${ALL_SELECTED[@]}"}"; do
 done
 printf "\n"
 
-# Copy agents from .claude/agents/ in the package root
+# Copy agents from agents/ in the package root
 AGENTS_DIR="${SKILLS_DIR%/skills}/agents"
-AGENTS_SRC="$TMP_DIR/syntactics-skills-main/.claude/agents"
+AGENTS_SRC="$TMP_DIR/syntactics-skills-main/agents"
 AGENT_COUNT=0
 if [[ -d "$AGENTS_SRC" ]]; then
     mkdir -p "$AGENTS_DIR"

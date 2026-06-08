@@ -155,9 +155,9 @@ try {
     New-Item -ItemType Directory -Force -Path $SkillDir | Out-Null
     $count = Copy-Skills -Names $all -SkillMap $SkillMap -Target $SkillDir
 
-    # Copy agents from .claude/agents/ in the package root
+    # Copy agents from agents/ in the package root
     $AgentDir   = $SkillDir -replace '\\skills$', '\agents'
-    $agentsSrc  = Join-Path $TmpDir "syntactics-skills-main\.claude\agents"
+    $agentsSrc  = Join-Path $TmpDir "syntactics-skills-main\agents"
     $agentCount = 0
     if (Test-Path $agentsSrc) {
         New-Item -ItemType Directory -Force -Path $AgentDir | Out-Null

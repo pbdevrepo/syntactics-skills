@@ -2,6 +2,11 @@
 
 All notable changes to syntactics-skills are documented here.
 
+## [Unreleased] - 2026-06-08
+
+### Changed
+- `agents/` - moved from `.claude/agents/` to repo root; `scripts/install.ps1` and `scripts/install.sh` updated to source agents from `agents/` instead of `.claude/agents/`; `CLAUDE.md` architecture diagram updated to reflect new location
+
 ## [Unreleased] - 2026-06-04
 
 ### Added

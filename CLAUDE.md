@@ -70,7 +70,7 @@ skills/{workflow}/sync-{skill}/SKILL.md
 
 **Directory structure:**
 ```
-.claude/agents/
+agents/
   {agent-name}.md        # all Claude Code subagents; installed to user's .claude/agents/ for every install
   references/*.md        # shared references consumed by agents
 skills/
