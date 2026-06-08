@@ -49,6 +49,17 @@ Read the database schema. Extract:
 
 ---
 
+## Step 1b — Architecture Detection
+
+From the FDD or project notes, identify the backend type:
+
+- `api-only` — headless/SPA backend; generate only API endpoint tasks
+- `full-stack` — Laravel app with web routes, console commands, queued jobs, events; generate API tasks plus framework-specific artifacts
+
+If not stated, default to `api-only` and note it in the Unresolved Items table for the PM to confirm.
+
+---
+
 ## Step 2 — Derive Backend Tasks
 
 Tag every task with the sprint number from the sprint map (Priority N = Sprint N).
@@ -63,7 +74,7 @@ Priority 5 - Integrations & Third-Party
 Priority 6 - Notifications & Background Jobs
 ```
 
-Always generate:
+Always generate (API-only and full-stack):
 
 | Source | Backend Tasks Generated |
 |--------|------------------------|
@@ -81,6 +92,20 @@ Always generate:
 | Every integration | 1x integration setup task |
 | Every export/report | 1x export endpoint |
 
+Full-stack only - also generate:
+
+| Source | Backend Tasks Generated |
+|--------|------------------------|
+| Every async/deferred operation | 1x Job class task (queue, payload, retry policy) |
+| Every domain event or side-effect trigger | 1x Event class + 1x Listener class per subscriber |
+| Every model with audit, cache, or cascade logic | 1x Observer task (creating/updating/deleting hooks) |
+| Every recurring automated task | 1x Schedule entry in Kernel + 1x backing Command or Job |
+| Every CLI operation (import, sync, cleanup) | 1x Artisan Command task (signature, arguments, options) |
+| Every controller action with 3+ validated fields | 1x FormRequest class task (rules, authorize method) |
+| Every module with reusable cross-cutting logic | 1x Service class task (methods, injected dependencies) |
+| Every mail notification | 1x Mailable class task (template, constructor params) |
+| Every real-time feature | 1x Broadcast event task (channel, payload, auth) |
+
 ---
 
 ## Step 3 — Self-Review
@@ -94,6 +119,10 @@ Before writing, verify:
 - [ ] Priority 1 tasks have no dependencies on Priority 2+ tasks
 - [ ] Every RBAC rule from the FDD is covered by a policy task
 - [ ] No task is vague
+- [ ] *(full-stack only)* Every async operation has a Job class task with queue and retry policy
+- [ ] *(full-stack only)* Every domain event has a matching Event + Listener pair
+- [ ] *(full-stack only)* Every scheduled automation has both a Schedule entry and a backing Command or Job
+- [ ] *(full-stack only)* Every Artisan command has its signature, arguments, and options specified
 
 ---
 
@@ -151,7 +180,8 @@ source_versions:
 | BE-{N} | 3 | {Module} | GET /api/{resource} | Endpoint | filter: status, search: name; paginated | BE-0002,BE-0004 | FE-{N} |
 
 **P column:** Priority 1-6 matching the build order within a sprint
-**Type values:** Migration - Model - Auth - Policy - Endpoint - Seeder - Integration - Notification - Job
+**Type values (API-only):** Migration - Model - Auth - Policy - Endpoint - Seeder - Integration - Notification - Job
+**Type values (full-stack, additional):** Command - Event - Listener - Observer - Schedule - Service - FormRequest - Mailable - Broadcast
 **Detail column:** For Migrations - key columns. For Models - relationships. For Endpoints - method/path + validation. For Auth/Policy - role-action mapping.
 **Blocks column:** FE-{N} = unblocks frontend task; BE-{N} = unblocks backend task
 
