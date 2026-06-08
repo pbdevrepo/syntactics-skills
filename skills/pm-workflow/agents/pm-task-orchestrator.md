@@ -75,6 +75,13 @@ Run the full `sync-backend-task-creator` workflow:
 
 **Inputs:** FDD module files + sprint plan + database schema
 
+**Architecture Detection** — before deriving tasks, identify the backend type from the FDD or project notes:
+
+- `api-only` — headless/SPA backend; generate only API endpoint tasks
+- `full-stack` — Laravel monolith with web routes, Blade/Livewire, console commands, queued jobs, events; generate API tasks **plus** all framework-specific backend artifacts
+
+If the architecture type is not stated in the FDD, ask: "Is this an API-only project or a full-stack Laravel application with console commands, jobs, and event listeners?"
+
 **Step 1 — Read All Inputs**
 
 From the FDD per module, extract:
@@ -100,7 +107,7 @@ Priority 5 - Integrations & Third-Party
 Priority 6 - Notifications & Background Jobs
 ```
 
-Always generate:
+Always generate (API-only and full-stack):
 
 | Source | Backend Tasks Generated |
 |--------|------------------------|
@@ -118,6 +125,20 @@ Always generate:
 | Every integration | 1x integration setup task |
 | Every export/report | 1x export endpoint |
 
+Full-stack only - also generate:
+
+| Source | Backend Tasks Generated |
+|--------|------------------------|
+| Every async/deferred operation | 1x Job class task (queue, payload, retry policy) |
+| Every domain event or side-effect trigger | 1x Event class + 1x Listener class per subscriber |
+| Every model with audit, cache, or cascade logic | 1x Observer task (creating/updating/deleting hooks) |
+| Every recurring automated task | 1x Schedule entry in Kernel + 1x backing Command or Job |
+| Every CLI operation (import, sync, cleanup) | 1x Artisan Command task (signature, arguments, options) |
+| Every controller action with 3+ validated fields | 1x FormRequest class task (rules, authorize method) |
+| Every module with reusable cross-cutting logic | 1x Service class task (methods, injected dependencies) |
+| Every mail notification | 1x Mailable class task (template, constructor params) |
+| Every real-time feature | 1x Broadcast event task (channel, payload, auth) |
+
 **Step 3 — Self-Review**
 
 - [ ] Every entity from the FDD has a migration and model task
@@ -127,6 +148,10 @@ Always generate:
 - [ ] Priority 1 tasks have no dependencies on Priority 2+ tasks
 - [ ] Every RBAC rule from the FDD is covered by a policy task
 - [ ] No task is vague
+- [ ] *(full-stack only)* Every async operation has a Job class task with queue and retry policy
+- [ ] *(full-stack only)* Every domain event has a matching Event + Listener pair
+- [ ] *(full-stack only)* Every scheduled automation has both a Schedule entry and a Command or Job backing it
+- [ ] *(full-stack only)* Every Artisan command has its signature, arguments, and options specified
 
 **Step 4 — Write Backend Tasks**
 
