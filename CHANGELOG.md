@@ -9,8 +9,14 @@ All notable changes to syntactics-skills are documented here.
 - `ba-workflow`: `sync-proposal-grill` v1.2.0 - moved from `sales-workflow`; reads `docs/ba/{project-name}-intake.md` (was `docs/sales/{project-name}-requirements.md`); updates intake doc Status from Draft to Grilled; Deployment Constraints block appended to intake doc after Section 11; no other content changes
 - `ba-workflow`: `sync-proposal-writer` v1.5.0 - moved from `sales-workflow`; reads `docs/ba/{project-name}-intake.md` for first proposal and `docs/ba/{project-name}-intake-v{N}.md` for revisions; updates intake doc Status from Grilled to Approved; proposal output path unchanged (`docs/sales/{project-name}-proposal.md`); no other content changes
 
+### Added
+- `ba-workflow`: `sync-database-designer` `references/laravel-packages.md` - new reference covering spatie/laravel-permission (never recreate Spatie tables, permission seed design, morph map, multi-tenancy consideration) and spatie/laravel-activitylog (activity_log table reference, decision matrix for activitylog vs custom history table, log name strategy, properties column query examples, combined-package usage)
+
 ### Changed
 - `sales-workflow`: `sync-proposal-revision` v1.1.0 -> v1.2.0 - updated to match new intake artifact naming; scans `docs/ba/` (was `docs/sales/`) for intake files; produces `docs/ba/{project-name}-intake-v{N}.md` (was `docs/sales/{project-name}-requirements-v{N}.md`); description updated
+- `ba-workflow`: `sync-database-designer` v1.3.0 -> v1.4.0 - added Spatie Packages subsection to ORM Compatibility with schema impact rules for spatie/laravel-permission and spatie/laravel-activitylog; updated Step 6 to check for activitylog before designing audit tables; added laravel-packages.md to Reference Files table
+- `ba-workflow`: `sync-database-designer` `references/triggers.md` - added row to "Avoid Triggers For" table: audit logging on Eloquent models when spatie/laravel-activitylog is installed should use LogsActivity trait instead of DB triggers
+- `ba-workflow`: `sync-database-designer` `references/schema-output-format.md` - added Packages field to document header; added third-party managed tables, models using activitylog, and permission-gated models rows to Design Overview table; split Audit / Log Tables section into Pattern A (spatie/laravel-activitylog - document audit trail inline on the parent table using a standard annotation block, no custom table) and Pattern B (custom history table for non-Eloquent writes, financial ledgers, or structured status-transition queries)
 
 ### Removed
 - `sales-workflow`: `sync-requirement-analyzer` - replaced by `sync-project-intake` in `ba-workflow`

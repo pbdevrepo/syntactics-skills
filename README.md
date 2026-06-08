@@ -137,7 +137,7 @@ Proposal and design pipeline - from first client input through Final Design Docu
 | `sync-project-intake` | Entry point for proposal and BA work - accepts client brief, RFP, meeting notes, or approved proposal; two modes: Pre-Proposal (Draft status, feeds proposal-grill) and Post-Approval (Approved status, feeds database-designer); produces `docs/ba/{project-name}-intake.md` |
 | `sync-proposal-grill` | Stress-test the intake document for missed modules, ambiguous scope, and deployment constraints before writing the proposal |
 | `sync-proposal-writer` | Write a client-facing project proposal from the grilled intake document, with automatic version numbering and a recommended deployment stack section |
-| `sync-database-designer` | ERD design, normalization, schema best practices |
+| `sync-database-designer` | ERD design, normalization, schema best practices, Laravel/Eloquent conventions, spatie/laravel-permission and spatie/laravel-activitylog integration |
 | `sync-sprint-planner` | Convert approved DB schema into development task list |
 | `sync-final-design` | Produce Final Design Documents (FDD) - outputs `docs/fdd/index.md` (General Instructions, Figma link, module directory) plus one `docs/fdd/{module-slug}.md` per module |
 

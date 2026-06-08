@@ -1,6 +1,6 @@
 ---
 name: sync-database-designer
-version: 1.3.0
+version: 1.4.0
 description: >
   Expert-level relational database design assistant. Deep knowledge in schema design,
   normalization (1NF–3NF), transactions, and production schema best practices.
@@ -112,6 +112,8 @@ Then follow with a `BEGIN; ... COMMIT;` SQL block. Identify: the happy path, one
 
 Read `references/triggers.md` for when to use trigger tables vs. application logic.
 
+If the stack includes `spatie/laravel-activitylog`: read `references/laravel-packages.md` before designing any audit or history table. It defines which models should defer to activitylog and when a custom history table or DB trigger is still warranted.
+
 ### Step 7 — Generate & Deliver the Schema File
 
 Read `references/schema-output-format.md` before writing the file — it defines the canonical document structure, section order, and tone rules.
@@ -208,6 +210,25 @@ When designing for Laravel, note at the top of the schema:
 ORM: Laravel Eloquent — table names plural, bigIncrements() PKs, foreignId()->constrained() FKs, timestamps managed by Eloquent
 ```
 
+### Spatie Packages (Syntactics Standard Laravel Stack)
+
+When `spatie/laravel-permission` or `spatie/laravel-activitylog` are in the stack, read `references/laravel-packages.md` before designing any role, permission, or audit-related tables.
+
+| Package | Schema Impact |
+|---|---|
+| `spatie/laravel-permission` | Never design `roles`, `permissions`, or their pivot tables. Annotate role-gated entities: "Access controlled via spatie/laravel-permission." Define permissions in a seed block, not as schema rows. |
+| `spatie/laravel-activitylog` | Never design a `{model}_history` table for Eloquent models that use `LogsActivity`. Annotate those tables: "Audit trail managed by spatie/laravel-activitylog." Skip DB audit triggers for those models. |
+
+Include this block in Design Overview when either package is present:
+
+```
+Third-Party Managed Tables (not in migration files):
+  - permissions, roles, role_has_permissions, model_has_roles, model_has_permissions
+    -> spatie/laravel-permission v6.x
+  - activity_log
+    -> spatie/laravel-activitylog v4.x
+```
+
 ### Other ORMs
 - **Prisma** — singular table names (mapped via `@@map`); follow Prisma schema conventions
 - **Django ORM** — plural table names, `id` as `AutoField`/`BigAutoField`
@@ -223,5 +244,6 @@ ORM: Laravel Eloquent — table names plural, bigIncrements() PKs, foreignId()->
 | `references/triggers.md` | Deciding trigger vs. application logic, writing audit table DDL |
 | `references/schema-output-format.md` | Writing the generated .md schema file |
 | `references/design-patterns.md` | UUID vs SERIAL, junction tables, indexing, dialect types, ERD format, naming, anti-patterns, Laravel FKs, transaction patterns |
+| `references/laravel-packages.md` | Any schema involving spatie/laravel-permission or spatie/laravel-activitylog — role/permission tables, audit trail design, log name strategy |
 
 
