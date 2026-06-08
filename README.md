@@ -206,7 +206,7 @@ flowchart TD
         L --> M[sync-final-design]
     end
 
-    subgraph PM[PM]
+    subgraph Agent[Agent]
         N[task-orchestrator]
         O[Stage 1a - Backend Tasks]
         P[Stage 1b - UI Design Tasks]
