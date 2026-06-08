@@ -135,7 +135,7 @@ Scope + requirements pipeline - the BA-side of pre-sales work.
 | Skill | Description |
 |-------|-------------|
 | `sync-ba-project-intake` | Entry point — gather and structure requirements from proposal |
-| `sync-database-designer` | ERD design, normalization, schema best practices |
+| `sync-database-designer` | ERD design, normalization, schema best practices, Laravel/Eloquent conventions, spatie/laravel-permission and spatie/laravel-activitylog integration |
 | `sync-sprint-planner` | Convert approved DB schema into development task list |
 | `sync-final-design` | Produce Final Design Documents (FDD) — outputs `docs/fdd/index.md` (General Instructions, Figma link, module directory) plus one `docs/fdd/{module-slug}.md` per module |
 

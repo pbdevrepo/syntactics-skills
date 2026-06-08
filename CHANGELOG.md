@@ -4,7 +4,14 @@ All notable changes to syntactics-skills are documented here.
 
 ## [Unreleased] - 2026-06-08
 
+### Added
+- `ba-workflow`: `sync-database-designer` `references/laravel-packages.md` - new reference covering spatie/laravel-permission (never recreate Spatie tables, permission seed design, morph map, multi-tenancy consideration) and spatie/laravel-activitylog (activity_log table reference, decision matrix for activitylog vs custom history table, log name strategy, properties column query examples, combined-package usage)
+
 ### Changed
+- `ba-workflow`: `sync-database-designer` v1.3.0 -> v1.4.0 - added Spatie Packages subsection to ORM Compatibility with schema impact rules for spatie/laravel-permission and spatie/laravel-activitylog; updated Step 6 to check for activitylog before designing audit tables; added laravel-packages.md to Reference Files table
+- `ba-workflow`: `sync-database-designer` `references/triggers.md` - added row to "Avoid Triggers For" table: audit logging on Eloquent models when spatie/laravel-activitylog is installed should use LogsActivity trait instead of DB triggers
+- `ba-workflow`: `sync-database-designer` `references/schema-output-format.md` - added Packages field to document header; added third-party managed tables, models using activitylog, and permission-gated models rows to Design Overview table; split Audit / Log Tables section into Pattern A (spatie/laravel-activitylog - document audit trail inline on the parent table using a standard annotation block, no custom table) and Pattern B (custom history table for non-Eloquent writes, financial ledgers, or structured status-transition queries)
+
 - `pm-workflow`: `sync-backend-task-creator` v1.2.0 -> v1.3.0 - added architecture detection step (api-only vs full-stack) before deriving tasks; expanded "Always generate" table with full-stack-only backend artifacts: Job, Event, Listener, Observer, Schedule, Command, Service, FormRequest, Mailable, Broadcast; added four full-stack checklist items in Step 3; bumped `generated_by` version in frontmatter template
 - `pm-workflow`: `sync-backend-task-creator` `references/task-output-format.md` - expanded Type values to include full-stack types (Command, Event, Listener, Observer, Schedule, Service, FormRequest, Mailable, Broadcast); expanded Detail column documentation with per-type guidance; added nine full-stack table row examples (Service, FormRequest, Event, Listener, Observer, Job, Command, Schedule, Mailable)
 

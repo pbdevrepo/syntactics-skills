@@ -16,6 +16,7 @@ This is the canonical DB reference document passed to sprint-planner and final-d
 **Dialect:** [MySQL 8+ / PostgreSQL 15+]
 **ORM:** [Laravel Eloquent / Raw SQL / other]
 **PK Strategy:** [BIGINT UNSIGNED AUTO_INCREMENT / BIGSERIAL / UUID]
+**Packages:** [spatie/laravel-permission v6.x, spatie/laravel-activitylog v4.x / none]
 **Status:** Draft / Approved
 
 ---
@@ -45,6 +46,9 @@ This is the canonical DB reference document passed to sprint-planner and final-d
 | Audit / history | X |
 | Soft delete applied to | [table names] |
 | Normalization | 3NF throughout; [any deliberate denormalizations noted] |
+| Third-party managed tables | [list Spatie tables here, or "none"] |
+| Models using activitylog | [list model names, or "none"] |
+| Permission-gated models | [list model names, or "none"] |
 
 ---
 
@@ -131,17 +135,41 @@ CREATE INDEX idx_{table_a}_{table_b}_b_id ON {table_a}_{table_b}(table_b_id);
 ---
 
 ### Audit / Log Tables
-> Append-only log of all state changes on `table_name`.
+
+Two patterns exist. Choose based on whether `spatie/laravel-activitylog` is in the stack and whether the table needs structured field-level queries.
+
+---
+
+#### Pattern A — spatie/laravel-activitylog (preferred for Eloquent models)
+
+When a model uses `LogsActivity`, do NOT create a custom log table. Instead, document the audit trail with this block under the parent table definition:
+
+> **Audit Trail:** Managed by `spatie/laravel-activitylog` via `LogsActivity` trait.
+> Log name: `'{log-name}'`
+> Events captured: `created`, `updated`, `deleted`
+> Fields logged: list only fields in `$fillable` or specify via `logOnly` — e.g. `['status', 'assigned_to', 'amount']`
+> Causer: authenticated `User` model (or `null` for system-initiated changes)
+> Queryable via: `Activity::forSubject($model)->get()` or direct `activity_log` table query on `subject_type` / `subject_id`
+
+No table definition or index block needed - `activity_log` is owned by the package.
+
+---
+
+#### Pattern B — Custom History Table (use when activitylog is absent or insufficient)
+
+Use when: no activitylog package, non-Eloquent writes, financial ledger, or status-transition history that requires structured SQL queries on old/new field values.
+
+> Append-only log of all state changes on `{table_name}`.
 
 | Field Name | Data Type | Length | Default Value | Nullable | Description | Constraints |
 |------------|-----------|--------|---------------|----------|-------------|-------------|
-| `id` | `BIGINT UNSIGNED` | — | AUTO_INCREMENT | No | Surrogate primary key | PK, AUTO_INCREMENT |
-| `{table}_id` | `BIGINT UNSIGNED` | — | — | No | FK to the parent record | FK → `{table}.id`, ON DELETE RESTRICT, NOT NULL |
-| `changed_by` | `BIGINT UNSIGNED` | — | — | No | User who triggered the change | FK → `users.id`, NOT NULL |
-| `old_status` | `VARCHAR` | 50 | NULL | Yes | Status before the change | — |
-| `new_status` | `VARCHAR` | 50 | — | No | Status after the change | NOT NULL |
-| `note` | `TEXT` | — | NULL | Yes | Optional context for the change | — |
-| `created_at` | `TIMESTAMP` | — | `CURRENT_TIMESTAMP` | No | When the change occurred | NOT NULL |
+| `id` | `BIGINT UNSIGNED` | - | AUTO_INCREMENT | No | Surrogate primary key | PK, AUTO_INCREMENT |
+| `{table}_id` | `BIGINT UNSIGNED` | - | - | No | FK to the parent record | FK -> `{table}.id`, ON DELETE RESTRICT, NOT NULL |
+| `changed_by` | `BIGINT UNSIGNED` | - | - | Yes | User who triggered the change; NULL for system actions | FK -> `users.id` |
+| `old_status` | `VARCHAR` | 50 | NULL | Yes | Status before the change | - |
+| `new_status` | `VARCHAR` | 50 | - | No | Status after the change | NOT NULL |
+| `note` | `TEXT` | - | NULL | Yes | Optional context for the change | - |
+| `created_at` | `TIMESTAMP` | - | `CURRENT_TIMESTAMP` | No | When the change occurred | NOT NULL |
 
 **Indexes:**
 ```sql

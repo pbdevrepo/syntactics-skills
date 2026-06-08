@@ -54,6 +54,7 @@ Is this business logic that product/dev teams will need to change frequently?
 | Logic developers need to trace in code | Application layer — triggers are invisible to ORM |
 | High-volume insert paths | Application logic or async workers — triggers add per-row overhead |
 | Anything you want to unit test | Application logic |
+| Audit logging on Eloquent models when `spatie/laravel-activitylog` is installed | `LogsActivity` trait on the model — see `references/laravel-packages.md` |
 
 ---
 
