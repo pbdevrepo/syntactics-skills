@@ -245,6 +245,8 @@ To test a change:
 2. Push to `main`
 3. Run the install command above to get the latest version
 
+project directory: & ".\scripts\install.ps1" -Dev -Global
+
 ## Structure
 
 ```
