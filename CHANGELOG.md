@@ -2,6 +2,11 @@
 
 All notable changes to syntactics-skills are documented here.
 
+## [Unreleased] - 2026-06-10
+
+### Changed
+- `engineering-workflow`: `sync-dev-tdd` v1.3.0 - expanded Tool Discovery to two-tier fallback; Tier 1 reads `docs/agents/tools.md` (synthesized registry); Tier 2 directly reads `.mcp.json`, `.claude/settings.json` mcpServers keys, `boost.json` (laravel indicator), `.claude/skills/` directory, and `.claude/agents/` directory when tools.md is absent; added local agents enforcement row - agents in `.claude/agents/` are surfaced as invokable subagents at Planning time; log format updated to `MCPs | Skills | Agents`
+
 ## [Unreleased] - 2026-06-08
 
 ### Added

@@ -2,8 +2,7 @@
 name: sync-dev-tdd
 version: 1.3.0
 description: >
-  TDD implementation skill for Syntactics Inc. Executes a red-green-refactor loop for a specific
-  task or module, anchored to the FDD. Auto-detects a prior dev session summary and loads it as the
+  Execute a red-green-refactor loop for a specific task or module, anchored to the FDD. Auto-detects a prior dev session summary and loads it as the
   implementation baseline; runs standalone if no session exists. Trigger when a developer says
   "start tdd", "implement", "tdd this task", "run tdd", or after sync-dev-session completes.
   Invoked as: /sync-dev-tdd {Task-ID} {module} @{task-file}.md @{fdd-file}.md. Generates Swagger
@@ -97,17 +96,31 @@ output that no prior dev session was found.
 
 **Tool Discovery:**
 
-Read `docs/agents/tools.md` if it exists. If the file is absent, skip this step — setup has not
-been run for this repo.
+**Tier 1 - Synthesized registry (preferred):** Read `docs/agents/tools.md` if it exists (generated
+by `sync-dev-setup`). Extract Framework MCPs, local skills, and docs-lookup MCPs from it directly.
 
-From `docs/agents/tools.md`, extract:
-- **Framework MCPs** (capability tier `framework:*`) — Laravel Boost, shadcn, WordPress, etc.
-- **Local project skills** (`.claude/skills/` entries) — skills installed for this project specifically
-- **Docs lookup MCPs** (capability tier `docs:lookup`) — context7 or similar
+**Tier 2 - Direct fallback (when `docs/agents/tools.md` is absent):** Read raw config sources in
+this order and merge results:
+
+| Source | What to extract |
+|--------|----------------|
+| `.mcp.json` (project root) | `mcpServers` object keys |
+| `.claude/settings.json` (project root) | `mcpServers` object keys |
+| `boost.json` (project root) | presence alone - classify as `framework:laravel` |
+| `.claude/skills/` (directory listing) | subdirectory names = installed local skills |
+| `.claude/agents/` (directory listing) | subdirectory names = invokable local agents |
+
+Classify each discovered MCP server name:
+- name contains `laravel`, or `boost.json` present - `framework:laravel`
+- name contains `shadcn` - `framework:shadcn`
+- name contains `wordpress` or `wp` - `framework:wordpress`
+- name contains `context7` - `docs:lookup`
+- name contains `playwright` or `cypress` - `testing:e2e`
+- otherwise - `other`
 
 Log the discovered tools at the top of the TDD session header:
 ```
-Tools available: {comma-separated list of MCP names and local skills, or "none detected"}
+Tools available: MCPs: {names or "none"} | Skills: {names or "none"} | Agents: {names or "none"}
 ```
 
 Enforce the following during this session:
@@ -118,9 +131,10 @@ Enforce the following during this session:
 | `framework:shadcn` | Use shadcn/ui components for all UI elements. Do not implement custom base components (Button, Input, Dialog, etc.) that shadcn already provides. Invoke the `/shadcn` skill if component generation is needed. |
 | `framework:wordpress` | Follow WordPress coding standards: hooks/filters over direct overrides, WP_Query over raw SQL, capability checks before any privileged action. |
 | `docs:lookup` (context7) | Before implementing a call to any third-party library, use the context7 MCP to pull current docs for that library. Do not rely on training-data knowledge for library APIs. |
-| Local project skills | Surface relevant skill names to the developer at the start of Planning so they can invoke them. Example: "This project has `/laravel-boost` and `/sync-backend-developer` available — consider invoking them during implementation." |
+| Local project skills (`.claude/skills/`) | Surface relevant skill names to the developer at the start of Planning so they can invoke them. Example: "This project has `/laravel-boost` available - consider invoking it during implementation." |
+| Local project agents (`.claude/agents/`) | Surface agent names to the developer at the start of Planning. These are fully invokable via the `Agent` tool during this session. Example: "This project has a `backend-task-writer` agent available - consider delegating task scaffolding to it." |
 
-If no tools are discovered, proceed with default behavior.
+If no tools are discovered from any source, proceed with default behavior.
 
 ### 1. Planning
 
@@ -130,12 +144,13 @@ Before writing any code:
 
 - [ ] Confirm with user what interface changes are needed
 - [ ] Confirm with user which behaviors to test (prioritize)
+- [ ] Brainstorm and list specific Edge Cases based on the FDD (e.g., boundary limits, empty inputs, token/payload overflows, authorization bypasses).
 - [ ] Identify opportunities for [deep modules](references/deep-modules.md) (small interface, deep implementation)
 - [ ] Design interfaces for [testability](references/interface-design.md)
 - [ ] List the behaviors to test (not implementation steps)
 - [ ] Get user approval on the plan
 
-Ask: "What should the public interface look like? Which behaviors are most important to test?"
+Ask: "What should the public interface look like? Which behaviors are most important to test? Here are the edge cases I've identified for this module - should we write tests for all of them?"
 
 **You can't test everything.** Confirm with the user exactly which behaviors matter most. Focus testing effort on critical paths and complex logic, not every possible edge case.
 
@@ -166,7 +181,7 @@ Rules:
 - Don't anticipate future tests
 - Keep tests focused on observable behavior
 
-### 4. Refactor
+### 4. Refactor & Verification
 
 After all tests pass, look for [refactor candidates](references/refactoring.md):
 
@@ -177,6 +192,21 @@ After all tests pass, look for [refactor candidates](references/refactoring.md):
 - [ ] Run tests after each refactor step
 
 **Never refactor while RED.** Get to GREEN first.
+
+#### CRITICAL GATE: Smoke Testing
+Once the local TDD loop is 100% GREEN and refactoring is complete, you must simulate or execute a **Smoke Test** (System Integration Check). 
+
+Verify the following:
+- [ ] **Verify Schema/Contract:** Ensure any new public methods or API routes match the project's global formatting rules and tool expectations.
+- [ ] **Execute "Happy Path" E2E:** Trigger a live local build/execution of the module to verify dependencies hook up correctly (no circular dependencies or initialization crashes).
+
+**Smoke Test Outcomes:**
+**PASSED:** Proceed directly to Swagger Output and FDD Compliance Summary.
+**FAILED (RED STATE):** Treat this as a hard workflow failure. You are now structurally **RED**. You must:
+  1. Capture the exact system breakdown or integration error log.
+  2. Re-enter the **Incremental Loop**.
+  3. Modify the implementation code to fix the integration environment breakdown.
+  4. Run your local unit tests and re-smoke test until the output status resolves to **PASSED**.
 
 ## Swagger Output (Backend / Full-Stack only)
 
@@ -235,3 +265,12 @@ Tip: name tests with FDD rule IDs (e.g. `BR-03`, `VAL-07`) for more accurate det
 [ ] Code is minimal for this test
 [ ] No speculative features added
 ```
+
+## Execution Rules & Guardrails
+
+1. **Strict Linearity:** You must execute this skill sequentially (0 → 1 → 2 → 3 → 4). You are explicitly blocked from generating Swagger YAML or the FDD Compliance Summary out of order.
+2. **The Smoke Test Blockade:** The Smoke Test in Step 4 is a non-negotiable structural gate. 
+   * **IF** the Smoke Test returns an initialization error, type crash, or runtime exception, **THEN** you must halt all forward momentum immediately. 
+   * You are strictly forbidden from writing or outputting the `docs/api/..._api.yaml` file or the final `FDD Compliance Summary` table while the workflow status remains in a Smoke Test RED STATE.
+   * Your immediate priority must pivot entirely to logging the environment error trace and debugging the implementation files.
+3. **No Muted Errors:** If a local project skill, terminal command, or tool invocation prints an error or environmental warning, you must print it in full and address it immediately. Do not assume upstream orchestration or production layers will catch it.
