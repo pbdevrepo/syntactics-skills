@@ -102,7 +102,7 @@ For each discovered tool, apply its enforcement rule:
 | `framework:wordpress` | Follow WordPress coding standards: hooks/filters over direct overrides, WP_Query over raw SQL, capability checks before any privileged action. |
 | `docs:lookup` (context7) | Before implementing a call to any third-party library, use `context7:resolve_library_id` then `context7:get_library_docs` to pull current docs. Do not rely on training-data knowledge for library APIs. |
 | Local project skills (`.claude/skills/`) | Surface relevant skill names to the developer at the start of Planning so they can invoke them. Example: "This project has `/laravel-boost` available - consider invoking it during implementation." |
-| Local project agents (`.claude/agents/`) | Surface agent names to the developer at the start of Planning. Invoke relevant agents at the delegation points defined in Steps 1-3 below. |
+| Local project agents (`.claude/agents/`) | Surface agent names to the developer at the start of Planning. These are fully invokable via the `Agent` tool during this session. Example: "This project has a `backend-task-writer` agent available - consider delegating task scaffolding to it." |
 
 If no tools are discovered from any source, proceed with default behavior.
 
@@ -124,12 +124,6 @@ Ask: "What should the public interface look like? Which behaviors are most impor
 
 **You can't test everything.** Confirm with the user exactly which behaviors matter most. Focus testing effort on critical paths and complex logic, not every possible edge case.
 
-**Agent delegation - Planning:**
-If an `api-designer` agent was discovered in Step 0 and this is a Backend or Full-Stack session:
-invoke it now, passing the task detail and the relevant FDD section. Use its output as the
-interface contract for test writing. Do not design the API contract yourself when this agent
-is available.
-
 ### 2. Tracer Bullet
 
 Write ONE test that confirms ONE thing about the system:
@@ -141,18 +135,13 @@ GREEN: Write minimal code to pass → test passes
 
 This is your tracer bullet - proves the path works end-to-end.
 
-**Agent delegation - GREEN phase:**
-If a `backend-developer` agent was discovered in Step 0: during each GREEN phase, invoke it
-with the failing test and the current file context. Integrate its output, verify the test
-passes, then continue. Do not implement the GREEN phase yourself when this agent is available.
-
 ### 3. Incremental Loop
 
 For each remaining behavior:
 
 ```
 RED:   Write next test → fails
-GREEN: Delegate to backend-developer agent (if available) or implement minimally → passes
+GREEN: Minimal code to pass → passes
 ```
 
 Rules:
