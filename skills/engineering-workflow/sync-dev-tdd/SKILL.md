@@ -2,11 +2,10 @@
 name: sync-dev-tdd
 version: 1.3.0
 description: >
-  Execute a red-green-refactor loop for a specific task or module, anchored to the FDD. Auto-detects a prior dev session summary and loads it as the
-  implementation baseline; runs standalone if no session exists. Trigger when a developer says
-  "start tdd", "implement", "tdd this task", "run tdd", or after sync-dev-session completes.
-  Invoked as: /sync-dev-tdd {Task-ID} {module} @{task-file}.md @{fdd-file}.md. Generates Swagger
-  YAML for backend and full-stack sessions. Always run after sync-dev-session when a session exists.
+  Executes a red-green-refactor TDD loop for a specific task or module, anchored to the FDD.
+  Auto-detects a prior dev session summary and loads it as the implementation baseline; runs
+  standalone if no summary exists. Use when a developer says "start tdd", "implement",
+  "tdd this task", "run tdd", or provides a Task ID with an FDD file.
 ---
 
 # Test-Driven Development
@@ -34,38 +33,9 @@ Do NOT ask for session type — it is auto-derived in Step 0.
 
 ## Philosophy
 
-**Core principle**: Tests should verify behavior through public interfaces, not implementation details. Code can change entirely; tests shouldn't.
+Tests verify behavior through public interfaces, not implementation. See [tests.md](references/tests.md) and [mocking.md](references/mocking.md).
 
-**Good tests** are integration-style: they exercise real code paths through public APIs. They describe _what_ the system does, not _how_ it does it. A good test reads like a specification - "user can checkout with valid cart" tells you exactly what capability exists. These tests survive refactors because they don't care about internal structure.
-
-**Bad tests** are coupled to implementation. They mock internal collaborators, test private methods, or verify through external means (like querying a database directly instead of using the interface). The warning sign: your test breaks when you refactor, but behavior hasn't changed. If you rename an internal function and tests fail, those tests were testing implementation, not behavior.
-
-See [tests.md](references/tests.md) for examples and [mocking.md](references/mocking.md) for mocking guidelines.
-
-## Anti-Pattern: Horizontal Slices
-
-**DO NOT write all tests first, then all implementation.** This is "horizontal slicing" - treating RED as "write all tests" and GREEN as "write all code."
-
-This produces **crap tests**:
-
-- Tests written in bulk test _imagined_ behavior, not _actual_ behavior
-- You end up testing the _shape_ of things (data structures, function signatures) rather than user-facing behavior
-- Tests become insensitive to real changes - they pass when behavior breaks, fail when behavior is fine
-- You outrun your headlights, committing to test structure before understanding the implementation
-
-**Correct approach**: Vertical slices via tracer bullets. One test → one implementation → repeat. Each test responds to what you learned from the previous cycle. Because you just wrote the code, you know exactly what behavior matters and how to verify it.
-
-```
-WRONG (horizontal):
-  RED:   test1, test2, test3, test4, test5
-  GREEN: impl1, impl2, impl3, impl4, impl5
-
-RIGHT (vertical):
-  RED→GREEN: test1→impl1
-  RED→GREEN: test2→impl2
-  RED→GREEN: test3→impl3
-  ...
-```
+**One rule:** Vertical slices only - one test → one implementation → repeat. Never write all tests first (horizontal slicing produces tests that verify imagined behavior, not real behavior).
 
 ## Workflow
 
@@ -123,14 +93,14 @@ Log the discovered tools at the top of the TDD session header:
 Tools available: MCPs: {names or "none"} | Skills: {names or "none"} | Agents: {names or "none"}
 ```
 
-Enforce the following during this session:
+For each discovered tool, apply its enforcement rule:
 
 | Discovered tool | Enforce during this session |
 |-----------------|-----------------------------|
 | `framework:laravel` | Follow Laravel conventions: Eloquent models, Form Requests, Resource classes, service-layer pattern. Do not implement raw SQL or ad-hoc validation outside Request classes. |
 | `framework:shadcn` | Use shadcn/ui components for all UI elements. Do not implement custom base components (Button, Input, Dialog, etc.) that shadcn already provides. Invoke the `/shadcn` skill if component generation is needed. |
 | `framework:wordpress` | Follow WordPress coding standards: hooks/filters over direct overrides, WP_Query over raw SQL, capability checks before any privileged action. |
-| `docs:lookup` (context7) | Before implementing a call to any third-party library, use the context7 MCP to pull current docs for that library. Do not rely on training-data knowledge for library APIs. |
+| `docs:lookup` (context7) | Before implementing a call to any third-party library, use `context7:resolve_library_id` then `context7:get_library_docs` to pull current docs. Do not rely on training-data knowledge for library APIs. |
 | Local project skills (`.claude/skills/`) | Surface relevant skill names to the developer at the start of Planning so they can invoke them. Example: "This project has `/laravel-boost` available - consider invoking it during implementation." |
 | Local project agents (`.claude/agents/`) | Surface agent names to the developer at the start of Planning. These are fully invokable via the `Agent` tool during this session. Example: "This project has a `backend-task-writer` agent available - consider delegating task scaffolding to it." |
 
