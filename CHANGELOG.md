@@ -2,6 +2,15 @@
 
 All notable changes to syntactics-skills are documented here.
 
+## [Unreleased] - 2026-06-16
+
+### Changed
+- `ba-workflow`: `sync-project-intake` v1.0.0 -> v1.1.0 - added "we have a new client" trigger phrase; enriched `references/extraction-rules.md` with Integrations and What NOT to Extract sections from legacy `sync-requirement-analyzer`; added Q-ID prefixes (Q-MS, Q-UR, Q-BR, Q-DI, Q-TC, Q-TL, Q-AM) to all `references/question-bank.md` entries; merged Q-IN (Integrations & Third Parties) questions into Q-DI category
+- `sales-workflow`: `sync-client-discovery` v2.4.0 - updated workflow line and handoff note to reference `sync-project-intake` instead of `sync-requirement-analyzer`
+
+### Removed
+- `ba-workflow`: `sync-requirement-analyzer` - fully merged into `sync-project-intake`; all unique content cherry-picked into intake references
+
 ## [Unreleased] - 2026-06-10
 
 ### Changed

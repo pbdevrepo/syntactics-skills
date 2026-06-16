@@ -50,3 +50,24 @@ Ambiguous -> becomes a clarifying question in Phase 3.
 2. Supporting docs = clarifications or additions
 3. Contradiction between docs -> flag as gap, do not silently resolve
 4. Supporting doc adds scope not in primary document -> add as `Inferred`, note the source
+
+---
+
+## Integrations - Always Extract
+
+Flag any mention of:
+- Payment gateways (Stripe, PayPal, PayMongo)
+- Communication (Twilio SMS, SendGrid, Mailchimp)
+- Accounting (QuickBooks, Xero)
+- Cloud storage (AWS S3, Google Drive, Dropbox)
+- Calendar / scheduling (Google Calendar, Calendly)
+- CRM / ERP systems
+- APIs from other internal systems
+
+---
+
+## What NOT to Extract
+
+- Implementation details (technology choices, hosting preferences) - note as constraints, not modules
+- Design preferences ("make it look modern") - note separately
+- Vague wishes ("make it easy to use") - not a module

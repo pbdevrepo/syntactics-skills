@@ -9,7 +9,7 @@ description: >
   spaces below for the rep to complete during the client meeting. Trigger when a Sales team member
   says "client has no idea what they want", "no requirements yet", "start discovery", "client
   discovery", "discovery questions", or when a new client has not yet provided any brief or RFP.
-  Always run before sync-requirement-analyzer when client input is absent or extremely vague.
+  Always run before sync-project-intake when client input is absent or extremely vague.
 ---
 
 # Client Discovery - Senior Consultant Mode
@@ -17,7 +17,7 @@ description: >
 Research first. Study ahead. Write a brief the sales rep takes into the meeting.
 One output. No modes.
 
-Workflow: **client-discovery -> requirement-analyzer -> proposal-grill -> proposal-writer -> quotation**
+Workflow: **client-discovery -> project-intake -> proposal-grill -> proposal-writer -> quotation**
 
 ---
 
@@ -148,7 +148,7 @@ After writing, state the file path and say:
 ```
 Discovery brief ready. Before the meeting: read the Pre-Meeting Intel section.
 During the meeting: fill in the answer spaces under each question.
-After the meeting: pass {project-name}-discovery.md to sync-requirement-analyzer.
+After the meeting: pass {project-name}-discovery.md to sync-project-intake.
 ```
 
 ---

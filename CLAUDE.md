@@ -33,12 +33,12 @@ curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/sc
 
 Windows:
 ```powershell
-& ([scriptblock]::Create((irm $url))) -Skill sync-requirement-analyzer,sync-proposal-writer
+& ([scriptblock]::Create((irm $url))) -Skill sync-project-intake,sync-proposal-writer
 ```
 
 Mac/Linux:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash -s -- --skill sync-requirement-analyzer --skill sync-proposal-writer
+curl -fsSL https://raw.githubusercontent.com/pbdevrepo/syntactics-skills/main/scripts/install.sh | bash -s -- --skill sync-project-intake --skill sync-proposal-writer
 ```
 
 **Install to current project only (local):**

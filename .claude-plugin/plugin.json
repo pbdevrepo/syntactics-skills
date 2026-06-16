@@ -29,6 +29,6 @@
     "./skills/sales-workflow/sync-proposal-revision",
     "./skills/sales-workflow/sync-proposal-writer",
     "./skills/sales-workflow/sync-quotation",
-    "./skills/sales-workflow/sync-requirement-analyzer"
+    "./skills/ba-workflow/sync-project-intake"
   ]
 }

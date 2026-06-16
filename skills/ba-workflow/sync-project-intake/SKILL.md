@@ -1,16 +1,16 @@
 ---
 name: sync-project-intake
-version: 1.0.0
+version: 1.1.0
 description: >
   Entry point for both the proposal and BA lifecycle at Syntactics Inc. Accepts any client input
   (brief, RFP, meeting notes, or approved proposal) and produces a single structured intake document
   used from proposal writing through database design. Trigger when a BA or Sales team member says
-  "analyze client requirements", "start the intake", "we have a new project", "I have client notes",
-  "we got a proposal", or shares any client brief, email, RFP, or proposal PDF. Works in two modes:
-  Pre-Proposal (from client brief - feeds proposal-grill and proposal-writer) and Post-Approval
-  (from approved proposal - feeds database-designer). Always run before proposal-grill,
-  database-designer, sprint-planner, and final-design. If the client has no brief or direction at
-  all, run sync-client-discovery first.
+  "analyze client requirements", "start the intake", "we have a new project", "we have a new client",
+  "I have client notes", "we got a proposal", or shares any client brief, email, RFP, or proposal
+  PDF. Works in two modes: Pre-Proposal (from client brief - feeds proposal-grill and
+  proposal-writer) and Post-Approval (from approved proposal - feeds database-designer). Always run
+  before proposal-grill, database-designer, sprint-planner, and final-design. If the client has no
+  brief or direction at all, run sync-client-discovery first.
 ---
 
 # Project Intake
@@ -29,10 +29,10 @@ BA design workflow: **project-intake -> database-designer -> sprint-planner -> f
 **Step 2 - Mode detection:** Ask:
 > "Are you working from a client brief / RFP / meeting notes (pre-proposal), or from a client-approved proposal (post-approval)?"
 
-- **Pre-Proposal:** Client brief, RFP, email, meeting notes - intake status: `Draft` - next skill: `proposal-grill`
-- **Post-Approval:** Client-approved proposal - intake status: `Approved` - next skill: `database-designer`
+- **Pre-Proposal:** Client brief, RFP, email, meeting notes, or `{project-name}-discovery.md` from `sync-client-discovery` - intake status: `Draft` - next skill: `proposal-grill`
+- **Post-Approval:** Client-approved proposal (`docs/sales/{project-name}-proposal.md`) - intake status: `Approved` - next skill: `database-designer`
 
-Accept input as: PDF upload, pasted text, email thread, meeting notes, or RFP document.
+Accept input as: PDF upload, pasted text, email thread, meeting notes, RFP document, or a discovery brief from `sync-client-discovery`.
 
 ---
 

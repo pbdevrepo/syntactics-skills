@@ -207,7 +207,7 @@ Answer: _______________
 
 ## Post-Meeting Summary
 
-> Fill in after the meeting. This section feeds sync-requirement-analyzer.
+> Fill in after the meeting. This section feeds sync-project-intake.
 
 **Root cause of project:** _______________
 
@@ -221,7 +221,7 @@ Answer: _______________
 
 **Integrations confirmed:** _______________
 
-**Open questions to resolve in requirement-analyzer:** _______________
+**Open questions to resolve in project-intake:** _______________
 
 **Hypotheses confirmed or denied:**
 
@@ -234,4 +234,4 @@ Answer: _______________
 
 ## Next Step
 
-Pass this file to `sync-requirement-analyzer` as the client input.
+Pass this file to `sync-project-intake` as the client input.

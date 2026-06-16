@@ -9,10 +9,9 @@
 Each skill runs in a human-in-the-loop session. A human triggers the skill, reviews its artifact output, then manually triggers the next skill. The pipeline is:
 
 ```
-sync-requirement-analyzer
+sync-project-intake
   → sync-proposal-writer
-    → sync-ba-project-intake
-      → sync-final-design
+    → sync-final-design
         → sync-ui-task-creator
           → sync-frontend-task-creator
             → sync-backend-task-creator

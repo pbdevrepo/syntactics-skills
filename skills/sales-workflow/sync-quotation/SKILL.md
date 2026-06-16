@@ -15,7 +15,7 @@ Read the project proposal. Produce an itemized quotation `.md` file. List every 
 
 Hour ranges are placeholders - Sales reviews and adjusts before sending. Produce a complete, structured breakdown Sales can edit. Do not commit to estimates.
 
-Workflow: **requirement-analyzer -> proposal-grill -> proposal-writer -> quotation -> [client decision]**
+Workflow: **project-intake -> proposal-grill -> proposal-writer -> quotation -> [client decision]**
 
 ---
 
