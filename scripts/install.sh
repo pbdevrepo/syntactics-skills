@@ -200,8 +200,29 @@ if [[ -d "$AGENTS_SRC" ]]; then
     fi
 fi
 
+# Copy workflows from workflows/ in the package root (does not overwrite existing user workflows)
+if [[ "$DEV" == "true" ]]; then
+    WORKFLOWS_SRC="$REPO_ROOT/workflows"
+else
+    WORKFLOWS_SRC="$TMP_DIR/syntactics-skills-main/workflows"
+fi
+WORKFLOWS_DIR="$HOME/.claude/workflows"
+WORKFLOW_COUNT=0
+if [[ -d "$WORKFLOWS_SRC" ]]; then
+    mkdir -p "$WORKFLOWS_DIR"
+    for workflow_file in "$WORKFLOWS_SRC"/*.js; do
+        [[ -f "$workflow_file" ]] || continue
+        dest="$WORKFLOWS_DIR/$(basename "$workflow_file")"
+        if [[ ! -f "$dest" ]]; then
+            cp "$workflow_file" "$dest"
+            WORKFLOW_COUNT=$((WORKFLOW_COUNT + 1))
+        fi
+    done
+fi
+
 echo ""
 echo "Installed $COUNT skill(s) to $SKILLS_DIR"
 [[ $AGENT_COUNT -gt 0 ]] && echo "Installed $AGENT_COUNT agent(s) to $AGENTS_DIR"
+[[ $WORKFLOW_COUNT -gt 0 ]] && echo "Installed $WORKFLOW_COUNT workflow(s) to $WORKFLOWS_DIR"
 echo "Previously installed skills were not removed."
 echo "Restart Claude Code to load the skills."

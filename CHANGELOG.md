@@ -4,7 +4,13 @@ All notable changes to syntactics-skills are documented here.
 
 ## [Unreleased] - 2026-06-16
 
+### Added
+- `engineering-workflow`: `sync-improve-codebase-architecture` - new `references/WORKFLOW-SWEEP.md` - phase spec for the parallel architecture sweep workflow
+- `workflows/arch-sweep.js` - new Claude Code dynamic workflow; fans out one Explore agent per module in parallel, runs adversarial review on Strong candidates, returns ranked candidates for the skill's HTML report
+- `scripts/install.ps1` + `scripts/install.sh` - workflow distribution: copies `workflows/*.js` to `~/.claude/workflows/` on install (skips files that already exist)
+
 ### Changed
+- `engineering-workflow`: `sync-improve-codebase-architecture` `SKILL.md` Step 1 - added Workflow mode (preferred): runs `/arch-sweep` for parallel fan-out; retains single Explore agent as Fallback mode when workflow is not installed
 - `ba-workflow`: `sync-project-intake` v1.0.0 -> v1.1.0 - added "we have a new client" trigger phrase; enriched `references/extraction-rules.md` with Integrations and What NOT to Extract sections from legacy `sync-requirement-analyzer`; added Q-ID prefixes (Q-MS, Q-UR, Q-BR, Q-DI, Q-TC, Q-TL, Q-AM) to all `references/question-bank.md` entries; merged Q-IN (Integrations & Third Parties) questions into Q-DI category
 - `sales-workflow`: `sync-client-discovery` v2.4.0 - updated workflow line and handoff note to reference `sync-project-intake` instead of `sync-requirement-analyzer`
 

@@ -182,10 +182,28 @@ try {
         }
     }
 
+    # Copy workflows from workflows/ in the package root (does not overwrite existing user workflows)
+    $WorkflowSrc = if ($Dev) { Join-Path $RepoRoot "workflows" } else { Join-Path $TmpDir "syntactics-skills-main\workflows" }
+    $WorkflowDir = Join-Path $HOME ".claude\workflows"
+    $workflowCount = 0
+    if (Test-Path $WorkflowSrc) {
+        New-Item -ItemType Directory -Force -Path $WorkflowDir | Out-Null
+        Get-ChildItem -Path $WorkflowSrc -Filter "*.js" | ForEach-Object {
+            $dest = Join-Path $WorkflowDir $_.Name
+            if (-not (Test-Path $dest)) {
+                Copy-Item -Path $_.FullName -Destination $dest -Force
+                $workflowCount++
+            }
+        }
+    }
+
     Write-Host ""
     Write-Host "Installed $count skill(s) to $SkillDir"
     if ($agentCount -gt 0) {
         Write-Host "Installed $agentCount agent(s) to $AgentDir"
+    }
+    if ($workflowCount -gt 0) {
+        Write-Host "Installed $workflowCount workflow(s) to $WorkflowDir"
     }
     Write-Host "Previously installed skills were not removed."
     Write-Host "Restart Claude Code to load the skills."

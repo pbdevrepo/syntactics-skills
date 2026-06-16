@@ -33,9 +33,28 @@ This skill is _informed_ by the project's domain model. The domain language give
 
 ### 1. Explore
 
-Read the project's domain glossary and any ADRs in the area you're touching first.
+**Workflow mode (preferred):** If `/arch-sweep` is available (installed via the install script
+or saved from a previous run), run it now. It fans out one Explore agent per top-level module
+in parallel and runs adversarial review on every Strong candidate before returning results.
 
-Then use the Agent tool with `subagent_type=Explore` to walk the codebase. Don't follow rigid heuristics — explore organically and note where you experience friction:
+```
+/arch-sweep
+/arch-sweep { "path": "src" }   <- scope to a subdirectory
+```
+
+When `/arch-sweep` returns, extract the `candidates` array from its JSON output and proceed
+directly to Step 2 with those candidates. Skip the manual exploration below.
+
+See [WORKFLOW-SWEEP.md](references/WORKFLOW-SWEEP.md) for the full phase spec and how to
+install or regenerate the workflow.
+
+---
+
+**Fallback mode (when `/arch-sweep` is not available):** Read the project's domain glossary
+and any ADRs in the area you're touching first.
+
+Then use the Agent tool with `subagent_type=Explore` to walk the codebase. Don't follow rigid
+heuristics — explore organically and note where you experience friction:
 
 - Where does understanding one concept require bouncing between many small modules?
 - Where are modules **shallow** — interface nearly as complex as the implementation?
