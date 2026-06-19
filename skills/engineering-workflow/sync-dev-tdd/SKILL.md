@@ -115,6 +115,11 @@ Before writing any code:
 - [ ] Confirm with user what interface changes are needed
 - [ ] Confirm with user which behaviors to test (prioritize)
 - [ ] Brainstorm and list specific Edge Cases based on the FDD (e.g., boundary limits, empty inputs, token/payload overflows, authorization bypasses).
+- [ ] Classify each planned test by coverage category before writing it:
+  - **Happy Path** - valid inputs, success responses, standard state transitions; defines "Done" for the feature
+  - **Edge Case** - boundary values (zero, max int, empty string, null, single-element collection, overflow)
+  - **Sad Path** - invalid inputs, missing required fields, expired tokens; assert the exact exception type or error payload, not just "an error occurred"
+  - **Mocked Boundary** - external dependency contracts (DB empty result, third-party API 500, file system failure); mock at unit level to keep tests fast, verify the interaction contract
 - [ ] Identify opportunities for [deep modules](references/deep-modules.md) (small interface, deep implementation)
 - [ ] Design interfaces for [testability](references/interface-design.md)
 - [ ] List the behaviors to test (not implementation steps)
@@ -133,7 +138,7 @@ RED:   Write test for first behavior → test fails
 GREEN: Write minimal code to pass → test passes
 ```
 
-This is your tracer bullet - proves the path works end-to-end.
+This is your tracer bullet - proves the path works end-to-end. It must target the **Happy Path**: establish the success case before writing any failure tests.
 
 ### 3. Incremental Loop
 
@@ -150,6 +155,13 @@ Rules:
 - Only enough code to pass current test
 - Don't anticipate future tests
 - Keep tests focused on observable behavior
+
+Coverage order per behavior:
+
+1. **Happy Path** - confirm the behavior works correctly
+2. **Sad Path** - confirm failure cases return the right exception or error payload
+3. **Edge Cases** - stress the conditional branches with boundary values
+4. **Mocked Boundaries** - verify external dependency contracts at the unit level (see [mocking.md](references/mocking.md))
 
 ### 4. Refactor & Verification
 
@@ -234,6 +246,8 @@ Tip: name tests with FDD rule IDs (e.g. `BR-03`, `VAL-07`) for more accurate det
 [ ] Test would survive internal refactor
 [ ] Code is minimal for this test
 [ ] No speculative features added
+[ ] Test is classified (Happy Path / Edge Case / Sad Path / Mocked Boundary)
+[ ] Both true and false branches of every new conditional are covered (branch coverage, not just line coverage)
 ```
 
 ## Execution Rules & Guardrails
