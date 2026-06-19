@@ -107,7 +107,7 @@ TDD Agents: QA → tdd-qa-tester | Implementation → tdd-{type}-developer
 | Backend | `tdd-backend-developer` |
 | Frontend | `tdd-frontend-developer` |
 | Full-Stack | `tdd-fullstack-developer` |
-| Backend session with dedicated API route tasks | `tdd-api-developer` for those route tasks |
+| Backend session with dedicated API route tasks | `tdd-api-designer` for those route tasks |
 
 Tests always delegate to `tdd-qa-tester` regardless of session type.
 
