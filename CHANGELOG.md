@@ -2,6 +2,15 @@
 
 All notable changes to syntactics-skills are documented here.
 
+## [Unreleased] - 2026-06-19
+
+### Added
+- `engineering-workflow`: `sync-dev-tdd` `references/e2e.md` - E2E test guidance: when Playwright tests belong (post-TDD, after Smoke Test), happy-path-only rule at E2E layer, test structure template, output path convention, and what NOT to test at E2E
+- `engineering-workflow`: `sync-dev-tdd` `references/a11y.md` - accessibility testing guidance: two-layer model (jest-axe at component level, axe-playwright at page level), usage patterns, severity levels for CI blocking, and 57% automation coverage ceiling callout
+
+### Changed
+- `engineering-workflow`: `sync-dev-tdd` v1.3.0 -> v1.4.0 - Step 0 Tool Discovery: added detection for `tsconfig.json` (`static:typescript`), `.eslintrc*`/`eslint.config.*` (`static:eslint`), and `jest-axe` in devDependencies (`testing:a11y-component`); added enforcement rules for each; updated tools log line to include Static and A11y fields; Step 3 Incremental Loop: added Per-GREEN hygiene block (tsc, ESLint, jest-axe run after each GREEN before the next RED); Step 4 Refactor: added Static Analysis Gate (tsc + ESLint hard gate before Smoke Test); added re-run note to Smoke Test FAILED outcome; new Step 5 E2E Coverage (FE/Full-Stack only, when testing:e2e discovered) with axe page-level scan; Checklist Per Cycle: added tsc, ESLint, jest-axe items; Execution Rules: added Rule 4 Static Analysis Blockade
+
 ## [Unreleased] - 2026-06-16
 
 ### Added

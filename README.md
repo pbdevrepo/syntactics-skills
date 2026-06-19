@@ -141,7 +141,7 @@ Proposal and design pipeline - from first client input through Final Design Docu
 |-------|-------------|
 | `sync-dev-setup` | One-time per-repo setup - scaffolds `## Agent skills` block and `docs/agents/` files so engineering skills know the issue tracker, triage labels, domain doc layout, and available MCPs/local skills; re-run when MCPs change |
 | `sync-dev-session` | Task-level grilling session anchored to FDD - invoked as `/sync-dev-session BE-0001 users-module @tasks.md @fdd.md`; session type auto-derived |
-| `sync-dev-tdd` | TDD red-green-refactor loop per task or module; reads `docs/agents/tools.md` to enforce framework MCP conventions (Laravel, shadcn, WordPress) and surface local project skills during planning |
+| `sync-dev-tdd` | TDD red-green-refactor loop per task or module; enforces framework conventions (Laravel, shadcn, WordPress), runs tsc and ESLint as inline quality gates, adds jest-axe a11y checks for FE sessions, and generates Playwright E2E tests post-loop |
 | `sync-dev-to-fix` | TDD-driven bug fix loop from a GitHub issue - fetches, fixes, posts result |
 | `sync-dev-diagnose` | Disciplined diagnosis loop for hard bugs and performance regressions - reproduce, minimise, hypothesise, instrument, fix, regression-test |
 | `sync-improve-codebase-architecture` | Find deepening opportunities in a codebase informed by CONTEXT.md and ADRs - refactoring, module consolidation, testability improvements |
