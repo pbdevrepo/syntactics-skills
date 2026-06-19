@@ -1,6 +1,6 @@
 ---
 name: sync-dev-tdd
-version: 1.4.0
+version: 1.5.0
 description: >
   Executes a red-green-refactor TDD loop for a specific task or module, anchored to the FDD.
   Auto-detects a prior dev session summary and loads it as the implementation baseline; runs
@@ -33,9 +33,7 @@ Do NOT ask for session type — it is auto-derived in Step 0.
 
 ## Philosophy
 
-Tests verify behavior through public interfaces, not implementation. See [tests.md](references/tests.md) and [mocking.md](references/mocking.md).
-
-**One rule:** Vertical slices only - one test → one implementation → repeat. Never write all tests first (horizontal slicing produces tests that verify imagined behavior, not real behavior).
+**Vertical slices only** - one test → one implementation → repeat. Never write all tests first. See [tests.md](references/tests.md) and [mocking.md](references/mocking.md).
 
 ## Workflow
 
@@ -81,7 +79,7 @@ this order and merge results:
 | `.claude/agents/` (directory listing) | subdirectory names = invokable local agents |
 | `tsconfig.json` (project root) | presence alone — classify as `static:typescript` |
 | `.eslintrc*` or `eslint.config.*` (project root) | presence alone — classify as `static:eslint` |
-| `package.json` `devDependencies` | `jest-axe` key present — classify as `testing:a11y-component` |
+| `package.json` `devDependencies` | `axe-core` key present — classify as `testing:a11y` |
 
 Classify each discovered MCP server name:
 - name contains `laravel`, or `boost.json` present - `framework:laravel`
@@ -94,11 +92,11 @@ Classify each discovered MCP server name:
 For file-based config detection:
 - `tsconfig.json` present at project root - `static:typescript`
 - `.eslintrc*` or `eslint.config.*` present at project root - `static:eslint`
-- `jest-axe` in `package.json` `devDependencies` - `testing:a11y-component`
+- `axe-core` in `package.json` `devDependencies` - `testing:a11y`
 
 Log the discovered tools at the top of the TDD session header:
 ```
-Tools available: MCPs: {names or "none"} | Skills: {names or "none"} | Agents: {names or "none"} | Static: {tsc, eslint or "none"} | A11y: {jest-axe or "none"}
+Tools available: MCPs: {names or "none"} | Skills: {names or "none"} | Agents: {names or "none"} | Static: {tsc, eslint or "none"} | A11y: {axe-core or "none"}
 ```
 
 For each discovered tool, apply its enforcement rule:
@@ -113,7 +111,7 @@ For each discovered tool, apply its enforcement rule:
 | Local project agents (`.claude/agents/`) | Surface agent names to the developer at the start of Planning. These are fully invokable via the `Agent` tool during this session. Example: "This project has a `backend-task-writer` agent available - consider delegating task scaffolding to it." |
 | `static:typescript` | Run `tsc --noEmit` as a baseline in Step 0 and surface any pre-existing type errors before writing new code. Run again after Refactor (Step 4). Hard gate: no Smoke Test if tsc exits non-zero. |
 | `static:eslint` | Run ESLint on changed files after each GREEN in the Incremental Loop. Hard gate: no Smoke Test if ESLint exits non-zero on session files. |
-| `testing:a11y-component` | After GREEN on any FE component, run `jest-axe` on the rendered output. Treat a11y failures as RED — fix before moving to next behavior. See [a11y.md](references/a11y.md). |
+| `testing:a11y` | After GREEN on any FE component, run `axe.run(container)` on the rendered output (disable `color-contrast` in JSDOM). Treat a11y failures as RED — fix before moving to next behavior. At E2E layer, inject via `page.addScriptTag` and run `axe.run()` on the full page. See [a11y.md](references/a11y.md). |
 
 If no tools are discovered from any source, proceed with default behavior.
 
@@ -178,7 +176,7 @@ Per-GREEN hygiene (run after each GREEN before writing the next RED):
 
 - [ ] `tsc --noEmit` (TypeScript projects only) - fix type errors before proceeding
 - [ ] ESLint on changed files - fix lint errors before proceeding
-- [ ] `jest-axe` on rendered component (FE sessions with `testing:a11y-component` only) - fix a11y violations before proceeding
+- [ ] `axe.run(container)` on rendered component (FE sessions with `testing:a11y` only) - fix a11y violations before proceeding
 
 If any hygiene check fails, treat it as blocking. Fix immediately. Do not proceed to the next behavior until all pass.
 
@@ -281,8 +279,8 @@ Scope rules:
 - Do not duplicate assertions already covered by unit/integration tests
 - Aim for the 70/20/10 ratio: if you have written more than 3 E2E tests for a single feature, push coverage down to the unit layer
 
-A11y at the E2E layer (when `testing:a11y-component` is also discovered):
-- After each Playwright interaction that renders new content, run an axe scan on the page
+A11y at the E2E layer (when `testing:a11y` is also discovered):
+- After each Playwright interaction that renders new content, inject axe-core via `page.addScriptTag({ path: require.resolve('axe-core') })` and call `page.evaluate(() => axe.run())`
 - Fail the E2E test on `critical` or `serious` violations - warn on `moderate` or `minor`
 - Note: automated tools catch ~57% of a11y issues; flag the remaining gap for manual review
 
@@ -302,7 +300,7 @@ See [e2e.md](references/e2e.md) for test structure and selector patterns and [a1
 [ ] Both true and false branches of every new conditional are covered (branch coverage, not just line coverage)
 [ ] tsc --noEmit passes (TypeScript projects only)
 [ ] ESLint passes on new/changed files
-[ ] jest-axe passes on rendered component output (FE sessions with testing:a11y-component only)
+[ ] axe.run(container) passes on rendered component output (FE sessions with testing:a11y only)
 ```
 
 ## Execution Rules & Guardrails
